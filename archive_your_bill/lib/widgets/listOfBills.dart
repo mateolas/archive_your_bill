@@ -1,6 +1,10 @@
 import "package:flutter/material.dart";
 import '../models/bill.dart';
 
+///////////////////////////////////
+//class draws the ListView of bills
+///////////////////////////////////
+
 class ListOfBills extends StatelessWidget {
   List<Bill> listOfBills = [
     Bill(
@@ -31,28 +35,32 @@ class ListOfBills extends StatelessWidget {
       padding: EdgeInsets.all(10),
       itemCount: listOfBills.length,
       itemBuilder: (BuildContext context, int index) {
-        return Container(
-          color: Colors.grey,
-          height: 100,
-          child: Center(
-            child: Row(
-              children: <Widget>[
-                //Shop name
-                Container(
-                  padding: EdgeInsets.all(10),
-                    color: Colors.blue,
-                    child: Text('${listOfBills[index].shopName}')),
-                //Item name and cost
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Item name: ${listOfBills[index].name}'),
-                    Text('Cost: ${listOfBills[index].cost}'),
-                    Text('Cost: ${listOfBills[index].purchaseDate}'),
-                  ],
-                ),
-              ],
+        return Card(
+          shadowColor: Colors.cyan,
+          color: Colors.cyan[50],
+          child: Container(
+            //color: Colors.grey,
+            height: 80,
+            child: Center(
+              child: Row(
+                children: <Widget>[
+                  //Shop name
+                  Container(
+                      padding: EdgeInsets.all(10),
+                      //color: Colors.blue,
+                      child: Text('${listOfBills[index].shopName}')),
+                  //Item name and cost
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('${listOfBills[index].name}'),
+                      Text('${listOfBills[index].cost}'),
+                      Text('${listOfBills[index].purchaseDate}'),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );

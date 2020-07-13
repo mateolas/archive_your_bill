@@ -13,8 +13,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Archive your bill',
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Archive your bill'),
+        appBar: AppBar(backgroundColor: Colors.cyan[300],
+          title: Text('Archive your bill'),actions: <Widget>[
+            IconButton(icon: Icon(Icons.add),
+            onPressed: () {},)
+          ],
         ),
         body: Center(
           child: Column(
@@ -31,7 +34,7 @@ class MyApp extends StatelessWidget {
                 padding: EdgeInsets.all(15),
                 child: Text('Search'),
               ),
-              //ListView
+              //ListView wrapped in Container
               Container(
                 height: 100,
                 child: ListOfBills(),
@@ -43,6 +46,17 @@ class MyApp extends StatelessWidget {
                 child: Text('Add button'),
               ),
             ],
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButton: Container(
+          padding: EdgeInsets.symmetric(
+            vertical: 25,
+            horizontal: 15,
+          ),
+          child: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {},
           ),
         ),
       ),

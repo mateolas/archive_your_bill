@@ -1,3 +1,5 @@
+//class defines the data structure of single bill
+
 class Bill {
   String id;
   String shopName;
