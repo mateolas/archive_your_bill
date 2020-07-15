@@ -28,16 +28,28 @@ class _NewBillState extends State<NewBill> {
       children: <Widget>[
         //Data input - shop name
         Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 2,
-            horizontal: 25,
-          ),
+          padding: const EdgeInsets.fromLTRB(25, 45, 25, 2),
           child: TextField(
             decoration: InputDecoration(
               hintText: 'Enter name of a shop',
               labelText: 'Shop',
             ),
             controller: shopNameController,
+            onSubmitted: (_) {},
+          ),
+        ),
+        //Data input - item name
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 2,
+            horizontal: 25,
+          ),
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: 'Enter name of an item',
+              labelText: 'Name',
+            ),
+            controller: itemNameController,
             onSubmitted: (_) {},
           ),
         ),
@@ -50,13 +62,13 @@ class _NewBillState extends State<NewBill> {
           child: TextField(
             decoration: InputDecoration(
               hintText: 'Enter cost of an item',
-              labelText: 'Cost',
+              labelText: 'Item',
             ),
             controller: itemCostController,
             onSubmitted: (_) {},
           ),
         ),
-        //Data input - 
+        //Data input - item type
         Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 2,
@@ -64,15 +76,12 @@ class _NewBillState extends State<NewBill> {
           ),
           child: TextField(
             decoration: InputDecoration(
-              hintText: 'Enter name of an item',
-              labelText: 'Item',
+              hintText: 'Enter type of an item',
+              labelText: 'Type',
             ),
-            controller: itemNameController,
+            controller: itemCostController,
             onSubmitted: (_) {},
           ),
-        ),
-        Container(
-          child: Text('Test2'),
         ),
       ],
     );
