@@ -8,11 +8,24 @@ void main() {
   runApp(MyApp());
 }
 
-
+//class which is the main widget
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        accentColor: Colors.white,
+        hintColor: Colors.grey,
+        inputDecorationTheme: InputDecorationTheme(
+          hintStyle: TextStyle(
+            color: Colors.grey,
+          ),
+          labelStyle: TextStyle(
+            color: Colors.blue,
+          ),
+        ),
+      ),
       title: 'Archive your bill',
       home: MyHomePage(),
     );
@@ -25,8 +38,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyHomePage> {
-  
-  //function which add new bill to the list
+  //function which add new bill
   void addNewBill(
     String newId,
     String newShopName,
@@ -38,28 +50,35 @@ class _MyAppState extends State<MyHomePage> {
     final newBill = Bill(
       id: newId,
       shopName: newShopName,
-      name: newName,
-      type: newType,
-      cost: newCost,
-      warrantyLengthMonths: newWarrantyLengthMonths,
+      itemName: newName,
+      itemType: newType,
+      itemCost: newCost,
+      itemWarrantyLengthMonths: newWarrantyLengthMonths,
       purchaseDate: DateTime.now(),
       warrantyUntil: DateTime.now(),
     );
   }
 
+  //function which builds a screen using NewBill widget
   void startAddNewBill(BuildContext ctx) {
     showModalBottomSheet(
-      context: ctx,
-      builder: (_) {
-        return GestureDetector(
-          onTap: () {},
-          child: NewBill(
-            addNewBill,
-          ),
-          behavior: HitTestBehavior.opaque,
+        context: ctx,
+        builder: (BuildContext ctx) {
+          return NewBill(addNewBill);
+        }
+        // showModalBottomSheet(
+        //   context: ctx,
+        //   builder: (_) {
+        //     return GestureDetector(
+        //       onTap: () {},
+        //       child: NewBill(
+        //         addNewBill,
+        //       ),
+        //       behavior: HitTestBehavior.opaque,
+        //     );
+        //   },
+        // );
         );
-      },
-    );
   }
 
   @override
