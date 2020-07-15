@@ -4,8 +4,8 @@ class Bill {
   String id;
   String shopName;
   String itemName;
-  String itemType;
   double itemCost;
+  String itemType;
   int itemWarrantyLengthMonths; 
   DateTime purchaseDate;
   DateTime warrantyUntil;

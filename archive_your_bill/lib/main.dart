@@ -63,6 +63,7 @@ class _MyAppState extends State<MyHomePage> {
   void startAddNewBill(BuildContext ctx) {
     showModalBottomSheet(
         context: ctx,
+        isScrollControlled: true,
         builder: (BuildContext ctx) {
           return NewBill(addNewBill);
         }
