@@ -14,15 +14,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        accentColor: Colors.white,
+        primarySwatch: Colors.yellow,
+        accentColor: Colors.black,
         hintColor: Colors.grey,
         inputDecorationTheme: InputDecorationTheme(
           hintStyle: TextStyle(
             color: Colors.grey,
           ),
           labelStyle: TextStyle(
-            color: Colors.blue,
+            color: Colors.black,
           ),
         ),
       ),
@@ -38,55 +38,56 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyHomePage> {
-  //function which add new bill
-  void addNewBill(
-    String newId,
-    String newShopName,
-    String newName,
-    String newType,
-    double newCost,
-    int newWarrantyLengthMonths,
-  ) {
+  
+  //list of userBills
+  List<Bill> userBills = [
+    Bill(
+      id: 'b1',
+      shopName: 'Media Markt',
+      itemName: 'PC',
+      itemType: 'Electronics',
+      itemCost: 5000,
+      purchaseDate: DateTime.now(),
+      itemWarrantyLengthMonths: 12,
+      warrantyUntil: DateTime.now(),
+    ),
+  ];
+
+  //functions which adds new bill
+  //as paramater gets name, type, cost etc. and based on them creates new Bill object
+  void addNewBill(String newShopName, String newName, double newCost) {
+    //new Bill object
     final newBill = Bill(
-      id: newId,
       shopName: newShopName,
       itemName: newName,
-      itemType: newType,
       itemCost: newCost,
-      itemWarrantyLengthMonths: newWarrantyLengthMonths,
-      purchaseDate: DateTime.now(),
-      warrantyUntil: DateTime.now(),
+    );
+
+    //updating the State
+    //adding newBill object to list of existing bills
+    setState(
+      () {
+        userBills.add(newBill);
+      },
     );
   }
 
   //function which builds a screen using NewBill widget
+  //returns NewBill object with needs have three parameters as input
   void startAddNewBill(BuildContext ctx) {
     showModalBottomSheet(
-        context: ctx,
-        isScrollControlled: true,
-        builder: (BuildContext ctx) {
-          return NewBill(addNewBill);
-        }
-        // showModalBottomSheet(
-        //   context: ctx,
-        //   builder: (_) {
-        //     return GestureDetector(
-        //       onTap: () {},
-        //       child: NewBill(
-        //         addNewBill,
-        //       ),
-        //       behavior: HitTestBehavior.opaque,
-        //     );
-        //   },
-        // );
-        );
+      context: ctx,
+      isScrollControlled: true,
+      builder: (BuildContext ctx) {
+        return NewBill(addNewBill);
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.cyan[300],
         title: Text('Archive your bill'),
         actions: <Widget>[
           IconButton(
@@ -113,13 +114,7 @@ class _MyAppState extends State<MyHomePage> {
             //ListView wrapped in Container
             Container(
               height: 100,
-              child: ListOfBills(),
-            ),
-            //AddButton
-            Container(
-              color: Colors.yellow,
-              padding: EdgeInsets.all(15),
-              child: Text('Add button'),
+              child: ListOfBills(userBills),
             ),
           ],
         ),
