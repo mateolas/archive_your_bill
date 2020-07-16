@@ -29,13 +29,14 @@ class _NewBillState extends State<NewBill> {
     final enteredItemName = itemNameController.text;
     final enteredCost = double.parse(itemCostController.text);
 
-    //function definition / pointer, we're referring to function
+    //pointer, we're referring to function
     //we're "returning" parameters in the brackets
     widget.addNewBill(enteredShopName,enteredItemName,enteredCost);
 
     //closing the popped up screen
     Navigator.of(context).pop();
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -38,7 +38,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyHomePage> {
-  
   //list of userBills
   List<Bill> userBills = [
     Bill(
@@ -70,6 +69,13 @@ class _MyAppState extends State<MyHomePage> {
         userBills.add(newBill);
       },
     );
+  }
+
+
+  void deleteBill(String id) {
+    setState(() {
+      userBills.removeWhere((element) => element.id == id);
+    });
   }
 
   //function which builds a screen using NewBill widget
@@ -113,8 +119,8 @@ class _MyAppState extends State<MyHomePage> {
             ),
             //ListView wrapped in Container
             Container(
-              height: 100,
-              child: ListOfBills(userBills),
+              height: 400,
+              child: ListOfBills(userBills,deleteBill),
             ),
           ],
         ),

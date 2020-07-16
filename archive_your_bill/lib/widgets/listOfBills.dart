@@ -7,8 +7,11 @@ import '../models/bill.dart';
 
 class ListOfBills extends StatelessWidget {
   final List<Bill> bills;
+  Function deleteBill;
   
-  ListOfBills(this.bills);
+  ListOfBills(this.bills,this.deleteBill);
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +20,12 @@ class ListOfBills extends StatelessWidget {
       itemCount: bills.length,
       itemBuilder: (BuildContext context, int index) {
         return Card(
+          elevation: 3,
+          margin: EdgeInsets.all(6),
           shadowColor: Colors.yellow,
           color: Colors.white,
           child: Container(
-            //color: Colors.grey,
-            height: 80,
+            height: 100,
             child: Center(
               child: Row(
                 children: <Widget>[
@@ -39,6 +43,32 @@ class ListOfBills extends StatelessWidget {
                       Text('${bills[index].itemCost}'),
                       Text('${bills[index].purchaseDate}'),
                     ],
+                  ),
+                  Expanded(
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Container(
+                            child: IconButton(
+                              icon: Icon(Icons.share),
+                              color: Colors.grey,
+                              onPressed: () {},
+                            ),
+                          ),
+                          Container(
+                            
+                            child: IconButton(
+                              icon: Icon(Icons.delete),
+                              disabledColor: Colors.yellow,
+                              color: Colors.grey,
+                              onPressed: () => deleteBill(bills[index].id),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
