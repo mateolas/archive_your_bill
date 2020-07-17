@@ -1,4 +1,6 @@
 import "package:flutter/material.dart";
+import 'package:intl/intl.dart';
+
 import '../models/bill.dart';
 
 /////////////////////////////////////
@@ -41,7 +43,8 @@ class ListOfBills extends StatelessWidget {
                     children: <Widget>[
                       Text('${bills[index].itemName}'),
                       Text('${bills[index].itemCost}'),
-                      Text('${bills[index].purchaseDate}'),
+                      Text(
+                        DateFormat.yMMMd().format(bills[index].purchaseDate),),
                     ],
                   ),
                   Expanded(
