@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.yellow,
         accentColor: Colors.black,
         hintColor: Colors.grey,
+        
         inputDecorationTheme: InputDecorationTheme(
           hintStyle: TextStyle(
             color: Colors.grey,

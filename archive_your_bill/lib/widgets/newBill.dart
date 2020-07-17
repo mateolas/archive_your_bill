@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 
+import 'package:archive_your_bill/widgets/itemCategoryMenu.dart';
+
 //Class which draws the layout of the New Bill screen
 //In constructor has a function which is called to pass submitted data
 
@@ -16,7 +18,7 @@ class _NewBillState extends State<NewBill> {
   //controllers for input text fields
   final shopNameController = TextEditingController();
   final itemNameController = TextEditingController();
-  final itemTypeController = TextEditingController();
+  final itemCategoryController = TextEditingController();
   final itemCostController = TextEditingController();
   final itemWarrantyLengthMonths = TextEditingController();
   final purchaseDateController = TextEditingController();
@@ -41,7 +43,7 @@ class _NewBillState extends State<NewBill> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         //Data input - shop name
         Padding(
@@ -85,13 +87,13 @@ class _NewBillState extends State<NewBill> {
             onSubmitted: (_) => submitData(),
           ),
         ),
-        //Data input - item type
+        //Data input - item category meny
         Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 0,
             horizontal: 25,
           ),
-          child: Text('Item type'),
+          child: ItemCategoryMenu(),
         ),
         //Data input - item warranty length
         Padding(
