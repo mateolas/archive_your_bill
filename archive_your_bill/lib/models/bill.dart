@@ -5,12 +5,12 @@ class Bill {
   String shopName;
   String itemName;
   double itemCost;
-  String itemType;
+  String itemCategory;
   int itemWarrantyLengthMonths; 
   DateTime purchaseDate;
   DateTime warrantyUntil;
 
-  Bill({this.id,this.shopName,this.itemName,this.itemType,this.itemCost, this.itemWarrantyLengthMonths, this.purchaseDate, this.warrantyUntil});
+  Bill({this.id,this.shopName,this.itemName,this.itemCategory,this.itemCost, this.itemWarrantyLengthMonths, this.purchaseDate, this.warrantyUntil});
 
   
 

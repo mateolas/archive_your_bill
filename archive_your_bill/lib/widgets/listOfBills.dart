@@ -10,10 +10,8 @@ import '../models/bill.dart';
 class ListOfBills extends StatelessWidget {
   final List<Bill> bills;
   Function deleteBill;
-  
-  ListOfBills(this.bills,this.deleteBill);
 
-  
+  ListOfBills(this.bills, this.deleteBill);
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +41,10 @@ class ListOfBills extends StatelessWidget {
                     children: <Widget>[
                       Text('${bills[index].itemName}'),
                       Text('${bills[index].itemCost}'),
-                      Text(
-                        DateFormat.yMMMd().format(bills[index].purchaseDate),),
+                      Text('${bills[index].itemCategory}'),
+                      //Text(
+                      //  DateFormat.yMMMd().format(bills[index].purchaseDate),
+                      //),
                     ],
                   ),
                   Expanded(
@@ -61,7 +61,6 @@ class ListOfBills extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            
                             child: IconButton(
                               icon: Icon(Icons.delete),
                               disabledColor: Colors.yellow,

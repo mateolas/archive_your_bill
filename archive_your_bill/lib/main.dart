@@ -46,7 +46,7 @@ class _MyAppState extends State<MyHomePage> {
       id: 'b1',
       shopName: 'Media Markt',
       itemName: 'PC',
-      itemType: 'Electronics',
+      itemCategory: 'Electronics',
       itemCost: 5000,
       purchaseDate: DateTime.now(),
       itemWarrantyLengthMonths: 12,
@@ -56,12 +56,13 @@ class _MyAppState extends State<MyHomePage> {
 
   //functions which adds new bill
   //as paramater gets name, type, cost etc. and based on them creates new Bill object
-  void addNewBill(String newShopName, String newName, double newCost) {
+  void addNewBill(String newShopName, String newName, double newCost, String newCategory) {
     //new Bill object
     final newBill = Bill(
       shopName: newShopName,
       itemName: newName,
       itemCost: newCost,
+      itemCategory: newCategory,
     );
 
     //updating the State

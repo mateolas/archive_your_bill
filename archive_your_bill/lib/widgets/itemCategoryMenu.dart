@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ItemCategoryMenu extends StatefulWidget {
+  final Function chosenCategory;
+  
+  ItemCategoryMenu({this.chosenCategory});
+  
   @override
   _ItemCategoryMenuState createState() => _ItemCategoryMenuState();
 }
@@ -23,6 +27,7 @@ class _ItemCategoryMenuState extends State<ItemCategoryMenu> {
       onChanged: (String newValue) {
         setState(() {
           dropdownValue = newValue;
+          widget.chosenCategory(dropdownValue);
         });
       },
       items: <String>['Electronics', 'Clothes', 'Services', 'Other']

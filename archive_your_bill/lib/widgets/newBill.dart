@@ -18,27 +18,27 @@ class _NewBillState extends State<NewBill> {
   //controllers for input text fields
   final shopNameController = TextEditingController();
   final itemNameController = TextEditingController();
-  final itemCategoryController = TextEditingController();
   final itemCostController = TextEditingController();
   final itemWarrantyLengthMonths = TextEditingController();
   final purchaseDateController = TextEditingController();
   final warrantyUntilController = TextEditingController();
-
+  String itemCategory;
 
   //function which is triggered by button and input fields
   void submitData() {
     final enteredShopName = shopNameController.text;
     final enteredItemName = itemNameController.text;
     final enteredCost = double.parse(itemCostController.text);
+    final enteredCategory = itemCategory;
 
     //pointer, we're referring to function
     //we're "returning" parameters in the brackets
-    widget.addNewBill(enteredShopName,enteredItemName,enteredCost);
+    widget.addNewBill(
+        enteredShopName, enteredItemName, enteredCost, enteredCategory);
 
     //closing the popped up screen
     Navigator.of(context).pop();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +93,13 @@ class _NewBillState extends State<NewBill> {
             vertical: 0,
             horizontal: 25,
           ),
-          child: ItemCategoryMenu(),
+          child: ItemCategoryMenu(
+            chosenCategory: (value) {
+              setState(() {
+                itemCategory = value;
+              });
+            },
+          ),
         ),
         //Data input - item warranty length
         Padding(
