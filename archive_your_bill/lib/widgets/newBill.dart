@@ -27,7 +27,7 @@ class _NewBillState extends State<NewBill> {
   
   DateTime _selectedDate;
   DateTime _warrantyValidUntil;
-  //int warrantyLength = int.parse(itemWarrantyLengthMonths.text);
+  
 
   //function which is triggered by button and input fields
   void submitData() {
@@ -57,14 +57,22 @@ class _NewBillState extends State<NewBill> {
         return;
       }
       
-      //_warrantyValidUntil = DateTime(pickedDate.year, pickedDate.month+warrantyLength,pickedDate.day);
-
+      validUntil();
       setState(() {
         _selectedDate = pickedDate;
         //_warrantyValidUntil = DateTime(pickedDate.year, pickedDate.month+warrantyLength,pickedDate.day);
       });
     });
   }
+
+  void validUntil(){
+      int warrantyLength = int.parse(itemWarrantyLengthMonths.text);
+      setState(() {
+        _warrantyValidUntil = DateTime(_selectedDate.year, _selectedDate.month+warrantyLength,_selectedDate.day);
+      });
+      
+      '${DateFormat.yMd().format(_warrantyValidUntil)}';
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -188,8 +196,8 @@ class _NewBillState extends State<NewBill> {
               Expanded(
                 child: Text(
                   _warrantyValidUntil == null
-                      ? ''
-                      :  '${DateFormat.yMd().format(_warrantyValidUntil)}',
+                      ? 'Nothing'
+                      :  validUntil,
                 ),
               ),
             ],
