@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:intl/intl.dart';
 
 import 'package:archive_your_bill/widgets/itemCategoryMenu.dart';
 
@@ -23,6 +24,10 @@ class _NewBillState extends State<NewBill> {
   final purchaseDateController = TextEditingController();
   final warrantyUntilController = TextEditingController();
   String itemCategory;
+  
+  DateTime _selectedDate;
+  DateTime _warrantyValidUntil;
+  //int warrantyLength = int.parse(itemWarrantyLengthMonths.text);
 
   //function which is triggered by button and input fields
   void submitData() {
@@ -30,7 +35,7 @@ class _NewBillState extends State<NewBill> {
     final enteredItemName = itemNameController.text;
     final enteredCost = double.parse(itemCostController.text);
     final enteredCategory = itemCategory;
-
+    
     //pointer, we're referring to function
     //we're "returning" parameters in the brackets
     widget.addNewBill(
@@ -40,12 +45,33 @@ class _NewBillState extends State<NewBill> {
     Navigator.of(context).pop();
   }
 
+  void _presentDatePicker() { 
+    //Gives future, because we're waiting for user to pick up the date
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      
+      //_warrantyValidUntil = DateTime(pickedDate.year, pickedDate.month+warrantyLength,pickedDate.day);
+
+      setState(() {
+        _selectedDate = pickedDate;
+        //_warrantyValidUntil = DateTime(pickedDate.year, pickedDate.month+warrantyLength,pickedDate.day);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        //Data input - shop name
+        //Data input - SHOP
         Padding(
           padding: const EdgeInsets.fromLTRB(25, 45, 25, 0),
           child: TextField(
@@ -57,7 +83,7 @@ class _NewBillState extends State<NewBill> {
             onSubmitted: (_) => submitData(),
           ),
         ),
-        //Data input - item name
+        //Data input - ITEM NAME
         Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 0,
@@ -72,7 +98,7 @@ class _NewBillState extends State<NewBill> {
             onSubmitted: (_) => submitData(),
           ),
         ),
-        //Data input - item cost
+        //Data input - ITEM COST
         Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 0,
@@ -87,7 +113,21 @@ class _NewBillState extends State<NewBill> {
             onSubmitted: (_) => submitData(),
           ),
         ),
-        //Data input - item category meny
+        //Data input - ITEM WARRANTY LENGTH
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 0,
+            horizontal: 25,
+          ),
+          child: TextField(
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+                hintText: 'Enter warranty length in months',
+                labelText: 'Warranty length'),
+          ),
+        ),
+
+        //Data input - ITEM CATEGORY
         Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 0,
@@ -101,22 +141,61 @@ class _NewBillState extends State<NewBill> {
             },
           ),
         ),
-        //Data input - item warranty length
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 0,
-            horizontal: 25,
+        //DateTime - CHOOSE START DAY
+        Container(
+          height: 70,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 0,
+                  horizontal: 10,
+                ),
+                child: FlatButton(
+                  textColor: Theme.of(context).accentColor,
+                  child: Text(
+                    'Choose warranty start date:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: _presentDatePicker,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  _selectedDate == null
+                      ? ''
+                      : '${DateFormat.yMd().format(_selectedDate)}',
+                ),
+              ),
+            ],
           ),
-          child: Text('Purchase date'),
         ),
-        //Data input - purchase date
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 0,
-            horizontal: 25,
+        //DateTime - WARRANTY VALID UNTIL
+        Container(
+          height: 70,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 0,
+                  horizontal: 10,
+                ),
+                child: Text(
+                  'Warranty valid until:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  _warrantyValidUntil == null
+                      ? ''
+                      :  '${DateFormat.yMd().format(_warrantyValidUntil)}',
+                ),
+              ),
+            ],
           ),
-          child: Text('Purchase date'),
         ),
+
         Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 0,
