@@ -36,6 +36,7 @@ class _NewBillState extends State<NewBill> {
     final enteredCost = double.parse(itemCostController.text);
     final enteredCategory = itemCategory;
     final calculatedWarranty = _warrantyValidUntil;
+    //final id = DateTime.now();
 
     //pointer, we're referring to function
     //we're "returning" parameters in the brackets
@@ -89,150 +90,154 @@ class _NewBillState extends State<NewBill> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ListView(
       children: <Widget>[
-        //Data input - SHOP
-        Padding(
-          padding: const EdgeInsets.fromLTRB(25, 35, 25, 0),
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Enter name of a shop',
-              labelText: 'Shop',
-            ),
-            controller: shopNameController,
-            onSubmitted: (_) => submitData(),
-          ),
-        ),
-        //Data input - ITEM NAME
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 0,
-            horizontal: 25,
-          ),
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Enter name of an item',
-              labelText: 'Name',
-            ),
-            controller: itemNameController,
-            onSubmitted: (_) => submitData(),
-          ),
-        ),
-        //Data input - ITEM COST
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 0,
-            horizontal: 25,
-          ),
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Enter cost of an item',
-              labelText: 'Cost',
-            ),
-            controller: itemCostController,
-            onSubmitted: (_) => submitData(),
-          ),
-        ),
-        //Data input - ITEM WARRANTY LENGTH
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 0,
-            horizontal: 25,
-          ),
-          child: TextField(
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-                hintText: 'Enter warranty length in months',
-                labelText: 'Warranty length'),
-            controller: itemWarrantyLengthController,
-            onChanged: (_) => warrantyValidUntil(),
-            onSubmitted: (_) => warrantyValidUntil(),
-          ),
-        ),
-        //Data input - ITEM CATEGORY
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 0,
-            horizontal: 25,
-          ),
-          child: ItemCategoryMenu(
-            chosenCategory: (value) {
-              setState(() {
-                itemCategory = value;
-              });
-            },
-          ),
-        ),
-        //DateTime - CHOOSE START DAY
-        Container(
-          height: 45,
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 0,
-                  horizontal: 10,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            //Data input - SHOP
+            Padding(
+              padding: const EdgeInsets.fromLTRB(25, 35, 25, 0),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Enter name of a shop',
+                  labelText: 'Shop',
                 ),
-                child: FlatButton(
-                  textColor: Theme.of(context).accentColor,
-                  child: Text(
-                    'Choose warranty start date:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.left,
+                controller: shopNameController,
+                onSubmitted: (_) => submitData(),
+              ),
+            ),
+            //Data input - ITEM NAME
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 0,
+                horizontal: 25,
+              ),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Enter name of an item',
+                  labelText: 'Name',
+                ),
+                controller: itemNameController,
+                onSubmitted: (_) => submitData(),
+              ),
+            ),
+            //Data input - ITEM COST
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 0,
+                horizontal: 25,
+              ),
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Enter cost of an item',
+                  labelText: 'Cost',
+                ),
+                controller: itemCostController,
+                onSubmitted: (_) => submitData(),
+              ),
+            ),
+            //Data input - ITEM WARRANTY LENGTH
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 0,
+                horizontal: 25,
+              ),
+              child: TextField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                    hintText: 'Enter warranty length in months',
+                    labelText: 'Warranty length'),
+                controller: itemWarrantyLengthController,
+                onChanged: (_) => warrantyValidUntil(),
+                onSubmitted: (_) => warrantyValidUntil(),
+              ),
+            ),
+            //Data input - ITEM CATEGORY
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 0,
+                horizontal: 25,
+              ),
+              child: ItemCategoryMenu(
+                chosenCategory: (value) {
+                  setState(() {
+                    itemCategory = value;
+                  });
+                },
+              ),
+            ),
+            //DateTime - CHOOSE START DAY
+            Container(
+              height: 45,
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 0,
+                      horizontal: 10,
+                    ),
+                    child: FlatButton(
+                      textColor: Theme.of(context).accentColor,
+                      child: Text(
+                        'Choose warranty start date:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.left,
+                      ),
+                      onPressed: _presentDatePicker,
+                    ),
                   ),
-                  onPressed: _presentDatePicker,
-                ),
+                  Expanded(
+                    child: Text(
+                      _selectedDate == null
+                          ? ''
+                          : '${DateFormat.yMMMd().format(_selectedDate)}',
+                    ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: Text(
-                  _selectedDate == null
-                      ? ''
-                      : '${DateFormat.yMMMd().format(_selectedDate)}',
-                ),
+            ),
+            //DateTime - WARRANTY VALID UNTIL
+            Container(
+              height: 25,
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 0,
+                      horizontal: 25,
+                    ),
+                    child: Text(
+                      'Warranty valid until:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      _warrantyValidUntil == null
+                          ? ''
+                          : '${DateFormat.yMMMd().format(_warrantyValidUntil)}',
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        //DateTime - WARRANTY VALID UNTIL
-        Container(
-          height: 25,
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 0,
-                  horizontal: 25,
-                ),
-                child: Text(
-                  'Warranty valid until:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  _warrantyValidUntil == null
-                      ? ''
-                      : '${DateFormat.yMMMd().format(_warrantyValidUntil)}',
-                ),
-              ),
-            ],
-          ),
-        ),
-        //TO - DO Make add Graphic
-        Container(
-          child: PhotoPreview(),
-        ),
+            ),
+            //TO - DO Make add Graphic
+            Container(
+              child: PhotoPreview(),
+            ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 0,
-            horizontal: 25,
-          ),
-          child: RaisedButton(
-            child: Text('Add bill'),
-            onPressed: submitData,
-          ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 0,
+                horizontal: 25,
+              ),
+              child: RaisedButton(
+                child: Text('Add bill'),
+                onPressed: submitData,
+              ),
+            ),
+          ],
         ),
       ],
     );

@@ -42,16 +42,16 @@ class MyHomePage extends StatefulWidget {
 class _MyAppState extends State<MyHomePage> {
   //list of userBills
   List<Bill> userBills = [
-    Bill(
-      id: 'b1',
-      shopName: 'Media Markt',
-      itemName: 'PC',
-      itemCategory: 'Electronics',
-      itemCost: 5000,
-      purchaseDate: DateTime.now(),
-      itemWarrantyLengthMonths: 12,
-      warrantyUntil: DateTime.now(),
-    ),
+    // Bill(
+    //   id: 'b1',
+    //   shopName: 'Media Markt',
+    //   itemName: 'PC',
+    //   itemCategory: 'Electronics',
+    //   itemCost: 5000,
+    //   purchaseDate: DateTime.now(),
+    //   itemWarrantyLengthMonths: 12,
+    //   warrantyUntil: DateTime.now(),
+    // ),
   ];
 
   //functions which adds new bill
@@ -64,6 +64,7 @@ class _MyAppState extends State<MyHomePage> {
       itemCost: newCost,
       itemCategory: newCategory,
       warrantyUntil: newWarrantyUntil,
+      id: DateTime.now().toString()
     );
 
     //updating the State

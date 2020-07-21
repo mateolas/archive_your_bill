@@ -13,6 +13,14 @@ class _PhotoPreviewState extends State<PhotoPreview> {
   File imageFile;
   final picker = ImagePicker();
 
+  void _openCamera(BuildContext context) async {
+    var picture = await picker.getImage(source: ImageSource.camera);
+    this.setState(() {
+      imageFile = File(picture.path);
+    });
+    Navigator.of(context).pop();
+  }
+
 
   void _openGallery(BuildContext context) async {
     var picture = await picker.getImage(source: ImageSource.gallery);
@@ -49,7 +57,7 @@ class _PhotoPreviewState extends State<PhotoPreview> {
                     GestureDetector(
                       child: Text("Camera"),
                       onTap: () {
-                        //_openCamera(context);
+                        _openCamera(context);
                       },
                     )
                   ],
