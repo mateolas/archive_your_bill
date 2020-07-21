@@ -24,8 +24,7 @@ class _NewBillState extends State<NewBill> {
   final purchaseDateController = TextEditingController();
   final warrantyUntilController = TextEditingController();
   String itemCategory;
-  //initializing with now to have possibility to add warranty length
-  DateTime _selectedDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now(); //initializing with 'now' to have possibility to add warranty length from the beginning
   DateTime _warrantyValidUntil;
 
   //function which is triggered by button and input fields
@@ -34,16 +33,18 @@ class _NewBillState extends State<NewBill> {
     final enteredItemName = itemNameController.text;
     final enteredCost = double.parse(itemCostController.text);
     final enteredCategory = itemCategory;
+    final calculatedWarranty = _warrantyValidUntil;
 
     //pointer, we're referring to function
     //we're "returning" parameters in the brackets
     widget.addNewBill(
-        enteredShopName, enteredItemName, enteredCost, enteredCategory);
+        enteredShopName, enteredItemName, enteredCost, enteredCategory, calculatedWarranty);
 
     //closing the popped up screen
     Navigator.of(context).pop();
   }
 
+  //function which shows the date picker menu and sets pickedDate to selectedDate
   void _presentDatePicker() {
     //Gives future, because we're waiting for user to pick up the date
     showDatePicker(
@@ -58,10 +59,6 @@ class _NewBillState extends State<NewBill> {
 
       setState(() {
         _selectedDate = pickedDate;
-        //_warrantyValidUntil = DateTime(
-        //    pickedDate.year,
-        //    pickedDate.month + int.parse(itemWarrantyLengthController.text),
-        //    pickedDate.day);
       });
     });
   }
@@ -188,7 +185,7 @@ class _NewBillState extends State<NewBill> {
                 child: Text(
                   _selectedDate == null
                       ? ''
-                      : '${DateFormat.yMd().format(_selectedDate)}',
+                      : '${DateFormat.yMMMd().format(_selectedDate)}',
                 ),
               ),
             ],
@@ -213,7 +210,7 @@ class _NewBillState extends State<NewBill> {
                 child: Text(
                   _warrantyValidUntil == null
                       ? ''
-                      : '${DateFormat.yMd().format(_warrantyValidUntil)}',
+                      : '${DateFormat.yMMMd().format(_warrantyValidUntil)}',
                 ),
               ),
             ],

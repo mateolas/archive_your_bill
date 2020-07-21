@@ -56,13 +56,14 @@ class _MyAppState extends State<MyHomePage> {
 
   //functions which adds new bill
   //as paramater gets name, type, cost etc. and based on them creates new Bill object
-  void addNewBill(String newShopName, String newName, double newCost, String newCategory) {
+  void addNewBill(String newShopName, String newName, double newCost, String newCategory, DateTime newWarrantyUntil) {
     //new Bill object
     final newBill = Bill(
       shopName: newShopName,
       itemName: newName,
       itemCost: newCost,
       itemCategory: newCategory,
+      warrantyUntil: newWarrantyUntil,
     );
 
     //updating the State

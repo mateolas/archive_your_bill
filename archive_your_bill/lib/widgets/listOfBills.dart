@@ -42,6 +42,7 @@ class ListOfBills extends StatelessWidget {
                       Text('${bills[index].itemName}'),
                       Text('${bills[index].itemCost}'),
                       Text('${bills[index].itemCategory}'),
+                      Text('${'Warranty until: '} ${DateFormat.yMMMd().format(bills[index].warrantyUntil)}'),
                       //Text(
                       //  DateFormat.yMMMd().format(bills[index].purchaseDate),
                       //),
