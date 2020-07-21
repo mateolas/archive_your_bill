@@ -20,14 +20,13 @@ class _NewBillState extends State<NewBill> {
   final shopNameController = TextEditingController();
   final itemNameController = TextEditingController();
   final itemCostController = TextEditingController();
-  final itemWarrantyLengthMonths = TextEditingController();
+  final itemWarrantyLengthController = TextEditingController();
   final purchaseDateController = TextEditingController();
   final warrantyUntilController = TextEditingController();
   String itemCategory;
-  
-  DateTime _selectedDate;
+  //initializing with now to have possibility to add warranty length
+  DateTime _selectedDate = DateTime.now();
   DateTime _warrantyValidUntil;
-  
 
   //function which is triggered by button and input fields
   void submitData() {
@@ -35,7 +34,7 @@ class _NewBillState extends State<NewBill> {
     final enteredItemName = itemNameController.text;
     final enteredCost = double.parse(itemCostController.text);
     final enteredCategory = itemCategory;
-    
+
     //pointer, we're referring to function
     //we're "returning" parameters in the brackets
     widget.addNewBill(
@@ -45,7 +44,7 @@ class _NewBillState extends State<NewBill> {
     Navigator.of(context).pop();
   }
 
-  void _presentDatePicker() { 
+  void _presentDatePicker() {
     //Gives future, because we're waiting for user to pick up the date
     showDatePicker(
       context: context,
@@ -56,23 +55,38 @@ class _NewBillState extends State<NewBill> {
       if (pickedDate == null) {
         return;
       }
-      
-      validUntil();
+
       setState(() {
         _selectedDate = pickedDate;
-        //_warrantyValidUntil = DateTime(pickedDate.year, pickedDate.month+warrantyLength,pickedDate.day);
+        //_warrantyValidUntil = DateTime(
+        //    pickedDate.year,
+        //    pickedDate.month + int.parse(itemWarrantyLengthController.text),
+        //    pickedDate.day);
       });
     });
   }
 
-  void validUntil(){
-      int warrantyLength = int.parse(itemWarrantyLengthMonths.text);
+  void warrantyValidUntil() {
+    if (itemWarrantyLengthController.text == '') {
       setState(() {
-        _warrantyValidUntil = DateTime(_selectedDate.year, _selectedDate.month+warrantyLength,_selectedDate.day);
+        _warrantyValidUntil = null;
       });
-      
-      '${DateFormat.yMd().format(_warrantyValidUntil)}';
+    } else {
+      setState(() {
+        _warrantyValidUntil = DateTime(
+            _selectedDate.year,
+            _selectedDate.month + int.parse(itemWarrantyLengthController.text),
+            _selectedDate.day);
+      });
     }
+
+    setState(() {
+      _warrantyValidUntil = DateTime(
+          _selectedDate.year,
+          _selectedDate.month + int.parse(itemWarrantyLengthController.text),
+          _selectedDate.day);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,9 +146,11 @@ class _NewBillState extends State<NewBill> {
             decoration: InputDecoration(
                 hintText: 'Enter warranty length in months',
                 labelText: 'Warranty length'),
+            controller: itemWarrantyLengthController,
+            onChanged: (_) => warrantyValidUntil(),
+            onSubmitted: (_) => warrantyValidUntil(),
           ),
         ),
-
         //Data input - ITEM CATEGORY
         Padding(
           padding: const EdgeInsets.symmetric(
@@ -196,8 +212,8 @@ class _NewBillState extends State<NewBill> {
               Expanded(
                 child: Text(
                   _warrantyValidUntil == null
-                      ? 'Nothing'
-                      :  validUntil,
+                      ? ''
+                      : '${DateFormat.yMd().format(_warrantyValidUntil)}',
                 ),
               ),
             ],
