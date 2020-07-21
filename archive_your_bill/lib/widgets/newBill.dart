@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import 'package:intl/intl.dart';
 
 import 'package:archive_your_bill/widgets/itemCategoryMenu.dart';
+import 'package:archive_your_bill/widgets/photoPreview.dart';
 
 //Class which draws the layout of the New Bill screen
 //In constructor has a function which is called to pass submitted data
@@ -24,7 +25,8 @@ class _NewBillState extends State<NewBill> {
   final purchaseDateController = TextEditingController();
   final warrantyUntilController = TextEditingController();
   String itemCategory;
-  DateTime _selectedDate = DateTime.now(); //initializing with 'now' to have possibility to add warranty length from the beginning
+  DateTime _selectedDate = DateTime
+      .now(); //initializing with 'now' to have possibility to add warranty length from the beginning
   DateTime _warrantyValidUntil;
 
   //function which is triggered by button and input fields
@@ -37,8 +39,8 @@ class _NewBillState extends State<NewBill> {
 
     //pointer, we're referring to function
     //we're "returning" parameters in the brackets
-    widget.addNewBill(
-        enteredShopName, enteredItemName, enteredCost, enteredCategory, calculatedWarranty);
+    widget.addNewBill(enteredShopName, enteredItemName, enteredCost,
+        enteredCategory, calculatedWarranty);
 
     //closing the popped up screen
     Navigator.of(context).pop();
@@ -92,7 +94,7 @@ class _NewBillState extends State<NewBill> {
       children: <Widget>[
         //Data input - SHOP
         Padding(
-          padding: const EdgeInsets.fromLTRB(25, 45, 25, 0),
+          padding: const EdgeInsets.fromLTRB(25, 35, 25, 0),
           child: TextField(
             decoration: InputDecoration(
               hintText: 'Enter name of a shop',
@@ -164,7 +166,7 @@ class _NewBillState extends State<NewBill> {
         ),
         //DateTime - CHOOSE START DAY
         Container(
-          height: 70,
+          height: 45,
           child: Row(
             children: <Widget>[
               Padding(
@@ -177,6 +179,7 @@ class _NewBillState extends State<NewBill> {
                   child: Text(
                     'Choose warranty start date:',
                     style: TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.left,
                   ),
                   onPressed: _presentDatePicker,
                 ),
@@ -193,13 +196,13 @@ class _NewBillState extends State<NewBill> {
         ),
         //DateTime - WARRANTY VALID UNTIL
         Container(
-          height: 70,
+          height: 25,
           child: Row(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 0,
-                  horizontal: 10,
+                  horizontal: 25,
                 ),
                 child: Text(
                   'Warranty valid until:',
@@ -215,6 +218,10 @@ class _NewBillState extends State<NewBill> {
               ),
             ],
           ),
+        ),
+        //TO - DO Make add Graphic
+        Container(
+          child: PhotoPreview(),
         ),
 
         Padding(

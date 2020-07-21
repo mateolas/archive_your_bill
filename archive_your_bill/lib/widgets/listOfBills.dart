@@ -13,6 +13,8 @@ class ListOfBills extends StatelessWidget {
 
   ListOfBills(this.bills, this.deleteBill);
 
+  final formatCurrency = new NumberFormat.compactSimpleCurrency();
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -29,20 +31,38 @@ class ListOfBills extends StatelessWidget {
             child: Center(
               child: Row(
                 children: <Widget>[
-                  //Shop name
                   Container(
-                      padding: EdgeInsets.all(10),
-                      //color: Colors.blue,
-                      child: Text('${bills[index].shopName}')),
-                  //Item name and cost
+                      padding: EdgeInsets.all(6),
+                      child: Text('${bills[index].itemCategory}')),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('${bills[index].itemName}'),
-                      Text('${bills[index].itemCost}'),
-                      Text('${bills[index].itemCategory}'),
-                      Text('${'Warranty until: '} ${DateFormat.yMMMd().format(bills[index].warrantyUntil)}'),
+                      Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Text(
+                          '${bills[index].shopName}',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Text('${bills[index].itemName}'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Text('${formatCurrency.format(bills[index].itemCost)}'),
+                          ),
+                        ],
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Text(
+                            '${'Warranty until: '} ${DateFormat.yMMMd().format(bills[index].warrantyUntil)}'),
+                      ),
                       //Text(
                       //  DateFormat.yMMMd().format(bills[index].purchaseDate),
                       //),
