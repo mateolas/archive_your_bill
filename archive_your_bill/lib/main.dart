@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import './models/bill.dart';
 import './widgets/newBill.dart';
+import './screens/loginScreen.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,7 +19,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.yellow,
         accentColor: Colors.black,
         hintColor: Colors.grey,
-        
         inputDecorationTheme: InputDecorationTheme(
           hintStyle: TextStyle(
             color: Colors.grey,
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       title: 'Archive your bill',
-      home: MyHomePage(),
+      home: LoginScreen(),
     );
   }
 }
@@ -56,16 +56,16 @@ class _MyAppState extends State<MyHomePage> {
 
   //functions which adds new bill
   //as paramater gets name, type, cost etc. and based on them creates new Bill object
-  void addNewBill(String newShopName, String newName, double newCost, String newCategory, DateTime newWarrantyUntil) {
+  void addNewBill(String newShopName, String newName, double newCost,
+      String newCategory, DateTime newWarrantyUntil) {
     //new Bill object
     final newBill = Bill(
-      shopName: newShopName,
-      itemName: newName,
-      itemCost: newCost,
-      itemCategory: newCategory,
-      warrantyUntil: newWarrantyUntil,
-      id: DateTime.now().toString()
-    );
+        shopName: newShopName,
+        itemName: newName,
+        itemCost: newCost,
+        itemCategory: newCategory,
+        warrantyUntil: newWarrantyUntil,
+        id: DateTime.now().toString());
 
     //updating the State
     //adding newBill object to list of existing bills
@@ -75,7 +75,6 @@ class _MyAppState extends State<MyHomePage> {
       },
     );
   }
-
 
   void deleteBill(String id) {
     setState(() {
@@ -125,7 +124,7 @@ class _MyAppState extends State<MyHomePage> {
             //ListView wrapped in Container
             Container(
               height: 400,
-              child: ListOfBills(userBills,deleteBill),
+              child: ListOfBills(userBills, deleteBill),
             ),
           ],
         ),
