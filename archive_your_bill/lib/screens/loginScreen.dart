@@ -7,8 +7,9 @@ import 'package:archive_your_bill/widgets/auth.dart';
 
 class LoginScreen extends StatefulWidget {
 final BaseAuth auth;
+final VoidCallback onSignedIn;
 
-LoginScreen({this.auth});
+LoginScreen({this.auth, this.onSignedIn});
   
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -47,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
           String userId = await widget.auth.createUserWithEmailAndPassword(_email, _password);
           print('Registered user: ${userId}');
         }
+        widget.onSignedIn();
       } catch (e) {
         print('Error: $e');
       }
