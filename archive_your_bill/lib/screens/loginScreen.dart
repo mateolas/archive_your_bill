@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:archive_your_bill/main.dart';
-import 'package:flutter/services.dart';
+
+import 'package:archive_your_bill/widgets/auth.dart';
+
+
 
 class LoginScreen extends StatefulWidget {
+final BaseAuth auth;
+
+LoginScreen({this.auth});
+  
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -35,17 +40,12 @@ class _LoginScreenState extends State<LoginScreen> {
     if (validateAndSave()) {
       try {
         if (_formType == FormType.login) { //in case we're login in
-          FirebaseUser user = (await FirebaseAuth.instance
-                  .signInWithEmailAndPassword(
-                      email: _email, password: _password))
-              .user;
-          print('Signed in: ${user.uid}');
+          //moved signIn to the auth class
+          String userId = await widget.auth.signInWithEmailAndPassword(_email, _password);
+          print('Signed in: $userId');
         } else { //in case we're registering user
-          FirebaseUser user = (await FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(
-                      email: _email, password: _password))
-              .user;
-          print('Registered user: ${user.uid}');
+          String userId = await widget.auth.createUserWithEmailAndPassword(_email, _password);
+          print('Registered user: ${userId}');
         }
       } catch (e) {
         print('Error: $e');

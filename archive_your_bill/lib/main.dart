@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import './models/bill.dart';
 import './widgets/newBill.dart';
 import './screens/loginScreen.dart';
+import 'package:archive_your_bill/widgets/auth.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,7 +30,9 @@ class MyApp extends StatelessWidget {
         ),
       ),
       title: 'Archive your bill',
-      home: LoginScreen(),
+      home: LoginScreen(
+        auth: Auth(),
+      ),
     );
   }
 }
