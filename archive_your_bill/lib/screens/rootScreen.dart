@@ -8,6 +8,7 @@ class RootScreen extends StatefulWidget {
   final BaseAuth auth;
 
   RootScreen({this.auth});
+  
   @override
   _RootScreenState createState() => _RootScreenState();
 }
@@ -25,6 +26,7 @@ class _RootScreenState extends State<RootScreen> {
   @override
   void initState() {
     super.initState();
+    //currentUser returns value only when user logged succesfully
     widget.auth.currentUser().then((userId) {
       setState(() {
         //authStatus =

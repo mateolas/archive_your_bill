@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
-
 import 'package:archive_your_bill/widgets/auth.dart';
 
-
-
 class LoginScreen extends StatefulWidget {
-final BaseAuth auth;
-final VoidCallback onSignedIn;
+  final BaseAuth auth;
+  final VoidCallback onSignedIn;
 
-LoginScreen({this.auth, this.onSignedIn});
-  
+  LoginScreen({this.auth, this.onSignedIn});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-enum FormType { login, register }
+enum FormType {
+  login,
+  register,
+}
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>(); //to use form
@@ -40,12 +40,16 @@ class _LoginScreenState extends State<LoginScreen> {
   void validateAndSubmit() async {
     if (validateAndSave()) {
       try {
-        if (_formType == FormType.login) { //in case we're login in
+        if (_formType == FormType.login) {
+          //in case we're login in
           //moved signIn to the auth class
-          String userId = await widget.auth.signInWithEmailAndPassword(_email, _password);
+          String userId =
+              await widget.auth.signInWithEmailAndPassword(_email, _password);
           print('Signed in: $userId');
-        } else { //in case we're registering user
-          String userId = await widget.auth.createUserWithEmailAndPassword(_email, _password);
+        } else {
+          //in case we're registering user
+          String userId = await widget.auth
+              .createUserWithEmailAndPassword(_email, _password);
           print('Registered user: ${userId}');
         }
         widget.onSignedIn();
@@ -144,14 +148,3 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-// RaisedButton(
-//   child: Text('Move to main screen'),
-//   onPressed: () {
-//     setState(() {
-//       Navigator.pushAndRemoveUntil(
-//         context,
-//         MaterialPageRoute(builder: (context) => MyHomePage()),
-//       (Route<dynamic> route) => false);
-//     });
-//   },
-// ),
