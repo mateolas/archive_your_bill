@@ -1,3 +1,4 @@
+import 'package:archive_your_bill/views/bill_list.dart';
 import 'package:flutter/material.dart';
 
 import 'package:archive_your_bill/screens/loginScreen.dart';
@@ -58,7 +59,7 @@ class _RootScreenState extends State<RootScreen> {
           onSignedIn: _signedIn,
         );
       case AuthStatus.signedIn:
-        return HomeScreen(
+        return BillList(
           auth: widget.auth,
           onSignedOut: _signedOut,
         );
