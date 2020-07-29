@@ -19,7 +19,7 @@ class ListOfBills extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {},
-          child: Container(
+      child: Container(
         child: bills.isEmpty
             ? Column(
                 children: <Widget>[
@@ -53,8 +53,9 @@ class ListOfBills extends StatelessWidget {
                         child: Row(
                           children: <Widget>[
                             Container(
-                                padding: EdgeInsets.all(6),
-                                child: Text('${bills[index].itemCategory}')),
+                              padding: EdgeInsets.all(6),
+                              //child: Text('${bills[index].itemCategory}'),
+                            ),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,27 +64,28 @@ class ListOfBills extends StatelessWidget {
                                   padding: const EdgeInsets.all(6.0),
                                   child: Text(
                                     '${bills[index].shopName}',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Row(
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.all(6.0),
-                                      child: Text('${bills[index].itemName}'),
+                                      //child: Text('${bills[index].itemName}'),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(6.0),
-                                      child: Text(
-                                          '${formatCurrency.format(bills[index].itemCost)}'),
+                                      //child: Text(
+                                      //    '${formatCurrency.format(bills[index].itemCost)}'),
                                     ),
                                   ],
                                 ),
 
                                 Padding(
                                   padding: const EdgeInsets.all(6.0),
-                                  child: Text(
-                                      '${'Warranty until: '} ${DateFormat.yMMMd().format(bills[index].warrantyUntil)}'),
+                                  //child: Text(
+                                  //'${'Warranty until: '} ${DateFormat.yMMMd().format(bills[index].warrantyUntil)}'),
                                 ),
                                 //Text(
                                 //  DateFormat.yMMMd().format(bills[index].purchaseDate),
@@ -109,7 +111,7 @@ class ListOfBills extends StatelessWidget {
                                         disabledColor: Colors.yellow,
                                         color: Colors.grey,
                                         onPressed: () =>
-                                            deleteBill(bills[index].id),
+                                            deleteBill(bills[index].billID),
                                       ),
                                     ),
                                   ],
