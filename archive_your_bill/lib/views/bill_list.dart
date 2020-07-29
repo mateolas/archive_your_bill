@@ -1,46 +1,44 @@
+import 'package:archive_your_bill/services/bills_service.dart';
 import 'package:archive_your_bill/views/bill_delete.dart';
 import 'package:archive_your_bill/views/bill_modify.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:intl/intl.dart';
 import 'package:archive_your_bill/widgets/auth.dart';
 import 'package:archive_your_bill/models/bill.dart';
 
-class BillList extends StatelessWidget {
+class BillList extends StatefulWidget {
   final BaseAuth auth;
   final VoidCallback onSignedOut;
 
   BillList({this.auth, this.onSignedOut});
 
+  @override
+  _BillListState createState() => _BillListState();
+}
+
+class _BillListState extends State<BillList> {
+  BillsService get service => GetIt.I<BillsService>();
+  List<Bill> bills = [];
+
+   //service is a source of data 
+  //bill list doesn't care is it from API / database or whatever :P :D
+   //method called when we're opening stateful page
+  @override
+  void initState() {
+    bills = service.getBillsList();
+    super.initState();
+  }
+
   void _signOut() async {
     try {
-      await auth.signOut();
-      onSignedOut();
+      await widget.auth.signOut();
+      widget.onSignedOut();
     } catch (e) {
       print(e);
     }
   }
-
-  final bills = [
-    Bill(
-      billID: '1',
-      shopName: 'Note 1',
-      purchaseDate: DateTime.now(),
-      latestEditDateTime: DateTime.now(),
-    ),
-    Bill(
-      billID: '2',
-      shopName: 'Note 2',
-      purchaseDate: DateTime.now(),
-      latestEditDateTime: DateTime.now(),
-    ),
-    Bill(
-      billID: '3',
-      shopName: 'Note 3',
-      purchaseDate: DateTime.now(),
-      latestEditDateTime: DateTime.now(),
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
