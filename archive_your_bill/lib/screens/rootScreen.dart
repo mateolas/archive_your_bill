@@ -1,4 +1,3 @@
-import 'package:archive_your_bill/views/bill_list.dart';
 import 'package:flutter/material.dart';
 
 import 'package:archive_your_bill/screens/loginScreen.dart';
@@ -9,7 +8,6 @@ class RootScreen extends StatefulWidget {
   final BaseAuth auth;
 
   RootScreen({this.auth});
-  
   @override
   _RootScreenState createState() => _RootScreenState();
 }
@@ -27,7 +25,6 @@ class _RootScreenState extends State<RootScreen> {
   @override
   void initState() {
     super.initState();
-    //currentUser returns value only when user logged succesfully
     widget.auth.currentUser().then((userId) {
       setState(() {
         //authStatus =
@@ -59,7 +56,7 @@ class _RootScreenState extends State<RootScreen> {
           onSignedIn: _signedIn,
         );
       case AuthStatus.signedIn:
-        return BillList(
+        return HomeScreen(
           auth: widget.auth,
           onSignedOut: _signedOut,
         );

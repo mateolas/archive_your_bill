@@ -1,24 +1,14 @@
-import 'package:archive_your_bill/services/bills_service.dart';
+import 'package:archive_your_bill/widgets/listOfBills.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 
+import './models/bill.dart';
+import './widgets/newBill.dart';
+import './screens/loginScreen.dart';
 import './screens/rootScreen.dart';
 import 'package:archive_your_bill/widgets/auth.dart';
 
-
-//to use get_it library we need to initialize it in main method
-void setupLocator(){
-  //it's stating instance available everywhere in the app
-  //singleton means that there could be only one instance of an object
-  //I - shortcut for instance
-  //we don't need more than one instance of a Bills service
-  GetIt.I.registerLazySingleton(() => BillsService());
-  //consuming the singleton
-  //return an instance of BillsService GetIt.instance<BillsService>();
-}
-
 void main() {
-  setupLocator();
   runApp(MyApp());
 }
 
@@ -48,3 +38,112 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyHomePage> {
+  //list of userBills
+  List<Bill> userBills = [
+    // Bill(
+    //   id: 'b1',
+    //   shopName: 'Media Markt',
+    //   itemName: 'PC',
+    //   itemCategory: 'Electronics',
+    //   itemCost: 5000,
+    //   purchaseDate: DateTime.now(),
+    //   itemWarrantyLengthMonths: 12,
+    //   warrantyUntil: DateTime.now(),
+    // ),
+  ];
+
+  //functions which adds new bill
+  //as paramater gets name, type, cost etc. and based on them creates new Bill object
+  void addNewBill(String newShopName, String newName, double newCost,
+      String newCategory, DateTime newWarrantyUntil) {
+    //new Bill object
+    final newBill = Bill(
+        shopName: newShopName,
+        itemName: newName,
+        itemCost: newCost,
+        itemCategory: newCategory,
+        warrantyUntil: newWarrantyUntil,
+        id: DateTime.now().toString());
+
+    //updating the State
+    //adding newBill object to list of existing bills
+    setState(
+      () {
+        userBills.add(newBill);
+      },
+    );
+  }
+
+  void deleteBill(String id) {
+    setState(() {
+      userBills.removeWhere((element) => element.id == id);
+    });
+  }
+
+  //function which builds a screen using NewBill widget
+  //returns NewBill object with needs have three parameters as input
+  void startAddNewBill(BuildContext ctx) {
+    showModalBottomSheet(
+      context: ctx,
+      isScrollControlled: true,
+      builder: (BuildContext ctx) {
+        return NewBill(addNewBill);
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Archive your bill'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {},
+          )
+        ],
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            //Logo
+            Container(
+              color: Colors.blue,
+              padding: EdgeInsets.all(15),
+              child: Text('Logo'),
+            ),
+            //Search
+            Container(
+              color: Colors.purple,
+              padding: EdgeInsets.all(15),
+              child: Text('Search'),
+            ),
+            //ListView wrapped in Container
+            Container(
+              height: 400,
+              child: ListOfBills(userBills, deleteBill),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: 25,
+          horizontal: 15,
+        ),
+        child: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () => startAddNewBill(context),
+        ),
+      ),
+    );
+  }
+}

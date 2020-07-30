@@ -1,19 +1,17 @@
 //class defines the data structure of single bill
 
 class Bill {
-  String billID;
+  String id;
   String shopName;
+  String itemName;
+  double itemCost;
+  String itemCategory;
+  int itemWarrantyLengthMonths; 
   DateTime purchaseDate;
-  DateTime latestEditDateTime;
-  //String itemName;
-  //double itemCost;
-  //String itemCategory;
-  //int itemWarrantyLengthMonths;
+  DateTime warrantyUntil;
 
-  Bill({
-    this.billID,
-    this.shopName,
-    this.purchaseDate,
-    this.latestEditDateTime,
-  });
+  Bill({this.id,this.shopName,this.itemName,this.itemCategory,this.itemCost, this.itemWarrantyLengthMonths, this.purchaseDate, this.warrantyUntil});
+
+  
+
 }

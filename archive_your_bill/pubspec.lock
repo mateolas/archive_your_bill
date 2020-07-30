@@ -134,13 +134,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1+2"
-  firebase_storage:
-    dependency: "direct main"
-    description:
-      name: firebase_storage
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.6"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -163,13 +156,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  get_it:
-    dependency: "direct main"
-    description:
-      name: get_it
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.4"
   http:
     dependency: transitive
     description:
@@ -317,20 +303,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.13"
-  provider:
-    dependency: "direct main"
-    description:
-      name: provider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.2.0"
-  provider_architecture:
-    dependency: "direct main"
-    description:
-      name: provider_architecture
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
   quiver:
     dependency: transitive
     description:
