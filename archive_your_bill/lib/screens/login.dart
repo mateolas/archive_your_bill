@@ -77,7 +77,7 @@ class _LoginState extends State<Login> {
     return TextFormField(
       decoration: InputDecoration(labelText: "Email"),
       keyboardType: TextInputType.emailAddress,
-      initialValue: 'julian@food.com',
+      initialValue: 'mati@test.com',
       style: TextStyle(fontSize: 26),
       validator: (String value) {
         if (value.isEmpty) {
