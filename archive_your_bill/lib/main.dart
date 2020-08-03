@@ -9,7 +9,7 @@ import 'notifier/auth_notifier.dart';
 void main() => runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          builder: (context) => AuthNotifier(), create: (BuildContext context) {  },
+          builder: (context) => AuthNotifier(),
         )
       ],
       child: MyApp(),
