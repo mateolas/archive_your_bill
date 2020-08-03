@@ -30,6 +30,7 @@ dependencies:
   image_picker:
   easy_permission_validator: ^1.0.5
   firebase_auth: 0.16.1
+  provider: ^3.1.0
 
 
   # The following adds the Cupertino Icons font to your application.
