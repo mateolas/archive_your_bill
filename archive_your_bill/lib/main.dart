@@ -1,3 +1,4 @@
+import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:provider/provider.dart';
 
 import './screens/feed.dart';
@@ -10,6 +11,9 @@ void main() => runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(
           builder: (context) => AuthNotifier(),
+        ),
+        ChangeNotifierProvider(
+          builder: (context) => BillNotifier(),
         )
       ],
       child: MyApp(),

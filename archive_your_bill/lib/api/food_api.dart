@@ -1,6 +1,9 @@
+import 'package:archive_your_bill/model/bill.dart';
 import 'package:archive_your_bill/model/user.dart';
 import 'package:archive_your_bill/notifier/auth_notifier.dart';
+import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 //Class to communicate with the Firebase API
 
@@ -30,7 +33,8 @@ login(User user, AuthNotifier authNotifier) async {
 //creating user
 signup(User user, AuthNotifier authNotifier) async {
   AuthResult authResult = await FirebaseAuth.instance
-      .createUserWithEmailAndPassword(email: user.email, password: user.password)
+      .createUserWithEmailAndPassword(
+          email: user.email, password: user.password)
       .catchError((error) => print(error.code));
 
   //checking the results of the signing
@@ -59,7 +63,9 @@ signup(User user, AuthNotifier authNotifier) async {
 
 signout(AuthNotifier authNotifier) async {
   //not returning anything
-  await FirebaseAuth.instance.signOut().catchError((error) => print(error.code));
+  await FirebaseAuth.instance
+      .signOut()
+      .catchError((error) => print(error.code));
 
   authNotifier.setUser(null);
 }
@@ -73,4 +79,21 @@ initializeCurrentUser(AuthNotifier authNotifier) async {
     //notify app
     authNotifier.setUser(firebaseUser);
   }
+}
+
+//method to get Bills
+getBills(BillNotifier billNotifier) async {
+  QuerySnapshot snapshot =
+      await Firestore.instance.collection('Bills').getDocuments();
+
+  List<Bill> _billList = [];
+
+  snapshot.documents.forEach((document) {
+    //creating new bill object
+    //fromMap - constructor which we created
+    Bill bill = Bill.fromMap(document.data);
+    _billList.add(bill);
+  });
+
+  billNotifier.billList = _billList;
 }
