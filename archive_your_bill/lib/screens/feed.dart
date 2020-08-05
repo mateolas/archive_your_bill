@@ -10,21 +10,23 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
-
   @override
   //turn class into statefull to use initState
   //it enables us to get list of Bills during loading of the app
   void initState() {
-    BillNotifier billNotifier = Provider.of<BillNotifier>(context, listen: false);
+    BillNotifier billNotifier =
+        Provider.of<BillNotifier>(context, listen: false);
     getBills(billNotifier);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-  //notifiers
-    AuthNotifier authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+    //notifiers
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     // we want to listen to changes, so not setting listen to false
-    BillNotifier billNotifier = Provider.of<BillNotifier>(context); 
+    BillNotifier billNotifier = Provider.of<BillNotifier>(context);
 
     print("building Feed");
     return Scaffold(
@@ -47,6 +49,8 @@ class _FeedState extends State<Feed> {
       body: ListView.separated(
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
+            //adding image from firebase
+            leading: Image.network(billNotifier.billList[index].image),
             title: Text(billNotifier.billList[index].name),
             subtitle: Text(billNotifier.billList[index].category),
           );
