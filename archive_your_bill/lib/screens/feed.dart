@@ -16,6 +16,7 @@ class _FeedState extends State<Feed> {
   //it enables us to get list of Bills during loading of the app
   void initState() {
     BillNotifier billNotifier = Provider.of<BillNotifier>(context, listen: false);
+    getBills(billNotifier);
     super.initState();
   }
   @override

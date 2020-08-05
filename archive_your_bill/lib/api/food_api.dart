@@ -82,6 +82,8 @@ initializeCurrentUser(AuthNotifier authNotifier) async {
 }
 
 //method to get Bills
+//when we call it we get bills from firebase
+//whoever is listetning to that gets notified
 getBills(BillNotifier billNotifier) async {
   QuerySnapshot snapshot =
       await Firestore.instance.collection('Bills').getDocuments();
@@ -95,5 +97,6 @@ getBills(BillNotifier billNotifier) async {
     _billList.add(bill);
   });
 
+  //notifing that we have a new bill list
   billNotifier.billList = _billList;
 }
