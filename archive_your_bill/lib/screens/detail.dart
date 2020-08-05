@@ -17,7 +17,48 @@ class BillDetail extends StatelessWidget {
         ),
         body: Center(
           child: Column(
-            children: <Widget>[Text('Details')],
+            children: <Widget>[
+              Container(
+                child: Image.network(billNotifier.currentBill.image),
+                height: 150,
+              ),
+              SizedBox(
+                height: 32,
+              ),
+              Text(
+                billNotifier.currentBill.name,
+                style: TextStyle(
+                  fontSize: 40,
+                ),
+              ),
+              Text(
+                billNotifier.currentBill.category,
+                style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+              ),
+              SizedBox(height: 32),
+              GridView.count(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                padding: EdgeInsets.all(8),
+                crossAxisCount: 3,
+                crossAxisSpacing: 4,
+                mainAxisSpacing: 4,
+                children: billNotifier.currentBill.subIngredients
+                    .map((ingredient) => Card(
+                          color: Colors.black54,
+                          child: Center(
+                            child: Text(
+                              ingredient,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ],
           ),
         ));
   }
