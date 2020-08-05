@@ -3,6 +3,7 @@ import 'package:archive_your_bill/notifier/auth_notifier.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:archive_your_bill/screens/detail.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -46,13 +47,25 @@ class _FeedState extends State<Feed> {
           ),
         ],
       ),
+      //listView to present the data from Firebase
       body: ListView.separated(
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
             //adding image from firebase
-            leading: Image.network(billNotifier.billList[index].image),
+            leading: Image.network(
+              billNotifier.billList[index].image,
+              width: 80,
+              fit: BoxFit.fitWidth,
+            ),
             title: Text(billNotifier.billList[index].name),
             subtitle: Text(billNotifier.billList[index].category),
+            onTap: () {
+              billNotifier.currentBill = billNotifier.billList[index];
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return BillDetail();
+              }));
+            },
           );
         },
         itemCount: billNotifier.billList.length,
