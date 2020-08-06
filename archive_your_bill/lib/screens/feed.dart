@@ -1,6 +1,7 @@
 import 'package:archive_your_bill/api/food_api.dart';
 import 'package:archive_your_bill/notifier/auth_notifier.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
+import 'package:archive_your_bill/screens/bill_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:archive_your_bill/screens/detail.dart';
@@ -15,7 +16,8 @@ class _FeedState extends State<Feed> {
   //turn class into statefull to use initState
   //it enables us to get list of Bills during loading of the app
   void initState() {
-    BillNotifier billNotifier = Provider.of<BillNotifier>(context, listen: false);
+    BillNotifier billNotifier =
+        Provider.of<BillNotifier>(context, listen: false);
     getBills(billNotifier);
     super.initState();
   }
@@ -23,7 +25,8 @@ class _FeedState extends State<Feed> {
   @override
   Widget build(BuildContext context) {
     //notifiers
-    AuthNotifier authNotifier = Provider.of<AuthNotifier>(context, listen: false);
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     // we want to listen to changes, so not setting listen to false
     BillNotifier billNotifier = Provider.of<BillNotifier>(context);
 
@@ -71,6 +74,17 @@ class _FeedState extends State<Feed> {
           //returning separator, we can have image/text or divider for example
           return Divider(color: Colors.black);
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          //moving into bill_form page
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (BuildContext context) {
+            return BillForm();
+          }));
+        },
+        child: Icon(Icons.add),
+        foregroundColor: Colors.white,
       ),
     );
   }
