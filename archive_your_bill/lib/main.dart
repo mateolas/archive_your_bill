@@ -11,9 +11,11 @@ void main() => runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(
           builder: (context) => AuthNotifier(),
+          create: (context) => AuthNotifier(),
         ),
         ChangeNotifierProvider(
           builder: (context) => BillNotifier(),
+          create: (context) => BillNotifier(),
         )
       ],
       child: MyApp(),
