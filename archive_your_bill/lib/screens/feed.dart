@@ -13,32 +13,25 @@ class Feed extends StatefulWidget {
 
 class _FeedState extends State<Feed> {
   @override
-  //turn class into statefull to use initState
-  //it enables us to get list of Bills during loading of the app
   void initState() {
-    BillNotifier billNotifier =
-        Provider.of<BillNotifier>(context, listen: false);
-    getBills(billNotifier);
+    FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context, listen: false);
+    getFoods(foodNotifier);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    //notifiers
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
-    // we want to listen to changes, so not setting listen to false
-    BillNotifier billNotifier = Provider.of<BillNotifier>(context);
+    FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context);
 
-      Future<void> _refreshList() async {
-      getBills(billNotifier);
+    Future<void> _refreshList() async {
+      getFoods(foodNotifier);
     }
-
 
     print("building Feed");
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          //showing the 'Display name' at the top of the screen
           authNotifier.user != null ? authNotifier.user.displayName : "Feed",
         ),
         actions: <Widget>[
@@ -52,51 +45,46 @@ class _FeedState extends State<Feed> {
           ),
         ],
       ),
-      //listView to present the data from Firebase
       body: new RefreshIndicator(
         child: ListView.separated(
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
-              //adding image from firebase
               leading: Image.network(
-                billNotifier.billList[index].image != null
-                    ? billNotifier.billList[index].image
+                foodNotifier.foodList[index].image != null
+                    ? foodNotifier.foodList[index].image
                     : 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg',
-                width: 80,
+                width: 120,
                 fit: BoxFit.fitWidth,
               ),
-              title: Text(billNotifier.billList[index].name),
-              subtitle: Text(billNotifier.billList[index].category),
-              //when we tap on the Tile of the listView we're moving to a screen
-              //where we're presenting the current bill
+              title: Text(foodNotifier.foodList[index].name),
+              subtitle: Text(foodNotifier.foodList[index].category),
               onTap: () {
-                billNotifier.currentBill = billNotifier.billList[index];
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (BuildContext context) {
-                  return BillDetail();
+                foodNotifier.currentFood = foodNotifier.foodList[index];
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+                  return FoodDetail();
                 }));
               },
             );
           },
-          itemCount: billNotifier.billList.length,
+          itemCount: foodNotifier.foodList.length,
           separatorBuilder: (BuildContext context, int index) {
-            //returning separator, we can have image/text or divider for example
-            return Divider(color: Colors.black);
+            return Divider(
+              color: Colors.black,
+            );
           },
         ),
         onRefresh: _refreshList,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //when we're pressing 'Add new bill' we're setting the currentBill to null
-          //thanks to it, we're starting a newBill and not editing a bill
-          billNotifier.currentBill = null;
-          //moving into bill_form page
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (BuildContext context) {
-            //isUpdating parameter: to know are we updating or editing
-            return BillForm(isUpdating: false);
-          }));
+          foodNotifier.currentFood = null;
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (BuildContext context) {
+              return FoodForm(
+                isUpdating: false,
+              );
+            }),
+          );
         },
         child: Icon(Icons.add),
         foregroundColor: Colors.white,

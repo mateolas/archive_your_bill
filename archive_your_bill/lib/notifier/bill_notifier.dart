@@ -1,30 +1,34 @@
 import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
-import 'package:archive_your_bill/model/bill.dart';
+import 'package:archive_your_bill/model/food.dart';
 
 
-class BillNotifier with ChangeNotifier{
-  //our list of bills
-  List<Bill> _billList = [];
-  //to track current bill
-  Bill _currentBill;
+class FoodNotifier with ChangeNotifier {
+  List<Food> _foodList = [];
+  Food _currentFood;
 
-  //gets the bill list and and make sure that we can't change it when we get from our notifier
-  UnmodifiableListView<Bill> get billList => UnmodifiableListView(_billList);
+  UnmodifiableListView<Food> get foodList => UnmodifiableListView(_foodList);
 
-  Bill get currentBill => _currentBill;
+  Food get currentFood => _currentFood;
 
-  //when we call app for the first time we want to call this setter
-  //to set a bill list
-  set billList(List<Bill> billList){
-    _billList = billList;
+  set foodList(List<Food> foodList) {
+    _foodList = foodList;
     notifyListeners();
   }
 
-  //when we change a current bill, we're calling this setter
-  set currentBill(Bill bill){
-    _currentBill = bill;
+  set currentFood(Food food) {
+    _currentFood = food;
+    notifyListeners();
+  }
+
+  addFood(Food food) {
+    _foodList.insert(0, food);
+    notifyListeners();
+  }
+
+  deleteFood(Food food) {
+    _foodList.removeWhere((_food) => _food.id == food.id);
     notifyListeners();
   }
 }

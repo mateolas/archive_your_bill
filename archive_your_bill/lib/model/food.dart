@@ -1,20 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Bill {
+class Food {
   String id;
   String name;
   String category;
   String image;
-  List subIngredients;
+  List subIngredients = [];
   Timestamp createdAt;
   Timestamp updatedAt;
 
-  Bill();
+  Food();
 
-  //named constructor
-  //we're passing a Map
-  //dynamic because they will be different things
-  Bill.fromMap(Map<String, dynamic> data) {
+  Food.fromMap(Map<String, dynamic> data) {
     id = data['id'];
     name = data['name'];
     category = data['category'];
@@ -24,9 +21,6 @@ class Bill {
     updatedAt = data['updatedAt'];
   }
 
-//function to upload bill to server
-//need to return Map of type String
-//to Map function will be used in our API file to upload bills
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -35,7 +29,7 @@ class Bill {
       'image': image,
       'subIngredients': subIngredients,
       'createdAt': createdAt,
-      'updatedAt': updatedAt,
+      'updatedAt': updatedAt
     };
   }
 }
