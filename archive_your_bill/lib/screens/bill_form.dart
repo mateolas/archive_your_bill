@@ -114,8 +114,8 @@ class _FoodFormState extends State<FoodForm> {
           return 'Name is required';
         }
 
-        if (value.length < 3 || value.length > 20) {
-          return 'Name must be more than 3 and less than 20';
+        if (value.length < 2 || value.length > 20) {
+          return 'Name must be more than 2 and less than 20';
         }
 
         return null;
@@ -137,7 +137,7 @@ class _FoodFormState extends State<FoodForm> {
           return 'Category is required';
         }
 
-        if (value.length < 3 || value.length > 20) {
+        if (value.length < 2 || value.length > 20) {
           return 'Category must be more than 3 and less than 20';
         }
 

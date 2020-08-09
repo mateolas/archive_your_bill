@@ -1,3 +1,4 @@
+import 'package:archive_your_bill/api/food_api.dart';
 import 'package:archive_your_bill/screens/bill_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -95,7 +96,7 @@ class FoodDetail extends StatelessWidget {
           SizedBox(height: 20),
           FloatingActionButton(
             heroTag: 'button2',
-            onPressed: () => {},//deleteFood(foodNotifier.currentFood, _onFoodDeleted),
+            onPressed: () => deleteFood(foodNotifier.currentFood, _onFoodDeleted),
             child: Icon(Icons.delete),
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,

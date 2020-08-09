@@ -32,7 +32,7 @@ class _FeedState extends State<Feed> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          authNotifier.user != null ? authNotifier.user.displayName : "Feed",
+          authNotifier.user != null ? authNotifier.user.displayName : "Main page",
         ),
         actions: <Widget>[
           // action button
@@ -40,7 +40,7 @@ class _FeedState extends State<Feed> {
             onPressed: () => signout(authNotifier),
             child: Text(
               "Logout",
-              style: TextStyle(fontSize: 20, color: Colors.white),
+              style: TextStyle(fontSize: 20, color: Colors.black),
             ),
           ),
         ],

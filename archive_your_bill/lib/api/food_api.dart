@@ -64,9 +64,10 @@ initializeCurrentUser(AuthNotifier authNotifier) async {
   }
 }
 
+//function to get list of bills from the firebase
 getFoods(FoodNotifier foodNotifier) async {
   QuerySnapshot snapshot = await Firestore.instance
-      .collection('Archive')
+      .collection('Bills')
       .orderBy("createdAt", descending: true)
       .getDocuments();
 
@@ -107,7 +108,7 @@ uploadFoodAndImage(Food food, bool isUpdating, File localFile, Function foodUplo
 }
 
 _uploadFood(Food food, bool isUpdating, Function foodUploaded, {String imageUrl}) async {
-  CollectionReference foodRef = Firestore.instance.collection('Archive');
+  CollectionReference foodRef = Firestore.instance.collection('Bills');
 
   if (imageUrl != null) {
     food.image = imageUrl;
@@ -147,6 +148,6 @@ deleteFood(Food food, Function foodDeleted) async {
     print('image deleted');
   }
 
-  await Firestore.instance.collection('Foods').document(food.id).delete();
+  await Firestore.instance.collection('Bills').document(food.id).delete();
   foodDeleted(food);
 }

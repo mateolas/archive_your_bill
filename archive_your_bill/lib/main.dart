@@ -26,8 +26,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Archive your app',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        accentColor: Colors.lightBlue,
+        primarySwatch: Colors.yellow,
+        accentColor: Colors.black,
       ),
       home: Consumer<AuthNotifier>(
         builder: (context, notifier, child) {
