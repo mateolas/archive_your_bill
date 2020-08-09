@@ -7,8 +7,7 @@ import 'package:archive_your_bill/notifier/bill_notifier.dart';
 class BillDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    BillNotifier billNotifier =
-        Provider.of<BillNotifier>(context, listen: false);
+    BillNotifier billNotifier = Provider.of<BillNotifier>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -21,12 +20,14 @@ class BillDetail extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Container(
-                child: Image.network(billNotifier.currentBill.image),
-                height: 150,
+                child: Image.network(
+                  billNotifier.currentBill.image != null
+                      ? billNotifier.currentBill.image
+                      : 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg',
+                  height: 150,
+                ),
               ),
-              SizedBox(
-                height: 32,
-              ),
+              SizedBox(height: 32),
               Text(
                 billNotifier.currentBill.name,
                 style: TextStyle(

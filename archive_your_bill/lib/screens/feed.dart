@@ -25,10 +25,14 @@ class _FeedState extends State<Feed> {
   @override
   Widget build(BuildContext context) {
     //notifiers
-    AuthNotifier authNotifier =
-        Provider.of<AuthNotifier>(context, listen: false);
+    AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
     // we want to listen to changes, so not setting listen to false
     BillNotifier billNotifier = Provider.of<BillNotifier>(context);
+
+      Future<void> _refreshList() async {
+      getBills(billNotifier);
+    }
+
 
     print("building Feed");
     return Scaffold(
@@ -49,33 +53,38 @@ class _FeedState extends State<Feed> {
         ],
       ),
       //listView to present the data from Firebase
-      body: ListView.separated(
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            //adding image from firebase
-            leading: Image.network(
-              billNotifier.billList[index].image,
-              width: 80,
-              fit: BoxFit.fitWidth,
-            ),
-            title: Text(billNotifier.billList[index].name),
-            subtitle: Text(billNotifier.billList[index].category),
-            //when we tap on the Tile of the listView we're moving to a screen
-            //where we're presenting the current bill
-            onTap: () {
-              billNotifier.currentBill = billNotifier.billList[index];
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                return BillDetail();
-              }));
-            },
-          );
-        },
-        itemCount: billNotifier.billList.length,
-        separatorBuilder: (BuildContext context, int index) {
-          //returning separator, we can have image/text or divider for example
-          return Divider(color: Colors.black);
-        },
+      body: new RefreshIndicator(
+        child: ListView.separated(
+          itemBuilder: (BuildContext context, int index) {
+            return ListTile(
+              //adding image from firebase
+              leading: Image.network(
+                billNotifier.billList[index].image != null
+                    ? billNotifier.billList[index].image
+                    : 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg',
+                width: 80,
+                fit: BoxFit.fitWidth,
+              ),
+              title: Text(billNotifier.billList[index].name),
+              subtitle: Text(billNotifier.billList[index].category),
+              //when we tap on the Tile of the listView we're moving to a screen
+              //where we're presenting the current bill
+              onTap: () {
+                billNotifier.currentBill = billNotifier.billList[index];
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  return BillDetail();
+                }));
+              },
+            );
+          },
+          itemCount: billNotifier.billList.length,
+          separatorBuilder: (BuildContext context, int index) {
+            //returning separator, we can have image/text or divider for example
+            return Divider(color: Colors.black);
+          },
+        ),
+        onRefresh: _refreshList,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:archive_your_bill/api/food_api.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:archive_your_bill/model/bill.dart';
@@ -44,8 +45,8 @@ class _BillFormState extends State<BillForm> {
       _currentBill = Bill();
     }
 
-    _subingredients.addAll(billNotifier.currentBill.subIngredients);
-    _imageUrl = billNotifier.currentBill.image;
+    //_subingredients.addAll(_currentBill.subIngredients);
+    _imageUrl = _currentBill.image;
   }
 
   //this function will show the image if we have it
@@ -83,7 +84,6 @@ class _BillFormState extends State<BillForm> {
           ),
         ],
       );
-
     } else if (_imageUrl != null) {
       print('showing image from url');
       //Stack allowys to put two images on top of each other
@@ -124,8 +124,8 @@ class _BillFormState extends State<BillForm> {
     );
 
     //now we're setting the state of the image
-    if(imageFile != null){
-      setState((){
+    if (imageFile != null) {
+      setState(() {
         _imageFile = imageFile;
       });
     }
@@ -173,7 +173,7 @@ class _BillFormState extends State<BillForm> {
         return null;
       },
       onSaved: (String value) {
-        _currentBill.name = value;
+        _currentBill.category = value;
       },
     );
   }
@@ -199,6 +199,28 @@ class _BillFormState extends State<BillForm> {
     }
   }
 
+
+saveBill(){
+  //if the form isn't valid
+  if(!_formKey.currentState.validate()){
+    return;
+  }
+
+  _formKey.currentState.save();
+
+  //adding subingredients to local list
+  _currentBill.subIngredients = _subingredients;
+
+  uploadBillandImage(_currentBill, widget.isUpdating,_imageFile );
+
+  print("name: ${_currentBill.name}");
+  print("category: ${_currentBill.category}");
+  print("subIngredients: ${_currentBill.subIngredients.toString()}");
+  print("_imageFile: ${_imageFile.toString()}"); 
+  print("_imageUrl ${_imageUrl}");
+
+
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -221,16 +243,21 @@ class _BillFormState extends State<BillForm> {
                 style: TextStyle(fontSize: 30),
               ),
               SizedBox(height: 16),
-              ButtonTheme(
-                child: RaisedButton(
-                  //the same function for 2 buttons
-                  onPressed: () => _getLocalImage(),
-                  child: Text(
-                    'Add Image',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
+              //if we don't have an image file we're not showing the button
+              _imageFile == null && _imageUrl == null
+                  ? ButtonTheme(
+                      child: RaisedButton(
+                        //the same function for 2 buttons
+                        onPressed: () => _getLocalImage(),
+                        child: Text(
+                          'Add Image',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                      height: 0,
+                    ),
               _buildNameField(),
               _buildCategoryField(),
               //Setting the ingredients
@@ -273,6 +300,11 @@ class _BillFormState extends State<BillForm> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => saveBill(),
+        child: Icon(Icons.save),
+        foregroundColor: Colors.white,
       ),
     );
   }

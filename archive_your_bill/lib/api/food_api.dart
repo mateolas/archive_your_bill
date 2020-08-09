@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:archive_your_bill/model/bill.dart';
 import 'package:archive_your_bill/model/user.dart';
 import 'package:archive_your_bill/notifier/auth_notifier.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as path;
+import 'package:uuid/uuid.dart';
 
 //Class to communicate with the Firebase API
 
@@ -99,4 +104,75 @@ getBills(BillNotifier billNotifier) async {
 
   //notifing that we have a new bill list
   billNotifier.billList = _billList;
+}
+
+//uploading bills to our API
+//added second parametere to know, are we adding new Bill
+//or we're updating existing one
+//uploading our image first
+//if that was ok than we get an url from the image
+//than we call upload bill
+//than we get documentref
+//then we update the Bill object with new ID
+uploadBillandImage(Bill bill, bool isUpdating, File localFile) async {
+  if (localFile != null) {
+    print('uploading image');
+
+    //getting the extension of file //jpg, gif, etc.
+    var fileExtension = path.extension(localFile.path);
+
+    //creating an unique user ID
+    var uuid = Uuid().v4();
+
+    final StorageReference firebaseStorageRef =
+        //uuid name of the picture file
+        //reference to the file at that location
+        FirebaseStorage.instance
+            .ref()
+            .child('archive/images/$uuid$fileExtension');
+
+    //thanks to it we're uploaded a file
+    await firebaseStorageRef
+        .putFile(localFile)
+        .onComplete
+        .catchError((onError) {
+      print(onError);
+      return false;
+    });
+
+    String url = await firebaseStorageRef.getDownloadURL();
+    _uploadBill(bill, isUpdating, imageUrl: url);
+    print("download url: $url");
+  } else {
+    print('...skipping image upload');
+    _uploadBill(bill, isUpdating);
+  }
+}
+
+_uploadBill(Bill bill, bool isUpdating, {String imageUrl}) async {
+  //reference to our Bill object
+  CollectionReference billRef = await Firestore.instance.collection('Bills');
+
+  if (imageUrl != null) {
+    bill.image = imageUrl;
+  }
+
+  if (isUpdating) {
+    bill.updatedAt = Timestamp.now();
+    //updated proper Bill with proper id with our Bill converted as a Map
+    await billRef.document(bill.id).updateData(bill.toMap());
+    print('updated bill with id: ${bill.id}');
+  } else {
+    bill.createdAt = Timestamp.now();
+
+    DocumentReference documentRef = await billRef.add(bill.toMap());
+
+    //local id
+    bill.id = documentRef.documentID;
+    print('uploaded food successfully: ${bill.toString()}');
+
+    //uploading local id to server
+    //merge - we just want to add new data to object
+    await documentRef.setData(bill.toMap(), merge: true);
+  }
 }
