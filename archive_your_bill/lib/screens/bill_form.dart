@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:archive_your_bill/model/bill.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
@@ -6,6 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BillForm extends StatefulWidget {
+//adding boolean to know, are we creating or editing the bill
+  final bool isUpdating;
+
+  BillForm({@required this.isUpdating});
+
   @override
   _BillFormState createState() => _BillFormState();
 }
@@ -52,7 +58,32 @@ class _BillFormState extends State<BillForm> {
     //even when the imageUrl exists
     //it means we want to upload new picture for the bill
     else if (_imageFile != null) {
-      return Text('Image from file');
+      print('showing image from local file');
+      //thanks to Stack we're returning a local image using ImagePicker
+      return Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: <Widget>[
+          //getting local image
+          Image.file(
+            _imageFile,
+            fit: BoxFit.cover,
+            height: 250,
+          ),
+          FlatButton(
+            padding: EdgeInsets.all(16),
+            color: Colors.black54,
+            child: Text(
+              'Change Image',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w400),
+            ),
+            onPressed: () => _getLocalImage(),
+          ),
+        ],
+      );
+
     } else if (_imageUrl != null) {
       print('showing image from url');
       //Stack allowys to put two images on top of each other
@@ -65,6 +96,8 @@ class _BillFormState extends State<BillForm> {
             height: 250,
           ),
           FlatButton(
+            padding: EdgeInsets.all(16),
+            color: Colors.black54,
             child: Text(
               'Change Image',
               style: TextStyle(
@@ -79,7 +112,25 @@ class _BillFormState extends State<BillForm> {
     }
   }
 
-  _getLocalImage() {}
+  //it will be an asynchronous operation so function async
+  _getLocalImage() async {
+    //adding new file
+
+    //here we're getting the image
+    File imageFile = await ImagePicker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+      maxWidth: 400,
+    );
+
+    //now we're setting the state of the image
+    if(imageFile != null){
+      setState((){
+        _imageFile = imageFile;
+      });
+    }
+  }
+
   Widget _buildNameField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Name'),
@@ -165,14 +216,15 @@ class _BillFormState extends State<BillForm> {
               _showImage(),
               SizedBox(height: 16),
               Text(
-                'Create Bill',
+                widget.isUpdating ? 'Edit Food' : 'Create Bill',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 30),
               ),
               SizedBox(height: 16),
               ButtonTheme(
                 child: RaisedButton(
-                  onPressed: () {},
+                  //the same function for 2 buttons
+                  onPressed: () => _getLocalImage(),
                   child: Text(
                     'Add Image',
                     style: TextStyle(color: Colors.white),

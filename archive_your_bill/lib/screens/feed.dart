@@ -85,7 +85,8 @@ class _FeedState extends State<Feed> {
           //moving into bill_form page
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (BuildContext context) {
-            return BillForm();
+            //isUpdating parameter: to know are we updating or editing
+            return BillForm(isUpdating: false);
           }));
         },
         child: Icon(Icons.add),

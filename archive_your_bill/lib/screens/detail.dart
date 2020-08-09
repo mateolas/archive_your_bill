@@ -68,7 +68,7 @@ class BillDetail extends StatelessWidget {
         onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (BuildContext context) {
-            return BillForm();
+            return BillForm(isUpdating: true);
           }));
         },
         child: Icon(Icons.edit),
