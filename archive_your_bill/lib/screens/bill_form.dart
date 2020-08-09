@@ -18,24 +18,47 @@ class _BillFormState extends State<BillForm> {
   }
 
   Widget _buildNameField() {
-    return TextFormField(keyboardType: TextInputType.text,
-    style: TextStyle(fontSize:20),
-    validator: (String value) {
-      if(value.isEmpty){
-        return 'Name is required';
-      }
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'Name'),
+      keyboardType: TextInputType.text,
+      style: TextStyle(fontSize: 20),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Name is required';
+        }
 
-      if(value.length <3 || value.length > 20){
-        return 'Name must be more than 3 and less than 20';
-      }
+        if (value.length < 3 || value.length > 20) {
+          return 'Name must be more than 3 and less than 20';
+        }
 
-      return null;
-    },
+        return null;
+      },
+      onSaved: (String value) {
+        _currentBill.name = value;
+      },
     );
   }
-  
+
   Widget _buildCategoryField() {
-    return Text('Image Here');
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'Category'),
+      keyboardType: TextInputType.text,
+      style: TextStyle(fontSize: 20),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Category is required';
+        }
+
+        if (value.length < 3 || value.length > 20) {
+          return 'Category must be more than 3 and less than 20';
+        }
+
+        return null;
+      },
+      onSaved: (String value) {
+        _currentBill.name = value;
+      },
+    );
   }
 
   @override
@@ -55,7 +78,7 @@ class _BillFormState extends State<BillForm> {
               _showImage(),
               SizedBox(height: 16),
               Text(
-                'Create Food',
+                'Create Bill',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 30),
               ),
@@ -68,10 +91,10 @@ class _BillFormState extends State<BillForm> {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                _buildNameField(),
-                _buildCategoryField(),
-                SizedBox(height: 16),
               ),
+              _buildNameField(),
+              _buildCategoryField(),
+              SizedBox(height: 16),
             ],
           ),
         ),
