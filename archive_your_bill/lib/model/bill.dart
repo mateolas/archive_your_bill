@@ -9,6 +9,8 @@ class Bill {
   Timestamp createdAt;
   Timestamp updatedAt;
 
+  Bill();
+
   //named constructor
   //we're passing a Map
   //dynamic because they will be different things

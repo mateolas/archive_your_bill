@@ -60,6 +60,8 @@ class _FeedState extends State<Feed> {
             ),
             title: Text(billNotifier.billList[index].name),
             subtitle: Text(billNotifier.billList[index].category),
+            //when we tap on the Tile of the listView we're moving to a screen
+            //where we're presenting the current bill
             onTap: () {
               billNotifier.currentBill = billNotifier.billList[index];
               Navigator.of(context)
@@ -77,6 +79,9 @@ class _FeedState extends State<Feed> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          //when we're pressing 'Add new bill' we're setting the currentBill to null
+          //thanks to it, we're starting a newBill and not editing a bill
+          billNotifier.currentBill = null;
           //moving into bill_form page
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (BuildContext context) {
