@@ -29,7 +29,8 @@ class _FoodFormState extends State<FoodForm> {
   @override
   void initState() {
     super.initState();
-    FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context, listen: false);
+    FoodNotifier foodNotifier =
+        Provider.of<FoodNotifier>(context, listen: false);
 
     if (foodNotifier.currentFood != null) {
       _currentFood = foodNotifier.currentFood;
@@ -60,7 +61,10 @@ class _FoodFormState extends State<FoodForm> {
             color: Colors.black54,
             child: Text(
               'Change Image',
-              style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w400),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w400),
             ),
             onPressed: () => _getLocalImage(),
           )
@@ -83,7 +87,10 @@ class _FoodFormState extends State<FoodForm> {
             color: Colors.black54,
             child: Text(
               'Change Image',
-              style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w400),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w400),
             ),
             onPressed: () => _getLocalImage(),
           )
@@ -93,8 +100,8 @@ class _FoodFormState extends State<FoodForm> {
   }
 
   _getLocalImage() async {
-    File imageFile =
-        await ImagePicker.pickImage(source: ImageSource.gallery, imageQuality: 50, maxWidth: 400);
+    File imageFile = await ImagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: 50, maxWidth: 400);
 
     if (imageFile != null) {
       setState(() {
@@ -162,7 +169,8 @@ class _FoodFormState extends State<FoodForm> {
   }
 
   _onFoodUploaded(Food food) {
-    FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context, listen: false);
+    FoodNotifier foodNotifier =
+        Provider.of<FoodNotifier>(context, listen: false);
     foodNotifier.addFood(food);
     Navigator.pop(context);
   }
@@ -188,7 +196,8 @@ class _FoodFormState extends State<FoodForm> {
 
     _currentFood.subIngredients = _subingredients;
 
-    uploadFoodAndImage(_currentFood, widget.isUpdating, _imageFile, _onFoodUploaded);
+    uploadFoodAndImage(
+        _currentFood, widget.isUpdating, _imageFile, _onFoodUploaded);
 
     print("name: ${_currentFood.name}");
     print("category: ${_currentFood.category}");
@@ -229,40 +238,7 @@ class _FoodFormState extends State<FoodForm> {
                 : SizedBox(height: 0),
             _buildNameField(),
             _buildCategoryField(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                _buildSubingredientField(),
-                ButtonTheme(
-                  child: RaisedButton(
-                    child: Text('Add', style: TextStyle(color: Colors.white)),
-                    onPressed: () => _addSubingredient(subingredientController.text),
-                  ),
-                )
-              ],
-            ),
             SizedBox(height: 16),
-            GridView.count(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              padding: EdgeInsets.all(8),
-              crossAxisCount: 3,
-              crossAxisSpacing: 4,
-              mainAxisSpacing: 4,
-              children: _subingredients
-                  .map(
-                    (ingredient) => Card(
-                      color: Colors.black54,
-                      child: Center(
-                        child: Text(
-                          ingredient,
-                          style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            )
           ]),
         ),
       ),
