@@ -38,7 +38,7 @@ class _FoodFormState extends State<FoodForm> {
       _currentFood = Food();
     }
 
-    _subingredients.addAll(_currentFood.subIngredients);
+    
     _imageUrl = _currentFood.image;
   }
 
@@ -156,7 +156,7 @@ class _FoodFormState extends State<FoodForm> {
     );
   }
 
-  _buildSubingredientField() {
+  _buildBillCategoryField() {
     return SizedBox(
       width: 200,
       child: TextField(
@@ -193,15 +193,13 @@ class _FoodFormState extends State<FoodForm> {
     _formKey.currentState.save();
 
     print('form saved');
-
-    _currentFood.subIngredients = _subingredients;
+   
 
     uploadFoodAndImage(
         _currentFood, widget.isUpdating, _imageFile, _onFoodUploaded);
 
     print("name: ${_currentFood.name}");
     print("category: ${_currentFood.category}");
-    print("subingredients: ${_currentFood.subIngredients.toString()}");
     print("_imageFile ${_imageFile.toString()}");
     print("_imageUrl $_imageUrl");
   }

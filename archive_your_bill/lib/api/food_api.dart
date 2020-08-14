@@ -64,6 +64,11 @@ initializeCurrentUser(AuthNotifier authNotifier) async {
   }
 }
 
+ // GET UID
+  Future<String> getCurrentUID() async {
+    return (await FirebaseAuth.instance.currentUser()).uid;
+  }
+
 //function to get list of bills from the firebase
 getFoods(FoodNotifier foodNotifier) async {
   QuerySnapshot snapshot = await Firestore.instance
@@ -108,7 +113,11 @@ uploadFoodAndImage(Food food, bool isUpdating, File localFile, Function foodUplo
 }
 
 _uploadFood(Food food, bool isUpdating, Function foodUploaded, {String imageUrl}) async {
-  CollectionReference foodRef = Firestore.instance.collection('Bills');
+  
+  var uid = getCurrentUID();
+  
+  
+  CollectionReference foodRef = Firestore.instance.collection('userData');
 
   if (imageUrl != null) {
     food.image = imageUrl;
@@ -124,7 +133,9 @@ _uploadFood(Food food, bool isUpdating, Function foodUploaded, {String imageUrl}
   } else {
     food.createdAt = Timestamp.now();
 
-    DocumentReference documentRef = await foodRef.add(food.toMap());
+    FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
+
+    DocumentReference documentRef = await foodRef.document(firebaseUser.uid).collection('bills').add(food.toMap());
 
     food.id = documentRef.documentID;
 

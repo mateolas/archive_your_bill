@@ -5,7 +5,7 @@ class Food {
   String name;
   String category;
   String image;
-  List subIngredients = [];
+  
   Timestamp createdAt;
   Timestamp updatedAt;
 
@@ -16,7 +16,7 @@ class Food {
     name = data['name'];
     category = data['category'];
     image = data['image'];
-    subIngredients = data['subIngredients'];
+    
     createdAt = data['createdAt'];
     updatedAt = data['updatedAt'];
   }
@@ -27,7 +27,7 @@ class Food {
       'name': name,
       'category': category,
       'image': image,
-      'subIngredients': subIngredients,
+      
       'createdAt': createdAt,
       'updatedAt': updatedAt
     };
