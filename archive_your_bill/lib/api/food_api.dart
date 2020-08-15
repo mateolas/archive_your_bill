@@ -131,7 +131,7 @@ _uploadFood(Food food, bool isUpdating, Function foodUploaded, {String imageUrl}
   if (isUpdating) {
     food.updatedAt = Timestamp.now();
     FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
-    
+
     await foodRef.document(firebaseUser.uid).collection('bills').document(food.id).updateData(food.toMap());
 
     foodUploaded(food);
@@ -164,7 +164,7 @@ deleteFood(Food food, Function foodDeleted) async {
 
     print('image deleted');
   }
-
-  await Firestore.instance.collection('Bills').document(food.id).delete();
+  FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
+  await Firestore.instance.collection('userData').document(firebaseUser.uid).collection('bills').document(food.id)..delete();
   foodDeleted(food);
 }
