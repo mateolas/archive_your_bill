@@ -71,8 +71,15 @@ initializeCurrentUser(AuthNotifier authNotifier) async {
 
 //function to get list of bills from the firebase
 getFoods(FoodNotifier foodNotifier) async {
+
+FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
+
+ //DocumentReference documentRef = await Firestore.instance.collection('userData').document(firebaseUser.uid).collection('bills').add(food.toMap());
+
   QuerySnapshot snapshot = await Firestore.instance
-      .collection('Bills')
+      .collection('userData')
+      .document(firebaseUser.uid)
+      .collection('bills')
       .orderBy("createdAt", descending: true)
       .getDocuments();
 
@@ -114,10 +121,8 @@ uploadFoodAndImage(Food food, bool isUpdating, File localFile, Function foodUplo
 
 _uploadFood(Food food, bool isUpdating, Function foodUploaded, {String imageUrl}) async {
   
-  var uid = getCurrentUID();
-  
-  
   CollectionReference foodRef = Firestore.instance.collection('userData');
+  
 
   if (imageUrl != null) {
     food.image = imageUrl;

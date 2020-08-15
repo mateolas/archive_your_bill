@@ -29,8 +29,7 @@ class _FoodFormState extends State<FoodForm> {
   @override
   void initState() {
     super.initState();
-    FoodNotifier foodNotifier =
-        Provider.of<FoodNotifier>(context, listen: false);
+    FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context, listen: false);
 
     if (foodNotifier.currentFood != null) {
       _currentFood = foodNotifier.currentFood;
@@ -173,15 +172,6 @@ class _FoodFormState extends State<FoodForm> {
         Provider.of<FoodNotifier>(context, listen: false);
     foodNotifier.addFood(food);
     Navigator.pop(context);
-  }
-
-  _addSubingredient(String text) {
-    if (text.isNotEmpty) {
-      setState(() {
-        _subingredients.add(text);
-      });
-      subingredientController.clear();
-    }
   }
 
   _saveFood() {
