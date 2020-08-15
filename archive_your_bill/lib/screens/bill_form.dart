@@ -20,7 +20,6 @@ class _FoodFormState extends State<FoodForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  List _subingredients = [];
   Food _currentFood;
   String _imageUrl;
   File _imageFile;
@@ -36,7 +35,6 @@ class _FoodFormState extends State<FoodForm> {
     } else {
       _currentFood = Food();
     }
-
     
     _imageUrl = _currentFood.image;
   }

@@ -130,8 +130,9 @@ _uploadFood(Food food, bool isUpdating, Function foodUploaded, {String imageUrl}
 
   if (isUpdating) {
     food.updatedAt = Timestamp.now();
-
-    await foodRef.document(food.id).updateData(food.toMap());
+    FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
+    
+    await foodRef.document(firebaseUser.uid).collection('bills').document(food.id).updateData(food.toMap());
 
     foodUploaded(food);
     print('updated food with id: ${food.id}');
