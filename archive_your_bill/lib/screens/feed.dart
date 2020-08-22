@@ -37,8 +37,7 @@ class _FeedState extends State<Feed> {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final FirebaseUser user = await auth.currentUser();
       final uid = user.uid;
-      
-    
+
       yield* Firestore.instance
           .collection('userData')
           .document(uid.toString())
@@ -75,7 +74,8 @@ class _FeedState extends State<Feed> {
                 return const Text("Loading...");
               } else {
                 return ListView.separated(
-                  itemCount: foodNotifier.foodList.length,
+                  key: new Key('Some key'),
+                  itemCount: snapshot.data.documents.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
                       leading: Text('Test'),
@@ -86,17 +86,23 @@ class _FeedState extends State<Feed> {
                       //   width: 120,
                       //   fit: BoxFit.fitWidth,
                       // ),
-                      //title: Text(snapshot.data.documents[index].name),
-                      //subtitle: Text(snapshot.data.documents[index].category),
-                      title: Text(foodNotifier.foodList[index].name),
-                      subtitle: Text(foodNotifier.foodList[index].category),
+                      title: Text(snapshot.data.documents[index]['name']),
+                      subtitle:
+                          Text(snapshot.data.documents[index]['category']),
+                      //title: Text(foodNotifier.foodList[index].name),
+                      //subtitle: Text(foodNotifier.foodList[index].category),
                       onTap: () {
-                        foodNotifier.currentFood =
-                            foodNotifier.foodList[index];
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (BuildContext context) {
-                          return FoodDetail();
-                        }));
+                        foodNotifier.currentFood = foodNotifier.foodList[index];
+
+                        Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FoodDetail()))
+                            .then((value) {
+                          setState(() {
+                            _refreshList();
+                          });
+                        });
                       },
                     );
                   },
