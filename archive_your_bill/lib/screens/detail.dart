@@ -76,6 +76,7 @@ class FoodDetail extends StatelessWidget {
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,
           ),
+          
         ],
       ),
     );
