@@ -5,8 +5,6 @@ import 'package:archive_your_bill/screens/bill_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:archive_your_bill/screens/detail.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -14,6 +12,8 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
+
+  
   @override
   void initState() {
     FoodNotifier foodNotifier =
@@ -24,26 +24,11 @@ class _FeedState extends State<Feed> {
 
   @override
   Widget build(BuildContext context) {
-    AuthNotifier authNotifier =
-        Provider.of<AuthNotifier>(context, listen: true);
-    FoodNotifier foodNotifier =
-        Provider.of<FoodNotifier>(context, listen: true);
+    AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
+    FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context);
 
     Future<void> _refreshList() async {
       getFoods(foodNotifier);
-    }
-
-    Stream<QuerySnapshot> getBillsStreamSnapshots(BuildContext context) async* {
-      final FirebaseAuth auth = FirebaseAuth.instance;
-      final FirebaseUser user = await auth.currentUser();
-      final uid = user.uid;
-
-      yield* Firestore.instance
-          .collection('userData')
-          .document(uid.toString())
-          .collection('bills')
-          .snapshots();
-      print('Uid: $uid');
     }
 
     print("building Feed");
@@ -52,9 +37,7 @@ class _FeedState extends State<Feed> {
     return Scaffold(
       appBar: AppBar(
         //added display.name
-        title: Text(authNotifier.user.displayName != null
-            ? authNotifier.user.displayName
-            : "Main page"),
+        title: Text(authNotifier.user.displayName != null ?  authNotifier.user.displayName : "Main page" ),
         actions: <Widget>[
           // action button - logout
           FlatButton(
@@ -67,34 +50,22 @@ class _FeedState extends State<Feed> {
         ],
       ),
       body: new RefreshIndicator(
-        child: StreamBuilder(
-            stream: getBillsStreamSnapshots(context),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Text("Loading...");
-              } else {
-                return ListView.separated(
-                  key: new Key('Some key'),
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      leading: Text('Test'),
-                      //  Image.network(
-                      //   foodNotifier.foodList[index].image != null
-                      //       ? foodNotifier.foodList[index].image
-                      //       : 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg',
-                      //   width: 120,
-                      //   fit: BoxFit.fitWidth,
-                      // ),
-                      title: Text(snapshot.data.documents[index]['name']),
-                      subtitle:
-                          Text(snapshot.data.documents[index]['category']),
-                      //title: Text(foodNotifier.foodList[index].name),
-                      //subtitle: Text(foodNotifier.foodList[index].category),
-                      onTap: () {
-                        foodNotifier.currentFood = foodNotifier.foodList[index];
-
-                        Navigator.push(
+        child: ListView.separated(
+          itemBuilder: (BuildContext context, int index) {
+            return ListTile(
+              leading: Text('Test'),
+              //  Image.network(
+              //   foodNotifier.foodList[index].image != null
+              //       ? foodNotifier.foodList[index].image
+              //       : 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg',
+              //   width: 120,
+              //   fit: BoxFit.fitWidth,
+              // ),
+              title: Text(foodNotifier.foodList[index].name),
+              subtitle: Text(foodNotifier.foodList[index].category),
+              onTap: () {
+                foodNotifier.currentFood = foodNotifier.foodList[index];
+                Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => FoodDetail()))
@@ -103,17 +74,17 @@ class _FeedState extends State<Feed> {
                             _refreshList();
                           });
                         });
-                      },
-                    );
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return Divider(
-                      color: Colors.black,
-                    );
-                  },
-                );
-              }
-            }),
+
+              },
+            );
+          },
+          itemCount: foodNotifier.foodList.length,
+          separatorBuilder: (BuildContext context, int index) {
+            return Divider(
+              color: Colors.black,
+            );
+          },
+        ),
         onRefresh: _refreshList,
       ),
       floatingActionButton: FloatingActionButton(
@@ -130,6 +101,8 @@ class _FeedState extends State<Feed> {
         child: Icon(Icons.add),
         foregroundColor: Colors.white,
       ),
+      
     );
+    
   }
 }
