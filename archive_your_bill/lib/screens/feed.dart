@@ -61,7 +61,7 @@ class _FeedState extends State<Feed> {
               //   width: 120,
               //   fit: BoxFit.fitWidth,
               // ),
-              title: Text(foodNotifier.billList[index].name),
+              title: Text(foodNotifier.billList[index].nameShop),
               subtitle: Text(foodNotifier.billList[index].category),
               onTap: () {
                 foodNotifier.currentBill = foodNotifier.billList[index];

@@ -25,6 +25,8 @@ class _BillFormState extends State<BillForm> {
   Bill _currentBill;
   String _imageUrl;
   File _imageFile;
+  // ignore: avoid_init_to_null
+  String _dropdownValue = null;
   TextEditingController subingredientController = new TextEditingController();
 
   @override
@@ -112,15 +114,15 @@ class _BillFormState extends State<BillForm> {
     }
   }
 
-  Widget _buildNameField() {
+  Widget _buildShopNameField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Name of the Shop'),
-      initialValue: _currentBill.name,
+      decoration: InputDecoration(labelText: 'Name of the shop'),
+      initialValue: _currentBill.nameShop,
       keyboardType: TextInputType.text,
       style: TextStyle(fontSize: 20),
       validator: (String value) {
         if (value.isEmpty) {
-          return 'Name is required';
+          return 'Name of the shop is required';
         }
 
         if (value.length < 2 || value.length > 20) {
@@ -130,45 +132,67 @@ class _BillFormState extends State<BillForm> {
         return null;
       },
       onSaved: (String value) {
-        _currentBill.name = value;
+        _currentBill.nameShop = value;
       },
     );
   }
 
-  Widget _buildCategoryField() {
+  Widget _buildItemNameField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Category'),
-      initialValue: _currentBill.category,
+      decoration: InputDecoration(labelText: 'Name of the item'),
+      initialValue: _currentBill.nameItem,
       keyboardType: TextInputType.text,
       style: TextStyle(fontSize: 20),
       validator: (String value) {
         if (value.isEmpty) {
-          return 'Category is required';
+          return 'Name of the item is required';
         }
 
         if (value.length < 2 || value.length > 20) {
-          return 'Category must be more than 3 and less than 20';
+          return 'Name must be more than 2 and less than 20';
         }
 
         return null;
       },
       onSaved: (String value) {
-        _currentBill.category = value;
+        _currentBill.nameShop = value;
       },
     );
+    
   }
 
-  _buildBillCategoryField() {
-    return SizedBox(
-      width: 200,
-      child: TextField(
-        controller: subingredientController,
-        keyboardType: TextInputType.text,
-        decoration: InputDecoration(labelText: 'Subingredient'),
-        style: TextStyle(fontSize: 20),
+  Widget _buildItemCategoryField() {
+    return Container(
+      child: Align(
+        alignment: Alignment.centerLeft,
+              child: DropdownButton<String>(
+          value: _currentBill.category,
+          icon: Icon(Icons.keyboard_arrow_down),
+          iconSize: 20,
+          elevation: 8,
+          style: TextStyle(fontSize: 20, color: Colors.black),
+          underline: Container(
+            height: 1,
+            color: Colors.grey,
+          ),
+          onChanged: (String newValue) {
+            setState(() {
+              _currentBill.category = newValue;
+            });
+          },
+          items: <String>['Electronics', 'Clothes', 'Services', 'Other']
+              .map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          hint: Text('Choose category '),
+        ),
       ),
     );
   }
+
 
   _onBillUploaded(Bill bill) {
     BillNotifier billNotifier =
@@ -191,7 +215,7 @@ class _BillFormState extends State<BillForm> {
     uploadFoodAndImage(
         _currentBill, widget.isUpdating, _imageFile, _onBillUploaded);
 
-    print("name: ${_currentBill.name}");
+    print("name: ${_currentBill.nameShop}");
     print("category: ${_currentBill.category}");
     print("_imageFile ${_imageFile.toString()}");
     print("_imageUrl $_imageUrl");
@@ -210,12 +234,8 @@ class _BillFormState extends State<BillForm> {
           child: Column(children: <Widget>[
             _showImage(),
             SizedBox(height: 16),
-            Text(
-              widget.isUpdating ? "Edit Bill" : "Create Bill",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 30),
-            ),
             SizedBox(height: 16),
+            //if there's no image file
             _imageFile == null && _imageUrl == null
                 ? ButtonTheme(
                     child: RaisedButton(
@@ -226,9 +246,16 @@ class _BillFormState extends State<BillForm> {
                       ),
                     ),
                   )
-                : SizedBox(height: 0),
-            _buildNameField(),
-            _buildCategoryField(),
+                : SizedBox(height: 10),
+                Text(
+              widget.isUpdating ? "Edit Bill" : "Create Bill",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 24),
+            ),
+            _buildShopNameField(),
+            _buildItemNameField(),
+            SizedBox(height: 12),
+            _buildItemCategoryField(),
             SizedBox(height: 16),
           ]),
         ),

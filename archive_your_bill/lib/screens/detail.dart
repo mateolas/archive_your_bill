@@ -18,7 +18,7 @@ class FoodDetail extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(billNotifier.currentBill.name),
+        title: Text(billNotifier.currentBill.nameShop),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -35,7 +35,7 @@ class FoodDetail extends StatelessWidget {
                 ),
                 SizedBox(height: 24),
                 Text(
-                  billNotifier.currentBill.name,
+                  billNotifier.currentBill.nameShop,
                   style: TextStyle(
                     fontSize: 40,
                   ),
