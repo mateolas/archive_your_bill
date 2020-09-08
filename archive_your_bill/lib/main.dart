@@ -13,7 +13,7 @@ void main() => runApp(MultiProvider(
           create: (context) => AuthNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (context) => FoodNotifier(),
+          create: (context) => BillNotifier(),
         ),
       ],
       child: MyApp(),

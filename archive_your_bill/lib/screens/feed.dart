@@ -1,4 +1,4 @@
-import 'package:archive_your_bill/api/food_api.dart';
+import 'package:archive_your_bill/api/bill_api.dart';
 import 'package:archive_your_bill/notifier/auth_notifier.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:archive_your_bill/screens/bill_form.dart';
@@ -16,19 +16,19 @@ class _FeedState extends State<Feed> {
   
   @override
   void initState() {
-    FoodNotifier foodNotifier =
-        Provider.of<FoodNotifier>(context, listen: false);
-    getFoods(foodNotifier);
+    BillNotifier foodNotifier =
+        Provider.of<BillNotifier>(context, listen: false);
+    getBills(foodNotifier);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
-    FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context);
+    BillNotifier foodNotifier = Provider.of<BillNotifier>(context);
 
     Future<void> _refreshList() async {
-      getFoods(foodNotifier);
+      getBills(foodNotifier);
     }
 
     print("building Feed");
@@ -61,10 +61,10 @@ class _FeedState extends State<Feed> {
               //   width: 120,
               //   fit: BoxFit.fitWidth,
               // ),
-              title: Text(foodNotifier.foodList[index].name),
-              subtitle: Text(foodNotifier.foodList[index].category),
+              title: Text(foodNotifier.billList[index].name),
+              subtitle: Text(foodNotifier.billList[index].category),
               onTap: () {
-                foodNotifier.currentFood = foodNotifier.foodList[index];
+                foodNotifier.currentBill = foodNotifier.billList[index];
                 Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -78,7 +78,7 @@ class _FeedState extends State<Feed> {
               },
             );
           },
-          itemCount: foodNotifier.foodList.length,
+          itemCount: foodNotifier.billList.length,
           separatorBuilder: (BuildContext context, int index) {
             return Divider(
               color: Colors.black,
@@ -89,10 +89,10 @@ class _FeedState extends State<Feed> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          foodNotifier.currentFood = null;
+          foodNotifier.currentBill = null;
           Navigator.of(context).push(
             MaterialPageRoute(builder: (BuildContext context) {
-              return FoodForm(
+              return BillForm(
                 isUpdating: false,
               );
             }),

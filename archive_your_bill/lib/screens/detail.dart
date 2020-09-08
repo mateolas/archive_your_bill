@@ -1,24 +1,24 @@
-import 'package:archive_your_bill/api/food_api.dart';
+import 'package:archive_your_bill/api/bill_api.dart';
 import 'package:archive_your_bill/screens/bill_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:archive_your_bill/model/food.dart';
+import 'package:archive_your_bill/model/bill.dart';
 
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
 
 class FoodDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context);
+    BillNotifier billNotifier = Provider.of<BillNotifier>(context);
 
-    _onFoodDeleted(Food food) {
+    _onBillDeleted(Bill bill) {
       Navigator.pop(context);
-      foodNotifier.deleteFood(food);
+      billNotifier.deleteBill(bill);
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(foodNotifier.currentFood.name),
+        title: Text(billNotifier.currentBill.name),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -26,8 +26,8 @@ class FoodDetail extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Image.network(
-                  foodNotifier.currentFood.image != null
-                      ? foodNotifier.currentFood.image
+                  billNotifier.currentBill.image != null
+                      ? billNotifier.currentBill.image
                       : 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg',
                   width: MediaQuery.of(context).size.width,
                   height: 250,
@@ -35,13 +35,13 @@ class FoodDetail extends StatelessWidget {
                 ),
                 SizedBox(height: 24),
                 Text(
-                  foodNotifier.currentFood.name,
+                  billNotifier.currentBill.name,
                   style: TextStyle(
                     fontSize: 40,
                   ),
                 ),
                 Text(
-                  'Category: ${foodNotifier.currentFood.category}',
+                  'Category: ${billNotifier.currentBill.category}',
                   style: TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
                 ),
                 SizedBox(height: 20),
@@ -58,7 +58,7 @@ class FoodDetail extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (BuildContext context) {
-                  return FoodForm(
+                  return BillForm(
                     isUpdating: true,
                   );
                 }),
@@ -71,12 +71,11 @@ class FoodDetail extends StatelessWidget {
           FloatingActionButton(
             heroTag: 'button2',
             onPressed: () =>
-                deleteFood(foodNotifier.currentFood, _onFoodDeleted),
+                deleteBill(billNotifier.currentBill, _onBillDeleted),
             child: Icon(Icons.delete),
             backgroundColor: Colors.red,
             foregroundColor: Colors.white,
           ),
-          
         ],
       ),
     );

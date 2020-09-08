@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:archive_your_bill/model/food.dart';
+import 'package:archive_your_bill/model/bill.dart';
 import 'package:archive_your_bill/model/user.dart';
 import 'package:archive_your_bill/notifier/auth_notifier.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
@@ -70,7 +70,7 @@ initializeCurrentUser(AuthNotifier authNotifier) async {
   }
 
 //function to get list of bills from the firebase
-getFoods(FoodNotifier foodNotifier) async {
+getBills(BillNotifier billNotifier) async {
 
 FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
 
@@ -83,17 +83,17 @@ FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
       .orderBy("createdAt", descending: true)
       .getDocuments();
 
-  List<Food> _foodList = [];
+  List<Bill> _foodList = [];
 
   snapshot.documents.forEach((document) {
-    Food food = Food.fromMap(document.data);
+    Bill food = Bill.fromMap(document.data);
     _foodList.add(food);
   });
 
-  foodNotifier.foodList = _foodList;
+  billNotifier.billList = _foodList;
 }
 
-uploadFoodAndImage(Food food, bool isUpdating, File localFile, Function foodUploaded) async {
+uploadFoodAndImage(Bill food, bool isUpdating, File localFile, Function foodUploaded) async {
   if (localFile != null) {
     print("uploading image");
 
@@ -119,7 +119,7 @@ uploadFoodAndImage(Food food, bool isUpdating, File localFile, Function foodUplo
   }
 }
 
-_uploadFood(Food food, bool isUpdating, Function foodUploaded, {String imageUrl}) async {
+_uploadFood(Bill food, bool isUpdating, Function foodUploaded, {String imageUrl}) async {
   
   CollectionReference foodRef = Firestore.instance.collection('userData');
   
@@ -153,7 +153,7 @@ _uploadFood(Food food, bool isUpdating, Function foodUploaded, {String imageUrl}
   }
 }
 
-deleteFood(Food food, Function foodDeleted) async {
+deleteBill(Bill food, Function foodDeleted) async {
   if (food.image != null) {
     StorageReference storageReference =
         await FirebaseStorage.instance.getReferenceFromUrl(food.image);

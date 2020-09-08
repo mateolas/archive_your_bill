@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Food {
+class Bill {
   String id;
   String name;
   String category;
@@ -9,14 +9,13 @@ class Food {
   Timestamp createdAt;
   Timestamp updatedAt;
 
-  Food();
+  Bill();
 
-  Food.fromMap(Map<String, dynamic> data) {
+  Bill.fromMap(Map<String, dynamic> data) {
     id = data['id'];
     name = data['name'];
     category = data['category'];
     image = data['image'];
-    
     createdAt = data['createdAt'];
     updatedAt = data['updatedAt'];
   }
@@ -27,7 +26,6 @@ class Food {
       'name': name,
       'category': category,
       'image': image,
-      
       'createdAt': createdAt,
       'updatedAt': updatedAt
     };

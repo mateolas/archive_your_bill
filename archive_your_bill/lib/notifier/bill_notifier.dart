@@ -1,34 +1,34 @@
 import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
-import 'package:archive_your_bill/model/food.dart';
+import 'package:archive_your_bill/model/bill.dart';
 
 
-class FoodNotifier with ChangeNotifier {
-  List<Food> _foodList = [];
-  Food _currentFood;
+class BillNotifier with ChangeNotifier {
+  List<Bill> _billList = [];
+  Bill _currentBill;
 
-  UnmodifiableListView<Food> get foodList => UnmodifiableListView(_foodList);
+  UnmodifiableListView<Bill> get billList => UnmodifiableListView(_billList);
 
-  Food get currentFood => _currentFood;
+  Bill get currentBill => _currentBill;
 
-  set foodList(List<Food> foodList) {
-    _foodList = foodList;
+  set billList(List<Bill> billList) {
+    _billList = billList;
     notifyListeners();
   }
 
-  set currentFood(Food food) {
-    _currentFood = food;
+  set currentBill(Bill bill) {
+    _currentBill = bill;
     notifyListeners();
   }
 
-  addFood(Food food) {
-    _foodList.insert(0, food);
+  addBill(Bill bill) {
+    _billList.insert(0, bill);
     notifyListeners();
   }
 
-  deleteFood(Food food) {
-    _foodList.removeWhere((_food) => _food.id == food.id);
+  deleteBill(Bill bill) {
+    _billList.removeWhere((_bill) => _bill.id == bill.id);
     notifyListeners();
   }
 }

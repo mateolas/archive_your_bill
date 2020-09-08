@@ -1,28 +1,28 @@
 import 'dart:io';
-import 'package:archive_your_bill/api/food_api.dart';
+import 'package:archive_your_bill/api/bill_api.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:archive_your_bill/model/food.dart';
+import 'package:archive_your_bill/model/bill.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-//screen to create new bill
-class FoodForm extends StatefulWidget {
+//screen to create/edit the bill
+class BillForm extends StatefulWidget {
   final bool isUpdating;
 
-  FoodForm({@required this.isUpdating});
+  BillForm({@required this.isUpdating});
 
   @override
-  _FoodFormState createState() => _FoodFormState();
+  _BillFormState createState() => _BillFormState();
 }
 
-class _FoodFormState extends State<FoodForm> {
+class _BillFormState extends State<BillForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Food _currentFood;
+  Bill _currentBill;
   String _imageUrl;
   File _imageFile;
   TextEditingController subingredientController = new TextEditingController();
@@ -30,31 +30,34 @@ class _FoodFormState extends State<FoodForm> {
   @override
   void initState() {
     super.initState();
-    FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context, listen: false);
+    BillNotifier billNotifier = Provider.of<BillNotifier>(context, listen: false);
 
-    if (foodNotifier.currentFood != null) {
-      _currentFood = foodNotifier.currentFood;
+    if (billNotifier.currentBill != null) {
+      _currentBill = billNotifier.currentBill;
     } else {
-      _currentFood = Food();
+      _currentBill = Bill();
     }
     
-    _imageUrl = _currentFood.image;
+    _imageUrl = _currentBill.image;
   }
 
   _showImage() {
+    //if there's any file chosen 
     if (_imageFile == null && _imageUrl == null) {
-      return Text("image placeholder");
+      return Text(" ");
+    //if local file is chosen
     } else if (_imageFile != null) {
       print('showing image from local file');
-
       return Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: <Widget>[
+          //presenting a picture
           Image.file(
             _imageFile,
             fit: BoxFit.cover,
             height: 250,
           ),
+          //button to choose a file
           FlatButton(
             padding: EdgeInsets.all(16),
             color: Colors.black54,
@@ -69,9 +72,9 @@ class _FoodFormState extends State<FoodForm> {
           )
         ],
       );
+    //showing item from url
     } else if (_imageUrl != null) {
       print('showing image from url');
-
       return Stack(
         alignment: AlignmentDirectional.bottomCenter,
         children: <Widget>[
@@ -111,8 +114,8 @@ class _FoodFormState extends State<FoodForm> {
 
   Widget _buildNameField() {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Name'),
-      initialValue: _currentFood.name,
+      decoration: InputDecoration(labelText: 'Name of the Shop'),
+      initialValue: _currentBill.name,
       keyboardType: TextInputType.text,
       style: TextStyle(fontSize: 20),
       validator: (String value) {
@@ -127,7 +130,7 @@ class _FoodFormState extends State<FoodForm> {
         return null;
       },
       onSaved: (String value) {
-        _currentFood.name = value;
+        _currentBill.name = value;
       },
     );
   }
@@ -135,7 +138,7 @@ class _FoodFormState extends State<FoodForm> {
   Widget _buildCategoryField() {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Category'),
-      initialValue: _currentFood.category,
+      initialValue: _currentBill.category,
       keyboardType: TextInputType.text,
       style: TextStyle(fontSize: 20),
       validator: (String value) {
@@ -150,7 +153,7 @@ class _FoodFormState extends State<FoodForm> {
         return null;
       },
       onSaved: (String value) {
-        _currentFood.category = value;
+        _currentBill.category = value;
       },
     );
   }
@@ -167,15 +170,15 @@ class _FoodFormState extends State<FoodForm> {
     );
   }
 
-  _onFoodUploaded(Food food) {
-    FoodNotifier foodNotifier =
-        Provider.of<FoodNotifier>(context, listen: false);
-    foodNotifier.addFood(food);
+  _onBillUploaded(Bill bill) {
+    BillNotifier billNotifier =
+        Provider.of<BillNotifier>(context, listen: false);
+    billNotifier.addBill(bill);
     Navigator.pop(context);
   }
 
-  _saveFood() {
-    print('saveFood Called');
+  _saveBill() {
+    print('saveBill Called');
     if (!_formKey.currentState.validate()) {
       return;
     }
@@ -186,10 +189,10 @@ class _FoodFormState extends State<FoodForm> {
    
 
     uploadFoodAndImage(
-        _currentFood, widget.isUpdating, _imageFile, _onFoodUploaded);
+        _currentBill, widget.isUpdating, _imageFile, _onBillUploaded);
 
-    print("name: ${_currentFood.name}");
-    print("category: ${_currentFood.category}");
+    print("name: ${_currentBill.name}");
+    print("category: ${_currentBill.category}");
     print("_imageFile ${_imageFile.toString()}");
     print("_imageUrl $_imageUrl");
   }
@@ -198,7 +201,7 @@ class _FoodFormState extends State<FoodForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(title: Text('Food Form')),
+      appBar: AppBar(title: Text('Bill Form')),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(32),
         child: Form(
@@ -208,7 +211,7 @@ class _FoodFormState extends State<FoodForm> {
             _showImage(),
             SizedBox(height: 16),
             Text(
-              widget.isUpdating ? "Edit Food" : "Create Food",
+              widget.isUpdating ? "Edit Bill" : "Create Bill",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 30),
             ),
@@ -233,7 +236,7 @@ class _FoodFormState extends State<FoodForm> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           FocusScope.of(context).requestFocus(new FocusNode());
-          _saveFood();
+          _saveBill();
         },
         child: Icon(Icons.save),
         foregroundColor: Colors.white,
