@@ -7,6 +7,8 @@ import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+
+//screen to create new bill
 class FoodForm extends StatefulWidget {
   final bool isUpdating;
 
