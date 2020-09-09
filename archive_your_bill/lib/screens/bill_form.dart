@@ -7,7 +7,6 @@ import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 //screen to create/edit the bill
 class BillForm extends StatefulWidget {
   final bool isUpdating;
@@ -25,29 +24,28 @@ class _BillFormState extends State<BillForm> {
   Bill _currentBill;
   String _imageUrl;
   File _imageFile;
-  // ignore: avoid_init_to_null
-  String _dropdownValue = null;
   TextEditingController subingredientController = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    BillNotifier billNotifier = Provider.of<BillNotifier>(context, listen: false);
+    BillNotifier billNotifier =
+        Provider.of<BillNotifier>(context, listen: false);
 
     if (billNotifier.currentBill != null) {
       _currentBill = billNotifier.currentBill;
     } else {
       _currentBill = Bill();
     }
-    
+
     _imageUrl = _currentBill.image;
   }
 
   _showImage() {
-    //if there's any file chosen 
+    //if there's any file chosen
     if (_imageFile == null && _imageUrl == null) {
       return Text(" ");
-    //if local file is chosen
+      //if local file is chosen
     } else if (_imageFile != null) {
       print('showing image from local file');
       return Stack(
@@ -74,7 +72,7 @@ class _BillFormState extends State<BillForm> {
           )
         ],
       );
-    //showing item from url
+      //showing item from url
     } else if (_imageUrl != null) {
       print('showing image from url');
       return Stack(
@@ -147,7 +145,7 @@ class _BillFormState extends State<BillForm> {
         if (value.isEmpty) {
           return 'Name of the item is required';
         }
-  
+
         if (value.length < 2 || value.length > 20) {
           return 'Name must be more than 2 and less than 20';
         }
@@ -158,41 +156,48 @@ class _BillFormState extends State<BillForm> {
         _currentBill.nameShop = value;
       },
     );
-    
   }
 
+  final _formKey2 = GlobalKey<FormState>();
+  bool _autovalidate = false;
+  String selectedCategory = null;
+  String name;
+
   Widget _buildItemCategoryField() {
-    return Container(
-      child: Align(
-        alignment: Alignment.centerLeft,
-              child: DropdownButton<String>(
-          value: _currentBill.category,
-          icon: Icon(Icons.keyboard_arrow_down),
-          iconSize: 20,
-          elevation: 8,
-          style: TextStyle(fontSize: 20, color: Colors.black),
-          underline: Container(
-            height: 1,
-            color: Colors.grey,
+    return Form(
+      key: _formKey2,
+      autovalidate: _autovalidate,
+      child: Column(
+        children: <Widget>[
+          DropdownButtonFormField<String>(
+            value: selectedCategory,
+            style: TextStyle(fontSize: 20, color: Colors.black),
+            hint: Text(
+              'Choose category',
+            ),
+            onChanged: (newValue) =>
+                setState(() => _currentBill.category = newValue),
+            validator: (value) => value == null ? 'Item category required' : null,
+            items: [
+              'Electronics',
+              'Fashion',
+              'Sports',
+              'Home',
+              'Food',
+              'Health',
+              'Services',
+              'Other'
+            ].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
           ),
-          onChanged: (String newValue) {
-            setState(() {
-              _currentBill.category = newValue;
-            });
-          },
-          items: <String>['Electronics', 'Fashion', 'Sports', 'Home', 'Food', 'Health', 'Services', 'Other']
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          hint: Text('Choose category '),
-        ),
+        ],
       ),
     );
   }
-
 
   _onBillUploaded(Bill bill) {
     BillNotifier billNotifier =
@@ -203,14 +208,16 @@ class _BillFormState extends State<BillForm> {
 
   _saveBill() {
     print('saveBill Called');
-    if (!_formKey.currentState.validate()) {
+    
+    if ((!_formKey.currentState.validate() && !_formKey2.currentState.validate()) ||
+        !_formKey2.currentState.validate()) {
       return;
     }
 
+    _formKey2.currentState.save(); 
     _formKey.currentState.save();
-
+    
     print('form saved');
-   
 
     uploadFoodAndImage(
         _currentBill, widget.isUpdating, _imageFile, _onBillUploaded);
@@ -246,17 +253,18 @@ class _BillFormState extends State<BillForm> {
                       ),
                     ),
                   )
-                : SizedBox(height: 10),
-                Text(
+                : SizedBox(height: 14),
+            Text(
               widget.isUpdating ? "Edit Bill" : "Create Bill",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24),
+              style: TextStyle(fontSize: 20),
             ),
+
             _buildShopNameField(),
             _buildItemNameField(),
             SizedBox(height: 12),
             _buildItemCategoryField(),
-            SizedBox(height: 16),
+            SizedBox(height: 12),
           ]),
         ),
       ),
