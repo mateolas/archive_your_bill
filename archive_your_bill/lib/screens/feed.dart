@@ -1,10 +1,12 @@
 import 'package:archive_your_bill/api/bill_api.dart';
+import 'package:archive_your_bill/model/bill.dart';
 import 'package:archive_your_bill/notifier/auth_notifier.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:archive_your_bill/screens/bill_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:archive_your_bill/screens/detail.dart';
+
 
 class Feed extends StatefulWidget {
   @override
@@ -25,14 +27,45 @@ class _FeedState extends State<Feed> {
   @override
   Widget build(BuildContext context) {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
-    BillNotifier foodNotifier = Provider.of<BillNotifier>(context);
+    BillNotifier billNotifier = Provider.of<BillNotifier>(context);
+
+    Bill _currentBill;
 
     Future<void> _refreshList() async {
-      getBills(foodNotifier);
+      getBills(billNotifier);
     }
 
     print("building Feed");
     print('First authnotifier ${authNotifier.user.displayName}');
+
+    categoryToIcon(String category){
+      switch(category) { 
+      case "Electronics": { return Icon(Icons.computer); } 
+      break; 
+     
+      case "Fashion": {  return Icon(Icons.local_offer); } 
+      break; 
+     
+      case "Sports": {  return Icon(Icons.fitness_center); } 
+      break; 
+
+      case "Home": {  return Icon(Icons.home); } 
+      break; 
+
+      case "Food": {  return Icon(Icons.local_dining); } 
+      break; 
+
+      case "Health": {  return Icon(Icons.local_hospital); } 
+      break; 
+
+      case "Services": {  return Icon(Icons.build); } 
+      break; 
+
+      case "Other": {  return Icon(Icons.receipt); } 
+      break;  
+    
+   }  
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +86,7 @@ class _FeedState extends State<Feed> {
         child: ListView.separated(
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
-              leading: Text('Test'),
+              leading: categoryToIcon(billNotifier.billList[index].category),
               //  Image.network(
               //   foodNotifier.foodList[index].image != null
               //       ? foodNotifier.foodList[index].image
@@ -61,10 +94,10 @@ class _FeedState extends State<Feed> {
               //   width: 120,
               //   fit: BoxFit.fitWidth,
               // ),
-              title: Text(foodNotifier.billList[index].nameShop),
-              subtitle: Text(foodNotifier.billList[index].category),
+              title: Text(billNotifier.billList[index].nameShop),
+              subtitle: Text(billNotifier.billList[index].category),
               onTap: () {
-                foodNotifier.currentBill = foodNotifier.billList[index];
+                billNotifier.currentBill = billNotifier.billList[index];
                 Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -78,7 +111,7 @@ class _FeedState extends State<Feed> {
               },
             );
           },
-          itemCount: foodNotifier.billList.length,
+          itemCount: billNotifier.billList.length,
           separatorBuilder: (BuildContext context, int index) {
             return Divider(
               color: Colors.black,
@@ -89,7 +122,7 @@ class _FeedState extends State<Feed> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          foodNotifier.currentBill = null;
+          billNotifier.currentBill = null;
           Navigator.of(context).push(
             MaterialPageRoute(builder: (BuildContext context) {
               return BillForm(

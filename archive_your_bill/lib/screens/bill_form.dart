@@ -147,7 +147,7 @@ class _BillFormState extends State<BillForm> {
         if (value.isEmpty) {
           return 'Name of the item is required';
         }
-
+  
         if (value.length < 2 || value.length > 20) {
           return 'Name must be more than 2 and less than 20';
         }
@@ -180,7 +180,7 @@ class _BillFormState extends State<BillForm> {
               _currentBill.category = newValue;
             });
           },
-          items: <String>['Electronics', 'Clothes', 'Services', 'Other']
+          items: <String>['Electronics', 'Fashion', 'Sports', 'Home', 'Food', 'Health', 'Services', 'Other']
               .map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,

@@ -7,6 +7,8 @@ class Bill {
   String category;
   String image;
   
+ 
+
   Timestamp createdAt;
   Timestamp updatedAt;
 
