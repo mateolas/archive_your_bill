@@ -196,7 +196,11 @@ class _BillFormState extends State<BillForm> {
 
   Widget _buildCostFieldValue() {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Price'),
+      decoration: InputDecoration(
+        labelText: 'Price',
+        labelStyle: TextStyle(fontSize: 20),
+        isDense: true,
+      ),
       initialValue: _currentBill.nameShop,
       keyboardType: TextInputType.text,
       style: TextStyle(fontSize: 20),
@@ -217,13 +221,15 @@ class _BillFormState extends State<BillForm> {
     );
   }
 
-  Widget _buildCostFieldCurrency() {
+  Widget _buildCostCurrencyField() {
     return DropdownButtonFormField<String>(
       value: selectedCurrency,
-      style: TextStyle(fontSize: 20, color: Colors.black),
-      hint: Text(
-        'Currency',
+      decoration: InputDecoration(
+        labelText: 'Currency',
+        labelStyle: TextStyle(fontSize: 20),
+        isDense: true,
       ),
+      style: TextStyle(fontSize: 20, color: Colors.black),
       onChanged: (newValue) => setState(() => _currentBill.category = newValue),
       validator: (value) => value == null ? 'Currency required' : null,
       items: [
@@ -243,13 +249,30 @@ class _BillFormState extends State<BillForm> {
   }
 
   Widget _buildCostField() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Flexible(child: _buildCostFieldValue()),
-        SizedBox(width: 20.0),
-        Flexible(child: _buildCostFieldCurrency()),
-      ],
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 0.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              flex: 2,
+              child: Container(
+                //color: Colors.red,
+                child: _buildCostFieldValue(),
+              ),
+            ),
+            SizedBox(width: 15.0),
+            Expanded(
+              flex: 1,
+              child: Container(
+                //color: Colors.blue,
+                child: _buildCostCurrencyField(),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -268,7 +291,6 @@ class _BillFormState extends State<BillForm> {
     }
 
     _formKey.currentState.save();
-   
 
     print('form saved');
 
@@ -319,7 +341,7 @@ class _BillFormState extends State<BillForm> {
               _buildItemNameField(),
               SizedBox(height: 12),
               _buildItemCategoryField(),
-              SizedBox(height: 12),
+              
               _buildCostField(),
             ],
           ),
