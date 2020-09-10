@@ -21,6 +21,15 @@ class _BillFormState extends State<BillForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  //final _formKey2 = GlobalKey<FormState>();
+  //final _formKey3 = GlobalKey<FormState>();
+  bool _autovalidate = false;
+  // ignore: avoid_init_to_null
+  String selectedCategory = null;
+  // ignore: avoid_init_to_null
+  String selectedCurrency = null;
+  String name;
+
   Bill _currentBill;
   String _imageUrl;
   File _imageFile;
@@ -158,54 +167,89 @@ class _BillFormState extends State<BillForm> {
     );
   }
 
-  Widget _buildCostField() {
-    return Row(
-      children: <Widget>[
-        Text('Test1'),
-        Text('Test2'),
-      ],
+  Widget _buildItemCategoryField() {
+    return DropdownButtonFormField<String>(
+      value: selectedCategory,
+      style: TextStyle(fontSize: 20, color: Colors.black),
+      hint: Text(
+        'Choose category',
+      ),
+      onChanged: (newValue) => setState(() => _currentBill.category = newValue),
+      validator: (value) => value == null ? 'Item category required' : null,
+      items: [
+        'Electronics',
+        'Fashion',
+        'Sports',
+        'Home',
+        'Food',
+        'Health',
+        'Services',
+        'Other'
+      ].map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
   }
 
-  final _formKey2 = GlobalKey<FormState>();
-  bool _autovalidate = false;
-  String selectedCategory = null;
-  String name;
+  Widget _buildCostFieldValue() {
+    return TextFormField(
+      decoration: InputDecoration(labelText: 'Price'),
+      initialValue: _currentBill.nameShop,
+      keyboardType: TextInputType.text,
+      style: TextStyle(fontSize: 20),
+      validator: (String value) {
+        if (value.isEmpty) {
+          return 'Price is required';
+        } else if (double.tryParse(value) >= 0 &&
+            value.length < 20 &&
+            (value is double || value is int)) {
+          return 'Insert proper value';
+        }
 
-  Widget _buildItemCategoryField() {
-    return Form(
-      key: _formKey2,
-      autovalidate: _autovalidate,
-      child: Column(
-        children: <Widget>[
-          DropdownButtonFormField<String>(
-            value: selectedCategory,
-            style: TextStyle(fontSize: 20, color: Colors.black),
-            hint: Text(
-              'Choose category',
-            ),
-            onChanged: (newValue) =>
-                setState(() => _currentBill.category = newValue),
-            validator: (value) =>
-                value == null ? 'Item category required' : null,
-            items: [
-              'Electronics',
-              'Fashion',
-              'Sports',
-              'Home',
-              'Food',
-              'Health',
-              'Services',
-              'Other'
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-        ],
+        return null;
+      },
+      onSaved: (String value) {
+        _currentBill.nameShop = value;
+      },
+    );
+  }
+
+  Widget _buildCostFieldCurrency() {
+    return DropdownButtonFormField<String>(
+      value: selectedCurrency,
+      style: TextStyle(fontSize: 20, color: Colors.black),
+      hint: Text(
+        'Currency',
       ),
+      onChanged: (newValue) => setState(() => _currentBill.category = newValue),
+      validator: (value) => value == null ? 'Currency required' : null,
+      items: [
+        'USD',
+        'GBP',
+        'EUR',
+        'PLN',
+        'INR',
+        'RMB',
+      ].map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildCostField() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Flexible(child: _buildCostFieldValue()),
+        SizedBox(width: 20.0),
+        Flexible(child: _buildCostFieldCurrency()),
+      ],
     );
   }
 
@@ -219,14 +263,12 @@ class _BillFormState extends State<BillForm> {
   _saveBill() {
     print('saveBill Called');
 
-    if ((!_formKey.currentState.validate() &&
-            !_formKey2.currentState.validate()) ||
-        !_formKey2.currentState.validate()) {
+    if (!_formKey.currentState.validate()) {
       return;
     }
 
-    _formKey2.currentState.save();
     _formKey.currentState.save();
+   
 
     print('form saved');
 
