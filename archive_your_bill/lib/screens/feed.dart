@@ -140,7 +140,7 @@ class _FeedState extends State<Feed> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text('${billNotifier.billList[index].nameShop}'),
-                            Text('${2}'),
+                            Text('${billNotifier.billList[index].nameItem}'),
                             Text('${3}'),
                             //Text(
                             //  DateFormat.yMMMd().format(bills[index].purchaseDate),

@@ -7,8 +7,6 @@ class Bill {
   String category;
   String image;
   
- 
-
   Timestamp createdAt;
   Timestamp updatedAt;
 
@@ -16,7 +14,8 @@ class Bill {
 
   Bill.fromMap(Map<String, dynamic> data) {
     id = data['id'];
-    nameShop = data['name'];
+    nameShop = data['nameShop'];
+    nameItem = data['nameItem'];
     category = data['category'];
     image = data['image'];
     createdAt = data['createdAt'];
@@ -26,7 +25,8 @@ class Bill {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'name': nameShop,
+      'nameShop': nameShop,
+      'nameItem': nameItem,
       'category': category,
       'image': image,
       'createdAt': createdAt,

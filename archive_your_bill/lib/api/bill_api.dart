@@ -83,17 +83,17 @@ FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
       .orderBy("createdAt", descending: true)
       .getDocuments();
 
-  List<Bill> _foodList = [];
+  List<Bill> _billList = [];
 
   snapshot.documents.forEach((document) {
-    Bill food = Bill.fromMap(document.data);
-    _foodList.add(food);
+    Bill bill = Bill.fromMap(document.data);
+    _billList.add(bill);
   });
 
-  billNotifier.billList = _foodList;
+  billNotifier.billList = _billList;
 }
 
-uploadFoodAndImage(Bill food, bool isUpdating, File localFile, Function foodUploaded) async {
+uploadBillAndImage(Bill bill, bool isUpdating, File localFile, Function foodUploaded) async {
   if (localFile != null) {
     print("uploading image");
 
@@ -112,44 +112,44 @@ uploadFoodAndImage(Bill food, bool isUpdating, File localFile, Function foodUplo
 
     String url = await firebaseStorageRef.getDownloadURL();
     print("download url: $url");
-    _uploadFood(food, isUpdating, foodUploaded, imageUrl: url);
+    _uploadBill(bill, isUpdating, foodUploaded, imageUrl: url);
   } else {
     print('...skipping image upload');
-    _uploadFood(food, isUpdating, foodUploaded);
+    _uploadBill(bill, isUpdating, foodUploaded);
   }
 }
 
-_uploadFood(Bill food, bool isUpdating, Function foodUploaded, {String imageUrl}) async {
+_uploadBill(Bill bill, bool isUpdating, Function billUploaded, {String imageUrl}) async {
   
   CollectionReference foodRef = Firestore.instance.collection('userData');
   
 
   if (imageUrl != null) {
-    food.image = imageUrl;
+    bill.image = imageUrl;
   }
 
   if (isUpdating) {
-    food.updatedAt = Timestamp.now();
+    bill.updatedAt = Timestamp.now();
     FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
 
-    await foodRef.document(firebaseUser.uid).collection('bills').document(food.id).updateData(food.toMap());
+    await foodRef.document(firebaseUser.uid).collection('bills').document(bill.id).updateData(bill.toMap());
 
-    foodUploaded(food);
-    print('updated food with id: ${food.id}');
+    billUploaded(bill);
+    print('updated food with id: ${bill.id}');
   } else {
-    food.createdAt = Timestamp.now();
+    bill.createdAt = Timestamp.now();
 
     FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
 
-    DocumentReference documentRef = await foodRef.document(firebaseUser.uid).collection('bills').add(food.toMap());
+    DocumentReference documentRef = await foodRef.document(firebaseUser.uid).collection('bills').add(bill.toMap());
 
-    food.id = documentRef.documentID;
+    bill.id = documentRef.documentID;
 
-    print('uploaded food successfully: ${food.toString()}');
+    print('uploaded food successfully: ${bill.toString()}');
 
-    await documentRef.setData(food.toMap(), merge: true);
+    await documentRef.setData(bill.toMap(), merge: true);
 
-    foodUploaded(food);
+    billUploaded(bill);
   }
 }
 

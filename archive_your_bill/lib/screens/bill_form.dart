@@ -153,7 +153,7 @@ class _BillFormState extends State<BillForm> {
         return null;
       },
       onSaved: (String value) {
-        _currentBill.nameShop = value;
+        _currentBill.nameItem = value;
       },
     );
   }
@@ -200,8 +200,7 @@ class _BillFormState extends State<BillForm> {
   }
 
   _onBillUploaded(Bill bill) {
-    BillNotifier billNotifier =
-        Provider.of<BillNotifier>(context, listen: false);
+    BillNotifier billNotifier = Provider.of<BillNotifier>(context, listen: false);
     billNotifier.addBill(bill);
     Navigator.pop(context);
   }
@@ -219,8 +218,7 @@ class _BillFormState extends State<BillForm> {
     
     print('form saved');
 
-    uploadFoodAndImage(
-        _currentBill, widget.isUpdating, _imageFile, _onBillUploaded);
+    uploadBillAndImage(_currentBill, widget.isUpdating, _imageFile, _onBillUploaded);
 
     print("name: ${_currentBill.nameShop}");
     print("category: ${_currentBill.category}");
