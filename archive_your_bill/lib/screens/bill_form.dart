@@ -158,6 +158,15 @@ class _BillFormState extends State<BillForm> {
     );
   }
 
+  Widget _buildCostField() {
+    return Row(
+      children: <Widget>[
+        Text('Test1'),
+        Text('Test2'),
+      ],
+    );
+  }
+
   final _formKey2 = GlobalKey<FormState>();
   bool _autovalidate = false;
   String selectedCategory = null;
@@ -177,7 +186,8 @@ class _BillFormState extends State<BillForm> {
             ),
             onChanged: (newValue) =>
                 setState(() => _currentBill.category = newValue),
-            validator: (value) => value == null ? 'Item category required' : null,
+            validator: (value) =>
+                value == null ? 'Item category required' : null,
             items: [
               'Electronics',
               'Fashion',
@@ -200,25 +210,28 @@ class _BillFormState extends State<BillForm> {
   }
 
   _onBillUploaded(Bill bill) {
-    BillNotifier billNotifier = Provider.of<BillNotifier>(context, listen: false);
+    BillNotifier billNotifier =
+        Provider.of<BillNotifier>(context, listen: false);
     billNotifier.addBill(bill);
     Navigator.pop(context);
   }
 
   _saveBill() {
     print('saveBill Called');
-    
-    if ((!_formKey.currentState.validate() && !_formKey2.currentState.validate()) ||
+
+    if ((!_formKey.currentState.validate() &&
+            !_formKey2.currentState.validate()) ||
         !_formKey2.currentState.validate()) {
       return;
     }
 
-    _formKey2.currentState.save(); 
+    _formKey2.currentState.save();
     _formKey.currentState.save();
-    
+
     print('form saved');
 
-    uploadBillAndImage(_currentBill, widget.isUpdating, _imageFile, _onBillUploaded);
+    uploadBillAndImage(
+        _currentBill, widget.isUpdating, _imageFile, _onBillUploaded);
 
     print("name: ${_currentBill.nameShop}");
     print("category: ${_currentBill.category}");
@@ -230,40 +243,44 @@ class _BillFormState extends State<BillForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(title: Text('Bill Form')),
+      appBar: AppBar(
+        title: Text(
+          widget.isUpdating ? "Edit Bill" : "Create Bill",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(32),
         child: Form(
           key: _formKey,
           autovalidate: true,
-          child: Column(children: <Widget>[
-            _showImage(),
-            SizedBox(height: 16),
-            SizedBox(height: 16),
-            //if there's no image file
-            _imageFile == null && _imageUrl == null
-                ? ButtonTheme(
-                    child: RaisedButton(
-                      onPressed: () => _getLocalImage(),
-                      child: Text(
-                        'Add Image',
-                        style: TextStyle(color: Colors.white),
+          child: Column(
+            children: <Widget>[
+              _showImage(),
+              SizedBox(height: 16),
+              SizedBox(height: 16),
+              //if there's no image file
+              _imageFile == null && _imageUrl == null
+                  ? ButtonTheme(
+                      child: RaisedButton(
+                        onPressed: () => _getLocalImage(),
+                        child: Text(
+                          'Add Image',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
-                    ),
-                  )
-                : SizedBox(height: 14),
-            Text(
-              widget.isUpdating ? "Edit Bill" : "Create Bill",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
-            ),
+                    )
+                  : SizedBox(height: 14),
 
-            _buildShopNameField(),
-            _buildItemNameField(),
-            SizedBox(height: 12),
-            _buildItemCategoryField(),
-            SizedBox(height: 12),
-          ]),
+              _buildShopNameField(),
+              _buildItemNameField(),
+              SizedBox(height: 12),
+              _buildItemCategoryField(),
+              SizedBox(height: 12),
+              _buildCostField(),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
