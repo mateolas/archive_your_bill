@@ -9,6 +9,7 @@ class Bill {
   
   Timestamp createdAt;
   Timestamp updatedAt;
+  
 
   Bill();
 
