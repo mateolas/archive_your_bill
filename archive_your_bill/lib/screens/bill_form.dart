@@ -63,7 +63,7 @@ class _BillFormState extends State<BillForm> {
       _currentBill.warrantyStart = Timestamp.fromDate(_selectedDate);
     }
 
-    if(_warrantyValidUntil != null){
+    if (_warrantyValidUntil != null) {
       setState(() {
         _warrantyValidUntil = DateTime(
             _selectedDate.year,
@@ -74,9 +74,6 @@ class _BillFormState extends State<BillForm> {
         _currentBill.warrantyLength = itemWarrantyLengthController.text;
       });
     }
-
-
-    
   }
 
   _showImage() {

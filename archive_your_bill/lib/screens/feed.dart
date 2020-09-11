@@ -108,9 +108,10 @@ class _FeedState extends State<Feed> {
           itemBuilder: (BuildContext context, int index) {
             return GestureDetector(
               onTap: () {
+                //after clicking setting up with notifier a current bill
                 billNotifier.currentBill = billNotifier.billList[index];
                 Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => FoodDetail()))
+                        MaterialPageRoute(builder: (context) => BillDetail()))
                     .then((value) {
                   setState(() {
                     _refreshList();
@@ -120,7 +121,7 @@ class _FeedState extends State<Feed> {
               child: Card(
                 elevation: 3,
                 margin: EdgeInsets.all(6),
-                shadowColor: Colors.yellow,
+                shadowColor: Colors.black,
                 color: Colors.white,
                 child: Container(
                   height: 140,
@@ -195,17 +196,27 @@ class _FeedState extends State<Feed> {
                               children: <Widget>[
                                 Container(
                                   child: IconButton(
-                                    icon: Icon(Icons.share),
+                                    icon: Icon(Icons.edit),
                                     color: Colors.grey,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      billNotifier.currentBill = billNotifier.billList[index];
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) {
+                                          return BillForm(
+                                            isUpdating: true,
+                                          );
+                                        }),
+                                      );
+                                    },
                                   ),
                                 ),
                                 Container(
                                   child: IconButton(
-                                    icon: Icon(Icons.delete),
+                                    icon: Icon(Icons.share),
                                     disabledColor: Colors.yellow,
                                     color: Colors.grey,
-                                    onPressed: () => {},
+                                    onPressed: () {},
                                   ),
                                 ),
                               ],

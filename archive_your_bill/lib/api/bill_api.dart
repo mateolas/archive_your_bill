@@ -153,10 +153,10 @@ _uploadBill(Bill bill, bool isUpdating, Function billUploaded, {String imageUrl}
   }
 }
 
-deleteBill(Bill food, Function foodDeleted) async {
-  if (food.image != null) {
+deleteBill(Bill bill, Function foodDeleted) async {
+  if (bill.image != null) {
     StorageReference storageReference =
-        await FirebaseStorage.instance.getReferenceFromUrl(food.image);
+        await FirebaseStorage.instance.getReferenceFromUrl(bill.image);
 
     print(storageReference.path);
 
@@ -165,6 +165,6 @@ deleteBill(Bill food, Function foodDeleted) async {
     print('image deleted');
   }
   FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
-  await Firestore.instance.collection('userData').document(firebaseUser.uid).collection('bills').document(food.id)..delete();
-  foodDeleted(food);
+  await Firestore.instance.collection('userData').document(firebaseUser.uid).collection('bills').document(bill.id)..delete();
+  foodDeleted(bill);
 }
