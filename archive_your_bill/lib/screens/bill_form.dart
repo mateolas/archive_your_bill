@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:archive_your_bill/api/bill_api.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:archive_your_bill/model/bill.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +36,7 @@ class _BillFormState extends State<BillForm> {
 
   DateTime _selectedDate = DateTime.now();
   DateTime _warrantyValidUntil;
-  final itemWarrantyLengthController = TextEditingController();
+  var itemWarrantyLengthController = TextEditingController();
 
   @override
   void initState() {
@@ -50,7 +50,33 @@ class _BillFormState extends State<BillForm> {
       _currentBill = Bill();
     }
 
+    //setting initial value for editext widget
+    if (_currentBill.warrantyLength == null) {
+      _currentBill.warrantyLength = '';
+    } else {
+      itemWarrantyLengthController =
+          TextEditingController(text: "${_currentBill.warrantyLength}");
+    }
     _imageUrl = _currentBill.image;
+
+    if (_currentBill.warrantyStart == null) {
+      _currentBill.warrantyStart = Timestamp.fromDate(_selectedDate);
+    }
+
+    if(_warrantyValidUntil != null){
+      setState(() {
+        _warrantyValidUntil = DateTime(
+            _selectedDate.year,
+            _selectedDate.month + int.parse(itemWarrantyLengthController.text),
+            _selectedDate.day);
+
+        _currentBill.warrantyEnd = Timestamp.fromDate(_warrantyValidUntil);
+        _currentBill.warrantyLength = itemWarrantyLengthController.text;
+      });
+    }
+
+
+    
   }
 
   _showImage() {
@@ -177,11 +203,9 @@ class _BillFormState extends State<BillForm> {
 
   Widget _buildItemCategoryField() {
     return DropdownButtonFormField<String>(
-      value: selectedCategory,
+      value: _currentBill.category,
       style: TextStyle(fontSize: 16, color: Colors.black),
-      hint: Text(
-        'Choose category',
-      ),
+      hint: Text('Choose category'),
       onChanged: (newValue) => setState(() => _currentBill.category = newValue),
       validator: (value) => value == null ? 'Item category required' : null,
       items: [
@@ -218,7 +242,7 @@ class _BillFormState extends State<BillForm> {
         labelStyle: TextStyle(fontSize: 16),
         isDense: true,
       ),
-      initialValue: _currentBill.nameShop,
+      initialValue: _currentBill.priceItem,
       keyboardType: TextInputType.number,
       validator: (String value) {
         if (value.isEmpty) {
@@ -227,21 +251,22 @@ class _BillFormState extends State<BillForm> {
         return null;
       },
       onSaved: (String value) {
-        _currentBill.nameShop = value;
+        _currentBill.priceItem = value;
       },
     );
   }
 
   Widget _buildCostCurrencyField() {
     return DropdownButtonFormField<String>(
-      value: selectedCurrency,
+      value: _currentBill.currencyItem,
       decoration: InputDecoration(
         labelText: 'Currency',
         labelStyle: TextStyle(fontSize: 16),
         isDense: true,
       ),
       style: TextStyle(fontSize: 16, color: Colors.black),
-      onChanged: (newValue) => setState(() => _currentBill.category = newValue),
+      onChanged: (newValue) =>
+          setState(() => _currentBill.currencyItem = newValue),
       validator: (value) => value == null ? 'Currency required' : null,
       items: [
         'USD',
@@ -305,12 +330,21 @@ class _BillFormState extends State<BillForm> {
 
       setState(() {
         _selectedDate = pickedDate;
+        _currentBill.warrantyStart = Timestamp.fromDate(_selectedDate);
+
+        _warrantyValidUntil = DateTime(
+            _selectedDate.year,
+            _selectedDate.month + int.parse(itemWarrantyLengthController.text),
+            _selectedDate.day);
+
+        _currentBill.warrantyEnd = Timestamp.fromDate(_warrantyValidUntil);
+        _currentBill.warrantyLength = itemWarrantyLengthController.text;
       });
     });
   }
 
   void warrantyValidUntil() {
-    if (itemWarrantyLengthController.text == '') {
+    if (itemWarrantyLengthController.text.isEmpty) {
       setState(() {
         _warrantyValidUntil = null;
       });
@@ -320,6 +354,9 @@ class _BillFormState extends State<BillForm> {
             _selectedDate.year,
             _selectedDate.month + int.parse(itemWarrantyLengthController.text),
             _selectedDate.day);
+
+        _currentBill.warrantyEnd = Timestamp.fromDate(_warrantyValidUntil);
+        _currentBill.warrantyLength = itemWarrantyLengthController.text;
       });
     }
     setState(() {
@@ -327,6 +364,9 @@ class _BillFormState extends State<BillForm> {
           _selectedDate.year,
           _selectedDate.month + int.parse(itemWarrantyLengthController.text),
           _selectedDate.day);
+
+      _currentBill.warrantyEnd = Timestamp.fromDate(_warrantyValidUntil);
+      _currentBill.warrantyLength = itemWarrantyLengthController.text;
     });
   }
 
@@ -372,9 +412,9 @@ class _BillFormState extends State<BillForm> {
               padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
               child: Expanded(
                 child: Text(
-                  _selectedDate == null
+                  _currentBill.warrantyStart == null
                       ? ''
-                      : '${DateFormat.yMMMd().format(_selectedDate)}',
+                      : '${DateFormat.yMMMd().format(_currentBill.warrantyStart.toDate())}',
                 ),
               ),
             ),
@@ -402,9 +442,9 @@ class _BillFormState extends State<BillForm> {
           ),
           Expanded(
             child: Text(
-              _warrantyValidUntil == null
+              _currentBill.warrantyEnd == null
                   ? ''
-                  : '${DateFormat.yMMMd().format(_warrantyValidUntil)}',
+                  : '${DateFormat.yMMMd().format(_currentBill.warrantyEnd.toDate())}',
             ),
           ),
         ],
@@ -428,6 +468,7 @@ class _BillFormState extends State<BillForm> {
       return;
     }
 
+    //_currentBill.warrantyStart = Timestamp.fromDate(_selectedDate);
     _formKey.currentState.save();
 
     print('form saved');
@@ -486,7 +527,9 @@ class _BillFormState extends State<BillForm> {
               _buildCostField(),
               _buildItemWarrantyLength(),
               _buildChooseStartDayButton(),
-              _buildWarrantyValidUntil(),
+              itemWarrantyLengthController.text.isEmpty
+                  ? SizedBox(height: 0)
+                  : _buildWarrantyValidUntil(),
             ],
           ),
         ),
