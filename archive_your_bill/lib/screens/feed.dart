@@ -6,6 +6,7 @@ import 'package:archive_your_bill/screens/bill_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:archive_your_bill/screens/detail.dart';
+import 'package:intl/intl.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -37,49 +38,49 @@ class _FeedState extends State<Feed> {
       switch (category) {
         case "Electronics":
           {
-            return Icon(Icons.computer);
+            return Icon(Icons.computer, size: 32);
           }
           break;
 
         case "Fashion":
           {
-            return Icon(Icons.local_offer);
+            return Icon(Icons.local_offer, size: 32);
           }
           break;
 
         case "Sports":
           {
-            return Icon(Icons.fitness_center);
+            return Icon(Icons.fitness_center, size: 32);
           }
           break;
 
         case "Home":
           {
-            return Icon(Icons.home);
+            return Icon(Icons.home, size: 32);
           }
           break;
 
         case "Food":
           {
-            return Icon(Icons.local_dining);
+            return Icon(Icons.local_dining, size: 32);
           }
           break;
 
         case "Health":
           {
-            return Icon(Icons.local_hospital);
+            return Icon(Icons.local_hospital, size: 32);
           }
           break;
 
         case "Services":
           {
-            return Icon(Icons.build);
+            return Icon(Icons.build, size: 32);
           }
           break;
 
         case "Other":
           {
-            return Icon(Icons.receipt);
+            return Icon(Icons.receipt, size: 32);
           }
           break;
       }
@@ -103,9 +104,6 @@ class _FeedState extends State<Feed> {
         ],
       ),
       body: new RefreshIndicator(
-        //TO-DO: Custom Tile
-        //link to custom ListView
-        //https://stackoverflow.com/questions/46416024/proper-way-to-add-gesturedector-to-listview-builder-card-in-flutter
         child: ListView.builder(
           itemBuilder: (BuildContext context, int index) {
             return GestureDetector(
@@ -125,26 +123,68 @@ class _FeedState extends State<Feed> {
                 shadowColor: Colors.yellow,
                 color: Colors.white,
                 child: Container(
-                  height: 100,
+                  height: 140,
                   child: Center(
                     child: Row(
                       children: <Widget>[
-                        //Shop name
+                        //Category Icon
                         Container(
                             padding: EdgeInsets.all(10),
                             //color: Colors.blue,
-                            child: categoryToIcon(billNotifier.billList[index].category)),
+                            child: categoryToIcon(
+                                billNotifier.billList[index].category)),
                         //Item name and cost
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text('${billNotifier.billList[index].nameShop}'),
-                            Text('${billNotifier.billList[index].nameItem}'),
-                            Text('${3}'),
-                            //Text(
-                            //  DateFormat.yMMMd().format(bills[index].purchaseDate),
-                            //),
+                            //SHOP NAME
+                            Text(
+                              '${billNotifier.billList[index].nameShop}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 6)),
+                            //ITEM NAME
+                            Text(
+                              '${billNotifier.billList[index].nameItem}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 12)),
+                            //ITEM PRICE AND CURRENCY
+                            Row(
+                              children: [
+                                Text(
+                                    'Price: ${billNotifier.billList[index].priceItem}',
+                                    style: TextStyle(fontSize: 14)),
+                                Text(
+                                    ' ${billNotifier.billList[index].currencyItem}',
+                                    style: TextStyle(fontSize: 14)),
+                              ],
+                            ),
+                            Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
+                            //ITEM BOUGHT DATE
+                            Text(
+                              'Bought: ${DateFormat.yMMMd().format(billNotifier.billList[index].warrantyStart.toDate())}',
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                            Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
+                            //WARRANTY UNTIL
+                            billNotifier.billList[index].warrantyEnd == null
+                                ? ''
+                                : Text(
+                                    'Warranty until: ${DateFormat.yMMMd().format(billNotifier.billList[index].warrantyEnd.toDate())}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
                           ],
                         ),
                         Expanded(
@@ -178,35 +218,8 @@ class _FeedState extends State<Feed> {
                 ),
               ),
             );
-
-            // return ListTile(
-            //   leading: categoryToIcon(billNotifier.billList[index].category),
-            //   //  Image.network(
-            //   //   foodNotifier.foodList[index].image != null
-            //   //       ? foodNotifier.foodList[index].image
-            //   //       : 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg',
-            //   //   width: 120,
-            //   //   fit: BoxFit.fitWidth,
-            //   // ),
-            //   title: Text(billNotifier.billList[index].nameShop),
-            //   subtitle: Text(billNotifier.billList[index].category),
-            //   onTap: () {
-            //     billNotifier.currentBill = billNotifier.billList[index];
-            //     Navigator.push(
-            //                     context,
-            //                     MaterialPageRoute(
-            //                         builder: (context) => FoodDetail()))
-            //                 .then((value) {
-            //               setState(() {
-            //                 _refreshList();
-            //               });
-            //             });
-
-            //   },
-            // );
           },
           itemCount: billNotifier.billList.length,
-          
         ),
         onRefresh: _refreshList,
       ),

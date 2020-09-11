@@ -30,7 +30,7 @@ class Bill {
     createdAt = data['createdAt'];
     updatedAt = data['updatedAt'];
     warrantyStart = data['warrantyStart'];
-    warrantyEnd = data['warrantEnd'];
+    warrantyEnd = data['warrantyEnd'];
   }
 
   Map<String, dynamic> toMap() {
@@ -46,7 +46,7 @@ class Bill {
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'warrantyStart': warrantyStart,
-      'warrantyEnd': warrantyEnd
+      'warrantyEnd': warrantyEnd,
     };
   }
 }
