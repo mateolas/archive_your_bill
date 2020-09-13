@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:archive_your_bill/model/bill.dart';
 import 'package:intl/intl.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
+import 'only_image_screen.dart';
 
 class BillDetail extends StatelessWidget {
   @override
@@ -26,14 +27,23 @@ class BillDetail extends StatelessWidget {
             Container(
               child: Column(
                 children: <Widget>[
-                  Image.network(
-                    billNotifier.currentBill.image != null
-                        ? billNotifier.currentBill.image
-                        : 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg',
-                    width: MediaQuery.of(context).size.width,
-                    height: 250,
-                    fit: BoxFit.fitWidth,
-                  ),
+                  GestureDetector(
+                      child: Image.network(
+                        billNotifier.currentBill.image != null
+                            ? billNotifier.currentBill.image
+                            : 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg',
+                        width: MediaQuery.of(context).size.width,
+                        height: 250,
+                        fit: BoxFit.fitWidth,
+                      ),
+                      onTap: () {
+                        print("IMAGE STRING ${billNotifier.currentBill.image}");
+                        Navigator.push(context, MaterialPageRoute(builder: (_) {
+                          return OnlyImageScreen(
+                            url: billNotifier.currentBill.image,
+                          );
+                        }));
+                      }),
                   SizedBox(height: 24),
                   //SHOP NAME
                   Text(
