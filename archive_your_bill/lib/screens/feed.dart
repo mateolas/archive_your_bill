@@ -8,6 +8,15 @@ import 'package:provider/provider.dart';
 import 'package:archive_your_bill/screens/detail.dart';
 import 'package:intl/intl.dart';
 
+import 'dart:async';
+import 'dart:io';
+import 'package:share/share.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/rendering.dart';
+
+import 'package:http/http.dart';
+import 'package:path_provider/path_provider.dart';
+
 class Feed extends StatefulWidget {
   @override
   _FeedState createState() => _FeedState();
@@ -84,6 +93,42 @@ class _FeedState extends State<Feed> {
           }
           break;
       }
+    }
+
+    //function to get image from url, save it and share
+    Future<Null> saveAndShare(
+        {String url,
+        String nameShop,
+        String nameItem,
+        String category,
+        String itemPrice,
+        String warrantyStart,
+        String warrantyEnd,
+        String warrantyLength}) async {
+      //enable permission to write/read from internal memory
+      var status = await Permission.storage.status;
+      if (!status.isGranted) {
+        await Permission.storage.request();
+      }
+
+      final RenderBox box = context.findRenderObject();
+
+      //list of imagePaths
+      List<String> imagePaths = [];
+      var response = await get(url);
+      //get the directory of external storage
+      final documentDirectory = (await getExternalStorageDirectory()).path;
+      //create empty file
+      File imgFile = new File('$documentDirectory/flutter.png');
+      //"copy" file from url to created empty file
+      imgFile.writeAsBytesSync(response.bodyBytes);
+      //add to list of paths path of created file
+      imagePaths.add(imgFile.path);
+      //share function
+      Share.shareFiles(imagePaths,
+          subject: 'Bill from ${nameShop} bought at ${warrantyStart}',
+          text: 'Hey! Checkout the Share Files repo',
+          sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
     }
 
     return Scaffold(
@@ -216,7 +261,30 @@ class _FeedState extends State<Feed> {
                                     icon: Icon(Icons.share),
                                     disabledColor: Colors.yellow,
                                     color: Colors.grey,
-                                    onPressed: () {},
+                                    onPressed: ()  {
+                                      billNotifier.currentBill =
+                                          billNotifier.billList[index];
+
+                                      saveAndShare(
+                                          nameShop: billNotifier
+                                              .billList[index].nameShop,
+                                          nameItem: billNotifier
+                                              .billList[index].nameItem,
+                                          itemPrice: billNotifier
+                                              .billList[index].priceItem,
+                                          warrantyStart: DateFormat.yMMMd()
+                                              .format(billNotifier
+                                                  .billList[index].warrantyStart
+                                                  .toDate()),
+                                          warrantyEnd: DateFormat.yMMMd()
+                                              .format(billNotifier
+                                                  .billList[index].warrantyEnd
+                                                  .toDate()),
+                                          warrantyLength: billNotifier
+                                              .billList[index].warrantyLength,
+                                          url: billNotifier
+                                              .billList[index].image);
+                                    },
                                   ),
                                 ),
                               ],
