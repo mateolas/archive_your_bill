@@ -126,28 +126,63 @@ class BillDetail extends StatelessWidget {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          FloatingActionButton(
-            heroTag: 'button1',
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (BuildContext context) {
-                  return BillForm(
-                    isUpdating: true,
+          Container(
+            height: 46.0,
+            width: 46.0,
+            child: FittedBox(
+              child: FloatingActionButton(
+                heroTag: 'button1',
+                backgroundColor: Colors.orange,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (BuildContext context) {
+                      return BillForm(
+                        isUpdating: true,
+                      );
+                    }),
                   );
-                }),
-              );
-            },
-            child: Icon(Icons.edit),
-            foregroundColor: Colors.white,
+                },
+                child: Icon(Icons.share),
+                foregroundColor: Colors.white,
+              ),
+            ),
           ),
-          SizedBox(height: 20),
-          FloatingActionButton(
-            heroTag: 'button2',
-            onPressed: () =>
-                deleteBill(billNotifier.currentBill, _onBillDeleted),
-            child: Icon(Icons.delete),
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
+          SizedBox(height: 10),
+          Container(
+            height: 46.0,
+            width: 46.0,
+            child: FittedBox(
+              child: FloatingActionButton(
+                backgroundColor: Colors.orange,
+                heroTag: 'button2',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (BuildContext context) {
+                      return BillForm(
+                        isUpdating: true,
+                      );
+                    }),
+                  );
+                },
+                child: Icon(Icons.edit),
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ),
+          SizedBox(height: 10),
+          Container(
+            height: 46.0,
+            width: 46.0,
+            child: FittedBox(
+              child: FloatingActionButton(
+                heroTag: 'button3',
+                onPressed: () =>
+                    deleteBill(billNotifier.currentBill, _onBillDeleted),
+                child: Icon(Icons.delete),
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+            ),
           ),
         ],
       ),
