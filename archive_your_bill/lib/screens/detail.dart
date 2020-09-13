@@ -7,6 +7,13 @@ import 'package:intl/intl.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'only_image_screen.dart';
 
+import 'dart:io';
+import 'package:share/share.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import 'package:http/http.dart';
+import 'package:path_provider/path_provider.dart';
+
 class BillDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -15,6 +22,42 @@ class BillDetail extends StatelessWidget {
     _onBillDeleted(Bill bill) {
       Navigator.pop(context);
       billNotifier.deleteBill(bill);
+    }
+
+    //function to get image from url, save it and share
+    Future<Null> saveAndShare(
+        {String url,
+        String nameShop,
+        String nameItem,
+        String category,
+        String itemPrice,
+        String warrantyStart,
+        String warrantyEnd,
+        String warrantyLength}) async {
+      //enable permission to write/read from internal memory
+      var status = await Permission.storage.status;
+      if (!status.isGranted) {
+        await Permission.storage.request();
+      }
+
+      final RenderBox box = context.findRenderObject();
+
+      //list of imagePaths
+      List<String> imagePaths = [];
+      var response = await get(url);
+      //get the directory of external storage
+      final documentDirectory = (await getExternalStorageDirectory()).path;
+      //create empty file
+      File imgFile = new File('$documentDirectory/flutter.png');
+      //"copy" file from url to created empty file
+      imgFile.writeAsBytesSync(response.bodyBytes);
+      //add to list of paths path of created file
+      imagePaths.add(imgFile.path);
+      //share function
+      Share.shareFiles(imagePaths,
+          subject: 'Bill from ${nameShop} bought at ${warrantyStart}',
+          text: 'Hey! Checkout the Share Files repo',
+          sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
     }
 
     return Scaffold(
@@ -134,13 +177,16 @@ class BillDetail extends StatelessWidget {
                 heroTag: 'button1',
                 backgroundColor: Colors.orange,
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (BuildContext context) {
-                      return BillForm(
-                        isUpdating: true,
-                      );
-                    }),
-                  );
+                  saveAndShare(
+                      nameShop: billNotifier.currentBill.nameShop,
+                      nameItem: billNotifier.currentBill.nameItem,
+                      itemPrice: billNotifier.currentBill.priceItem,
+                      warrantyStart: DateFormat.yMMMd().format(
+                          billNotifier.currentBill.warrantyStart.toDate()),
+                      warrantyEnd: DateFormat.yMMMd().format(
+                          billNotifier.currentBill.warrantyEnd.toDate()),
+                      warrantyLength: billNotifier.currentBill.warrantyLength,
+                      url: billNotifier.currentBill.image);
                 },
                 child: Icon(Icons.share),
                 foregroundColor: Colors.white,
