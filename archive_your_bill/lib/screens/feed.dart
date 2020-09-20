@@ -49,27 +49,34 @@ class _FeedState extends State<Feed> {
     //print(_searchController.text);
   }
 
+  //function wcich creates a second filtered list
+  //bill notifier as a argument to get the list of the bills
   setSearchResultsList(billNotifier) {
+    //list were filtered values will be kept
     var showResults = [];
 
+    //if text field is not empty
     if (_searchController.text != "") {
+    //search whole list from firebase
       for (var bill in billNotifier.billList) {
         var title = bill.nameShop.toLowerCase();
         var title2 = bill.nameItem.toLowerCase();
-
+    //if typed by user value equals bill's nameShop or nameItem add bill to the filtered list - showResults
         if (title.contains(_searchController.text.toLowerCase()) || title2.contains(_searchController.text.toLowerCase())  ) {
           showResults.add(bill);
         }
       }
-
+    //if text field is empty copy all the items from list fetched from firebase to filtered list
     } else {
       showResults = billNotifier.billList;
     }
+    //update the results
     setState(() {
       _resultsList = showResults;
     });
   }
 
+  //Search field widget
   Widget searchField() {
     return Padding(
       padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
@@ -176,6 +183,8 @@ class _FeedState extends State<Feed> {
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
+
+  //function to refresh the screen
   @override
   void didChangeDependencies() {
     BillNotifier billNotifier = Provider.of<BillNotifier>(context);
@@ -189,11 +198,14 @@ class _FeedState extends State<Feed> {
   Widget build(BuildContext context) {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
     BillNotifier billNotifier = Provider.of<BillNotifier>(context);
+    //function to used in RefreshIndicator widhget
+    //swipe to refresh
     Future<void> _refreshList() async {
       getBills(billNotifier);
       setSearchResultsList(billNotifier);
     }
 
+    //sets the search results
     setSearchResultsList(billNotifier);
 
     print("1 Building Feed");
@@ -232,9 +244,7 @@ class _FeedState extends State<Feed> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => BillDetail())).then((value) {
-                        setState(() {
-                          //_refreshList();
-                        });
+                      
                       });
                     },
                     child: Card(

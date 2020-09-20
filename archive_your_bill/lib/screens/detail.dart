@@ -60,6 +60,38 @@ class BillDetail extends StatelessWidget {
           sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
     }
 
+    showAlertDialog(BuildContext context) {
+      // set up the buttons
+      Widget cancelButton = FlatButton(
+        child: Text("Cancel"),
+        onPressed: () { Navigator.of(context).pop();},
+      );
+      Widget continueButton = FlatButton(
+        child: Text("Yes"),
+        onPressed: () {Navigator.pop(context);
+          deleteBill(billNotifier.currentBill, _onBillDeleted);},
+      );
+
+      // set up the AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: Text("Delete Bill"),
+        content: Text(
+            "Would you like to delete this bill ? (no undo)"),
+        actions: [
+          cancelButton,
+          continueButton,
+        ],
+      );
+
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(billNotifier.currentBill.nameShop),
@@ -222,8 +254,8 @@ class BillDetail extends StatelessWidget {
             child: FittedBox(
               child: FloatingActionButton(
                 heroTag: 'button3',
-                onPressed: () =>
-                    deleteBill(billNotifier.currentBill, _onBillDeleted),
+                onPressed: () => showAlertDialog(context),
+                //deleteBill(billNotifier.currentBill, _onBillDeleted),
                 child: Icon(Icons.delete),
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
