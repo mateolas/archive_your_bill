@@ -31,7 +31,6 @@ class _FeedState extends State<Feed> {
     BillNotifier billNotifier =
         Provider.of<BillNotifier>(context, listen: false);
     getBills(billNotifier);
-    print("INIT LENGTH: ${billNotifier.billList.length}");
     super.initState();
     _searchController.addListener(_onSearchChanged);
     //setSearchResultsList(billNotifier);
@@ -45,10 +44,9 @@ class _FeedState extends State<Feed> {
   }
 
   _onSearchChanged() {
-    BillNotifier billNotifier =
-        Provider.of<BillNotifier>(context, listen: false);
+    BillNotifier billNotifier = Provider.of<BillNotifier>(context, listen: false);
     setSearchResultsList(billNotifier);
-    print(_searchController.text);
+    //print(_searchController.text);
   }
 
   setSearchResultsList(billNotifier) {
@@ -57,8 +55,9 @@ class _FeedState extends State<Feed> {
     if (_searchController.text != "") {
       for (var bill in billNotifier.billList) {
         var title = bill.nameShop.toLowerCase();
+        var title2 = bill.nameItem.toLowerCase();
 
-        if (title.contains(_searchController.text.toLowerCase())) {
+        if (title.contains(_searchController.text.toLowerCase()) || title2.contains(_searchController.text.toLowerCase())  ) {
           showResults.add(bill);
         }
       }
@@ -178,6 +177,15 @@ class _FeedState extends State<Feed> {
   }
 
   @override
+  void didChangeDependencies() {
+    BillNotifier billNotifier = Provider.of<BillNotifier>(context);
+    super.didChangeDependencies();
+    setState(() {
+      getBills(billNotifier);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
     BillNotifier billNotifier = Provider.of<BillNotifier>(context);
@@ -188,9 +196,9 @@ class _FeedState extends State<Feed> {
 
     setSearchResultsList(billNotifier);
 
-    print("building Feed");
-    print('First authnotifier ${authNotifier.user.displayName}');
-    print("BUILD RESULT LIST LENGTH: ${_resultsList.length}");
+    print("1 Building Feed");
+    print('2 First authnotifier ${authNotifier.user.displayName}');
+    print("3 BUILD RESULT LIST LENGTH: ${_resultsList.length}");
 
     return Scaffold(
       appBar: AppBar(
@@ -225,7 +233,7 @@ class _FeedState extends State<Feed> {
                           MaterialPageRoute(
                               builder: (context) => BillDetail())).then((value) {
                         setState(() {
-                          _refreshList();
+                          //_refreshList();
                         });
                       });
                     },
