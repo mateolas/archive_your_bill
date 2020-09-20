@@ -24,132 +24,173 @@ class Feed extends StatefulWidget {
 
 class _FeedState extends State<Feed> {
   TextEditingController _searchController = TextEditingController();
+  List _resultsList = [];
 
   @override
   void initState() {
     BillNotifier billNotifier =
         Provider.of<BillNotifier>(context, listen: false);
     getBills(billNotifier);
+    print("INIT LENGTH: ${billNotifier.billList.length}");
     super.initState();
+    _searchController.addListener(_onSearchChanged);
+    //setSearchResultsList(billNotifier);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged());
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  _onSearchChanged() {
+    BillNotifier billNotifier =
+        Provider.of<BillNotifier>(context, listen: false);
+    setSearchResultsList(billNotifier);
+    print(_searchController.text);
+  }
+
+  setSearchResultsList(billNotifier) {
+    var showResults = [];
+
+    if (_searchController.text != "") {
+      for (var bill in billNotifier.billList) {
+        var title = bill.nameShop.toLowerCase();
+
+        if (title.contains(_searchController.text.toLowerCase())) {
+          showResults.add(bill);
+        }
+      }
+
+    } else {
+      showResults = billNotifier.billList;
+    }
+    setState(() {
+      _resultsList = showResults;
+    });
+  }
+
+  Widget searchField() {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
+      child: TextField(
+        controller: _searchController,
+        decoration: InputDecoration(
+          prefixIcon: Icon(Icons.search),
+          border: new OutlineInputBorder(
+            borderRadius: const BorderRadius.all(
+              const Radius.circular(10.0),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  //function which draws Icon based on the chosen by user category
+  categoryToIcon(String category) {
+    switch (category) {
+      case "Electronics":
+        {
+          return Icon(Icons.computer, size: 32);
+        }
+        break;
+
+      case "Fashion":
+        {
+          return Icon(Icons.local_offer, size: 32);
+        }
+        break;
+
+      case "Sports":
+        {
+          return Icon(Icons.fitness_center, size: 32);
+        }
+        break;
+
+      case "Home":
+        {
+          return Icon(Icons.home, size: 32);
+        }
+        break;
+
+      case "Food":
+        {
+          return Icon(Icons.local_dining, size: 32);
+        }
+        break;
+
+      case "Health":
+        {
+          return Icon(Icons.local_hospital, size: 32);
+        }
+        break;
+
+      case "Services":
+        {
+          return Icon(Icons.build, size: 32);
+        }
+        break;
+
+      case "Other":
+        {
+          return Icon(Icons.receipt, size: 32);
+        }
+        break;
+    }
+  }
+
+  //function to get image from url, save it and share
+  Future<Null> saveAndShare(
+      {String url,
+      String nameShop,
+      String nameItem,
+      String category,
+      String itemPrice,
+      String warrantyStart,
+      String warrantyEnd,
+      String warrantyLength}) async {
+    //enable permission to write/read from internal memory
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+
+    final RenderBox box = context.findRenderObject();
+
+    //list of imagePaths
+    List<String> imagePaths = [];
+    var response = await get(url);
+    //get the directory of external storage
+    final documentDirectory = (await getExternalStorageDirectory()).path;
+    //create empty file
+    File imgFile = new File('$documentDirectory/flutter.png');
+    //"copy" file from url to created empty file
+    imgFile.writeAsBytesSync(response.bodyBytes);
+    //add to list of paths path of created file
+    imagePaths.add(imgFile.path);
+    //share function
+    Share.shareFiles(imagePaths,
+        subject: 'Bill from ${nameShop} bought at ${warrantyStart}',
+        text: 'Hey! Checkout the Share Files repo',
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
   @override
   Widget build(BuildContext context) {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
     BillNotifier billNotifier = Provider.of<BillNotifier>(context);
-
     Future<void> _refreshList() async {
       getBills(billNotifier);
+      setSearchResultsList(billNotifier);
     }
+
+    setSearchResultsList(billNotifier);
 
     print("building Feed");
     print('First authnotifier ${authNotifier.user.displayName}');
-
-    //function which draws Icon based on the chosen by user category
-    categoryToIcon(String category) {
-      switch (category) {
-        case "Electronics":
-          {
-            return Icon(Icons.computer, size: 32);
-          }
-          break;
-
-        case "Fashion":
-          {
-            return Icon(Icons.local_offer, size: 32);
-          }
-          break;
-
-        case "Sports":
-          {
-            return Icon(Icons.fitness_center, size: 32);
-          }
-          break;
-
-        case "Home":
-          {
-            return Icon(Icons.home, size: 32);
-          }
-          break;
-
-        case "Food":
-          {
-            return Icon(Icons.local_dining, size: 32);
-          }
-          break;
-
-        case "Health":
-          {
-            return Icon(Icons.local_hospital, size: 32);
-          }
-          break;
-
-        case "Services":
-          {
-            return Icon(Icons.build, size: 32);
-          }
-          break;
-
-        case "Other":
-          {
-            return Icon(Icons.receipt, size: 32);
-          }
-          break;
-      }
-    }
-
-    //function to get image from url, save it and share
-    Future<Null> saveAndShare(
-        {String url,
-        String nameShop,
-        String nameItem,
-        String category,
-        String itemPrice,
-        String warrantyStart,
-        String warrantyEnd,
-        String warrantyLength}) async {
-      //enable permission to write/read from internal memory
-      var status = await Permission.storage.status;
-      if (!status.isGranted) {
-        await Permission.storage.request();
-      }
-
-      final RenderBox box = context.findRenderObject();
-
-      //list of imagePaths
-      List<String> imagePaths = [];
-      var response = await get(url);
-      //get the directory of external storage
-      final documentDirectory = (await getExternalStorageDirectory()).path;
-      //create empty file
-      File imgFile = new File('$documentDirectory/flutter.png');
-      //"copy" file from url to created empty file
-      imgFile.writeAsBytesSync(response.bodyBytes);
-      //add to list of paths path of created file
-      imagePaths.add(imgFile.path);
-      //share function
-      Share.shareFiles(imagePaths,
-          subject: 'Bill from ${nameShop} bought at ${warrantyStart}',
-          text: 'Hey! Checkout the Share Files repo',
-          sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
-    }
-
-    Widget searchField() {
-      return Padding(
-        padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
-        child: TextField(
-          controller: _searchController,
-          decoration: InputDecoration(
-            prefixIcon: Icon(Icons.search),
-            border: new OutlineInputBorder(
-              borderRadius: const BorderRadius.all(
-                const Radius.circular(10.0),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
+    print("BUILD RESULT LIST LENGTH: ${_resultsList.length}");
 
     return Scaffold(
       appBar: AppBar(
@@ -172,165 +213,164 @@ class _FeedState extends State<Feed> {
         children: [
           searchField(),
           Expanded(
-            child: ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    //after clicking setting up with notifier a current bill
-                    billNotifier.currentBill = billNotifier.billList[index];
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BillDetail())).then((value) {
-                      setState(() {
-                        _refreshList();
+            child: RefreshIndicator(
+                          child: ListView.builder(
+                itemBuilder: (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () {
+                      //after clicking setting up with notifier a current bill
+                      billNotifier.currentBill = _resultsList[index];
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BillDetail())).then((value) {
+                        setState(() {
+                          _refreshList();
+                        });
                       });
-                    });
-                  },
-                  child: Card(
-                    elevation: 3,
-                    margin: EdgeInsets.all(6),
-                    shadowColor: Colors.black,
-                    color: Colors.white,
-                    child: Container(
-                      height: 140,
-                      child: Center(
-                        child: Row(
-                          children: <Widget>[
-                            //Category Icon
-                            Container(
-                                padding: EdgeInsets.all(10),
-                                //color: Colors.blue,
-                                child: categoryToIcon(
-                                    billNotifier.billList[index].category)),
-                            //Item name and cost
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                //SHOP NAME
-                                Text(
-                                  '${billNotifier.billList[index].nameShop}',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                    },
+                    child: Card(
+                      elevation: 3,
+                      margin: EdgeInsets.all(6),
+                      shadowColor: Colors.black,
+                      color: Colors.white,
+                      child: Container(
+                        height: 140,
+                        child: Center(
+                          child: Row(
+                            children: <Widget>[
+                              //Category Icon
+                              Container(
+                                  padding: EdgeInsets.all(10),
+                                  //color: Colors.blue,
+                                  child: categoryToIcon(
+                                      _resultsList[index].category)),
+                              //Item name and cost
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  //SHOP NAME
+                                  Text(
+                                    '${_resultsList[index].nameShop}',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 6)),
-                                //ITEM NAME
-                                Text(
-                                  '${billNotifier.billList[index].nameItem}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
+                                  Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 6)),
+                                  //ITEM NAME
+                                  Text(
+                                    '${_resultsList[index].nameItem}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 12)),
-                                //ITEM PRICE AND CURRENCY
-                                Row(
-                                  children: [
-                                    Text(
-                                        'Price: ${billNotifier.billList[index].priceItem}',
-                                        style: TextStyle(fontSize: 14)),
-                                    Text(
-                                        ' ${billNotifier.billList[index].currencyItem}',
-                                        style: TextStyle(fontSize: 14)),
-                                  ],
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
-                                //ITEM BOUGHT DATE
-                                Text(
-                                  'Bought: ${DateFormat.yMMMd().format(billNotifier.billList[index].warrantyStart.toDate())}',
-                                  style: TextStyle(
-                                    fontSize: 14,
+                                  Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 12)),
+                                  //ITEM PRICE AND CURRENCY
+                                  Row(
+                                    children: [
+                                      Text(
+                                          'Price: ${_resultsList[index].priceItem}',
+                                          style: TextStyle(fontSize: 14)),
+                                      Text(' ${_resultsList[index].currencyItem}',
+                                          style: TextStyle(fontSize: 14)),
+                                    ],
                                   ),
-                                ),
-                                Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
-                                //WARRANTY UNTIL
-                                billNotifier.billList[index].warrantyEnd == null
-                                    ? ''
-                                    : Text(
-                                        'Warranty until: ${DateFormat.yMMMd().format(billNotifier.billList[index].warrantyEnd.toDate())}',
-                                        style: TextStyle(
-                                          fontSize: 14,
+                                  Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
+                                  //ITEM BOUGHT DATE
+                                  Text(
+                                    'Bought: ${DateFormat.yMMMd().format(_resultsList[index].warrantyStart.toDate())}',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
+                                  //WARRANTY UNTIL
+                                  billNotifier.billList[index].warrantyEnd == null
+                                      ? ''
+                                      : Text(
+                                          'Warranty until: ${DateFormat.yMMMd().format(_resultsList[index].warrantyEnd.toDate())}',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                ],
+                              ),
+                              Expanded(
+                                child: Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: <Widget>[
+                                      Container(
+                                        child: IconButton(
+                                          icon: Icon(Icons.edit),
+                                          color: Colors.grey,
+                                          onPressed: () {
+                                            billNotifier.currentBill =
+                                                _resultsList[index];
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(builder:
+                                                  (BuildContext context) {
+                                                return BillForm(
+                                                  isUpdating: true,
+                                                );
+                                              }),
+                                            );
+                                          },
                                         ),
                                       ),
-                              ],
-                            ),
-                            Expanded(
-                              child: Container(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    Container(
-                                      child: IconButton(
-                                        icon: Icon(Icons.edit),
-                                        color: Colors.grey,
-                                        onPressed: () {
-                                          billNotifier.currentBill =
-                                              billNotifier.billList[index];
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(builder:
-                                                (BuildContext context) {
-                                              return BillForm(
-                                                isUpdating: true,
-                                              );
-                                            }),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    Container(
-                                      child: IconButton(
-                                        icon: Icon(Icons.share),
-                                        disabledColor: Colors.yellow,
-                                        color: Colors.grey,
-                                        onPressed: () {
-                                          billNotifier.currentBill =
-                                              billNotifier.billList[index];
+                                      Container(
+                                        child: IconButton(
+                                          icon: Icon(Icons.share),
+                                          disabledColor: Colors.yellow,
+                                          color: Colors.grey,
+                                          onPressed: () {
+                                            billNotifier.currentBill =
+                                                _resultsList[index];
 
-                                          saveAndShare(
-                                              nameShop: billNotifier
-                                                  .billList[index].nameShop,
-                                              nameItem: billNotifier
-                                                  .billList[index].nameItem,
-                                              itemPrice: billNotifier
-                                                  .billList[index].priceItem,
-                                              warrantyStart: DateFormat.yMMMd()
-                                                  .format(billNotifier
-                                                      .billList[index]
-                                                      .warrantyStart
-                                                      .toDate()),
-                                              warrantyEnd: DateFormat.yMMMd()
-                                                  .format(billNotifier
-                                                      .billList[index]
-                                                      .warrantyEnd
-                                                      .toDate()),
-                                              warrantyLength: billNotifier
-                                                  .billList[index]
-                                                  .warrantyLength,
-                                              url: billNotifier
-                                                  .billList[index].image);
-                                        },
+                                            saveAndShare(
+                                                nameShop:
+                                                    _resultsList[index].nameShop,
+                                                nameItem:
+                                                    _resultsList[index].nameItem,
+                                                itemPrice:
+                                                    _resultsList[index].priceItem,
+                                                warrantyStart: DateFormat.yMMMd()
+                                                    .format(_resultsList[index]
+                                                        .warrantyStart
+                                                        .toDate()),
+                                                warrantyEnd: DateFormat.yMMMd()
+                                                    .format(_resultsList[index]
+                                                        .warrantyEnd
+                                                        .toDate()),
+                                                warrantyLength:
+                                                    _resultsList[index]
+                                                        .warrantyLength,
+                                                url: _resultsList[index].image);
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
-              itemCount: billNotifier.billList.length,
+                  );
+                },
+                itemCount: _resultsList.length,
+              ),
+              onRefresh: _refreshList,
             ),
           ),
         ],
