@@ -23,6 +23,8 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
+  TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     BillNotifier billNotifier =
@@ -43,8 +45,7 @@ class _FeedState extends State<Feed> {
     print("building Feed");
     print('First authnotifier ${authNotifier.user.displayName}');
 
-
-    //function which draws Icon based on the chosen by user category 
+    //function which draws Icon based on the chosen by user category
     categoryToIcon(String category) {
       switch (category) {
         case "Electronics":
@@ -133,6 +134,23 @@ class _FeedState extends State<Feed> {
           sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
     }
 
+    Widget searchField() {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
+        child: TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            prefixIcon: Icon(Icons.search),
+            border: new OutlineInputBorder(
+              borderRadius: const BorderRadius.all(
+                const Radius.circular(10.0),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         //added display.name
@@ -150,159 +168,172 @@ class _FeedState extends State<Feed> {
           ),
         ],
       ),
-      body: new RefreshIndicator(
-        child: ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
-              onTap: () {
-                //after clicking setting up with notifier a current bill
-                billNotifier.currentBill = billNotifier.billList[index];
-                Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => BillDetail()))
-                    .then((value) {
-                  setState(() {
-                    _refreshList();
-                  });
-                });
-              },
-              child: Card(
-                elevation: 3,
-                margin: EdgeInsets.all(6),
-                shadowColor: Colors.black,
-                color: Colors.white,
-                child: Container(
-                  height: 140,
-                  child: Center(
-                    child: Row(
-                      children: <Widget>[
-                        //Category Icon
-                        Container(
-                            padding: EdgeInsets.all(10),
-                            //color: Colors.blue,
-                            child: categoryToIcon(
-                                billNotifier.billList[index].category)),
-                        //Item name and cost
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+      body: Column(
+        children: [
+          searchField(),
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () {
+                    //after clicking setting up with notifier a current bill
+                    billNotifier.currentBill = billNotifier.billList[index];
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BillDetail())).then((value) {
+                      setState(() {
+                        _refreshList();
+                      });
+                    });
+                  },
+                  child: Card(
+                    elevation: 3,
+                    margin: EdgeInsets.all(6),
+                    shadowColor: Colors.black,
+                    color: Colors.white,
+                    child: Container(
+                      height: 140,
+                      child: Center(
+                        child: Row(
                           children: <Widget>[
-                            //SHOP NAME
-                            Text(
-                              '${billNotifier.billList[index].nameShop}',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 6)),
-                            //ITEM NAME
-                            Text(
-                              '${billNotifier.billList[index].nameItem}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 12)),
-                            //ITEM PRICE AND CURRENCY
-                            Row(
-                              children: [
+                            //Category Icon
+                            Container(
+                                padding: EdgeInsets.all(10),
+                                //color: Colors.blue,
+                                child: categoryToIcon(
+                                    billNotifier.billList[index].category)),
+                            //Item name and cost
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                //SHOP NAME
                                 Text(
-                                    'Price: ${billNotifier.billList[index].priceItem}',
-                                    style: TextStyle(fontSize: 14)),
+                                  '${billNotifier.billList[index].nameShop}',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 6)),
+                                //ITEM NAME
                                 Text(
-                                    ' ${billNotifier.billList[index].currencyItem}',
-                                    style: TextStyle(fontSize: 14)),
+                                  '${billNotifier.billList[index].nameItem}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 12)),
+                                //ITEM PRICE AND CURRENCY
+                                Row(
+                                  children: [
+                                    Text(
+                                        'Price: ${billNotifier.billList[index].priceItem}',
+                                        style: TextStyle(fontSize: 14)),
+                                    Text(
+                                        ' ${billNotifier.billList[index].currencyItem}',
+                                        style: TextStyle(fontSize: 14)),
+                                  ],
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
+                                //ITEM BOUGHT DATE
+                                Text(
+                                  'Bought: ${DateFormat.yMMMd().format(billNotifier.billList[index].warrantyStart.toDate())}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
+                                //WARRANTY UNTIL
+                                billNotifier.billList[index].warrantyEnd == null
+                                    ? ''
+                                    : Text(
+                                        'Warranty until: ${DateFormat.yMMMd().format(billNotifier.billList[index].warrantyEnd.toDate())}',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
                               ],
                             ),
-                            Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
-                            //ITEM BOUGHT DATE
-                            Text(
-                              'Bought: ${DateFormat.yMMMd().format(billNotifier.billList[index].warrantyStart.toDate())}',
-                              style: TextStyle(
-                                fontSize: 14,
+                            Expanded(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    Container(
+                                      child: IconButton(
+                                        icon: Icon(Icons.edit),
+                                        color: Colors.grey,
+                                        onPressed: () {
+                                          billNotifier.currentBill =
+                                              billNotifier.billList[index];
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(builder:
+                                                (BuildContext context) {
+                                              return BillForm(
+                                                isUpdating: true,
+                                              );
+                                            }),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Container(
+                                      child: IconButton(
+                                        icon: Icon(Icons.share),
+                                        disabledColor: Colors.yellow,
+                                        color: Colors.grey,
+                                        onPressed: () {
+                                          billNotifier.currentBill =
+                                              billNotifier.billList[index];
+
+                                          saveAndShare(
+                                              nameShop: billNotifier
+                                                  .billList[index].nameShop,
+                                              nameItem: billNotifier
+                                                  .billList[index].nameItem,
+                                              itemPrice: billNotifier
+                                                  .billList[index].priceItem,
+                                              warrantyStart: DateFormat.yMMMd()
+                                                  .format(billNotifier
+                                                      .billList[index]
+                                                      .warrantyStart
+                                                      .toDate()),
+                                              warrantyEnd: DateFormat.yMMMd()
+                                                  .format(billNotifier
+                                                      .billList[index]
+                                                      .warrantyEnd
+                                                      .toDate()),
+                                              warrantyLength: billNotifier
+                                                  .billList[index]
+                                                  .warrantyLength,
+                                              url: billNotifier
+                                                  .billList[index].image);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
-                            //WARRANTY UNTIL
-                            billNotifier.billList[index].warrantyEnd == null
-                                ? ''
-                                : Text(
-                                    'Warranty until: ${DateFormat.yMMMd().format(billNotifier.billList[index].warrantyEnd.toDate())}',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  ),
                           ],
                         ),
-                        Expanded(
-                          child: Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: <Widget>[
-                                Container(
-                                  child: IconButton(
-                                    icon: Icon(Icons.edit),
-                                    color: Colors.grey,
-                                    onPressed: () {
-                                      billNotifier.currentBill = billNotifier.billList[index];
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) {
-                                          return BillForm(
-                                            isUpdating: true,
-                                          );
-                                        }),
-                                      );
-                                    },
-                                  ),
-                                ),
-                                Container(
-                                  child: IconButton(
-                                    icon: Icon(Icons.share),
-                                    disabledColor: Colors.yellow,
-                                    color: Colors.grey,
-                                    onPressed: ()  {
-                                      billNotifier.currentBill =
-                                          billNotifier.billList[index];
-
-                                      saveAndShare(
-                                          nameShop: billNotifier
-                                              .billList[index].nameShop,
-                                          nameItem: billNotifier
-                                              .billList[index].nameItem,
-                                          itemPrice: billNotifier
-                                              .billList[index].priceItem,
-                                          warrantyStart: DateFormat.yMMMd()
-                                              .format(billNotifier
-                                                  .billList[index].warrantyStart
-                                                  .toDate()),
-                                          warrantyEnd: DateFormat.yMMMd()
-                                              .format(billNotifier
-                                                  .billList[index].warrantyEnd
-                                                  .toDate()),
-                                          warrantyLength: billNotifier
-                                              .billList[index].warrantyLength,
-                                          url: billNotifier
-                                              .billList[index].image);
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
-            );
-          },
-          itemCount: billNotifier.billList.length,
-        ),
-        onRefresh: _refreshList,
+                );
+              },
+              itemCount: billNotifier.billList.length,
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
