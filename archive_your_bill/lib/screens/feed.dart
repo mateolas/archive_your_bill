@@ -43,6 +43,8 @@ class _FeedState extends State<Feed> {
     print("building Feed");
     print('First authnotifier ${authNotifier.user.displayName}');
 
+
+    //function which draws Icon based on the chosen by user category 
     categoryToIcon(String category) {
       switch (category) {
         case "Electronics":
