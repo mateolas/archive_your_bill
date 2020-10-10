@@ -99,49 +99,58 @@ class _FeedState extends State<Feed> {
     switch (category) {
       case "Electronics":
         {
-          return Icon(Icons.computer, size: 32);
+          return Icon(Icons.computer, size: 32, color: Colors.orange);
         }
         break;
 
       case "Fashion":
         {
-          return Icon(Icons.local_offer, size: 32);
+          return Icon(Icons.local_offer, size: 32, color: Colors.orange);
         }
         break;
 
       case "Sports":
         {
-          return Icon(Icons.fitness_center, size: 32);
+          return Icon(Icons.local_offer, size: 32, color: Colors.orange);
         }
         break;
 
+
+      case "Books/Music/Culture":
+        {
+          return Icon(Icons.format_quote, size: 32, color: Colors.orange);
+        }
+        break;
+      
+
+
       case "Home":
         {
-          return Icon(Icons.home, size: 32);
+          return Icon(Icons.home, size: 32, color: Colors.orange);
         }
         break;
 
       case "Food":
         {
-          return Icon(Icons.local_dining, size: 32);
+          return Icon(Icons.local_dining, size: 32, color: Colors.orange);
         }
         break;
 
       case "Health":
         {
-          return Icon(Icons.local_hospital, size: 32);
+          return Icon(Icons.local_hospital, size: 32, color: Colors.orange);
         }
         break;
 
       case "Services":
         {
-          return Icon(Icons.build, size: 32);
+          return Icon(Icons.build, size: 32, color: Colors.orange);
         }
         break;
 
       case "Other":
         {
-          return Icon(Icons.receipt, size: 32);
+          return Icon(Icons.receipt, size: 32, color: Colors.orange);
         }
         break;
     }
@@ -274,6 +283,7 @@ class _FeedState extends State<Feed> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
+                                      color: Colors.orange,
                                     ),
                                   ),
                                   Padding(

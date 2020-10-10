@@ -20,10 +20,6 @@ class BillDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     BillNotifier billNotifier = Provider.of<BillNotifier>(context);
 
-    void printVariable(BillNotifier bill){
-      print(bill);
-    }
-
     _onBillDeleted(Bill bill) {
       Navigator.pop(context);
       billNotifier.deleteBill(bill);
@@ -190,7 +186,8 @@ class BillDetail extends StatelessWidget {
                 //WARRANTY UNTIL
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
-                  child: billNotifier.currentBill.warrantyEnd == Timestamp.fromDate(DateTime.parse("1969-07-20 20:18:04Z"))
+                  child: billNotifier.currentBill.warrantyEnd == null
+                  //Timestamp.fromDate(DateTime.parse("1969-07-20 20:18:04Z"))
                       ? Text('')
                       : Text(
                           'Warranty until: ${DateFormat.yMMMd().format(billNotifier.currentBill.warrantyEnd.toDate())}',
@@ -201,7 +198,7 @@ class BillDetail extends StatelessWidget {
                 //WARRANTY LENGTH
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
-                  child: billNotifier.currentBill.warrantyLength == '0'
+                  child: billNotifier.currentBill.warrantyLength.isEmpty
                    ? Text('')
                    : Text(
                     'Warranty length: ${billNotifier.currentBill.warrantyLength} months',
