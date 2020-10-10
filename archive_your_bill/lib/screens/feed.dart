@@ -198,7 +198,7 @@ class _FeedState extends State<Feed> {
   Widget build(BuildContext context) {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
     BillNotifier billNotifier = Provider.of<BillNotifier>(context);
-    //function to used in RefreshIndicator widhget
+    //function to used in RefreshIndicator widget
     //swipe to refresh
     Future<void> _refreshList() async {
       getBills(billNotifier);
@@ -311,7 +311,7 @@ class _FeedState extends State<Feed> {
                                       padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
                                   //WARRANTY UNTIL
                                   billNotifier.billList[index].warrantyEnd == null
-                                      ? ''
+                                      ? Text('')
                                       : Text(
                                           'Warranty until: ${DateFormat.yMMMd().format(_resultsList[index].warrantyEnd.toDate())}',
                                           style: TextStyle(

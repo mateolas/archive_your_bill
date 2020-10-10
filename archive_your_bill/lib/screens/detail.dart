@@ -13,11 +13,16 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BillDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     BillNotifier billNotifier = Provider.of<BillNotifier>(context);
+
+    void printVariable(BillNotifier bill){
+      print(bill);
+    }
 
     _onBillDeleted(Bill bill) {
       Navigator.pop(context);
@@ -40,6 +45,10 @@ class BillDetail extends StatelessWidget {
         await Permission.storage.request();
       }
 
+      if(billNotifier.currentBill.image == null){
+        url = "https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg";
+      }
+
       final RenderBox box = context.findRenderObject();
 
       //list of imagePaths
@@ -56,7 +65,7 @@ class BillDetail extends StatelessWidget {
       //share function
       Share.shareFiles(imagePaths,
           subject: 'Bill from ${nameShop} bought at ${warrantyStart}',
-          text: 'Hey! Checkout the Share Files repo',
+          text: 'Hey! Just sending you a picture of a bill from ${nameShop} where ${warrantyStart} you bought ${nameItem}. Have a great day ! Archive Your Bill Team',
           sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
     }
 
@@ -64,19 +73,22 @@ class BillDetail extends StatelessWidget {
       // set up the buttons
       Widget cancelButton = FlatButton(
         child: Text("Cancel"),
-        onPressed: () { Navigator.of(context).pop();},
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       );
       Widget continueButton = FlatButton(
         child: Text("Yes"),
-        onPressed: () {Navigator.pop(context);
-          deleteBill(billNotifier.currentBill, _onBillDeleted);},
+        onPressed: () {
+          Navigator.pop(context);
+          deleteBill(billNotifier.currentBill, _onBillDeleted);
+        },
       );
 
       // set up the AlertDialog
       AlertDialog alert = AlertDialog(
         title: Text("Delete Bill"),
-        content: Text(
-            "Would you like to delete this bill ? (no undo)"),
+        content: Text("Would you like to delete this bill ? (no undo)"),
         actions: [
           cancelButton,
           continueButton,
@@ -178,16 +190,20 @@ class BillDetail extends StatelessWidget {
                 //WARRANTY UNTIL
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
-                  child: Text(
-                    'Warranty until: ${DateFormat.yMMMd().format(billNotifier.currentBill.warrantyEnd.toDate())}',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  child: billNotifier.currentBill.warrantyEnd == Timestamp.fromDate(DateTime.parse("1969-07-20 20:18:04Z"))
+                      ? Text('')
+                      : Text(
+                          'Warranty until: ${DateFormat.yMMMd().format(billNotifier.currentBill.warrantyEnd.toDate())}',
+                          style: TextStyle(fontSize: 18),
+                        ),
                 ),
                 SizedBox(height: 10),
                 //WARRANTY LENGTH
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
-                  child: Text(
+                  child: billNotifier.currentBill.warrantyLength == '0'
+                   ? Text('')
+                   : Text(
                     'Warranty length: ${billNotifier.currentBill.warrantyLength} months',
                     style: TextStyle(fontSize: 18),
                   ),

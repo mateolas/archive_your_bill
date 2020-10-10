@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
+
 //screen to create/edit the bill
 class BillForm extends StatefulWidget {
   final bool isUpdating;
@@ -440,7 +441,7 @@ class _BillFormState extends State<BillForm> {
           Expanded(
             child: Text(
               _currentBill.warrantyEnd == null
-                  ? ''
+                  ? Text('')
                   : '${DateFormat.yMMMd().format(_currentBill.warrantyEnd.toDate())}',
             ),
           ),
@@ -465,6 +466,14 @@ class _BillFormState extends State<BillForm> {
       return;
     }
 
+    if(_currentBill.warrantyEnd == null){
+      _currentBill.warrantyEnd = Timestamp.fromDate(DateTime.parse("1969-07-20 20:18:04Z"));
+    }
+
+    if (itemWarrantyLengthController == null){
+      itemWarrantyLengthController.text = '0';
+    }
+
     //_currentBill.warrantyStart = Timestamp.fromDate(_selectedDate);
     _formKey.currentState.save();
 
@@ -478,8 +487,6 @@ class _BillFormState extends State<BillForm> {
     print("_imageFile ${_imageFile.toString()}");
     print("_imageUrl $_imageUrl");
   }
-
-
 
 
   @override
