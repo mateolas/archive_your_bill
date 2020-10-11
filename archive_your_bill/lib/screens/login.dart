@@ -46,6 +46,10 @@ class _LoginState extends State<Login> {
     }
   }
 
+  Widget _buildLogoPicture(){
+    return Image(image: AssetImage('lib/assets/images/logo.png', package: 'archive_your_bill'));
+  }
+
   Widget _buildDisplayNameField() {
     return TextFormField(
       decoration: InputDecoration(
@@ -213,10 +217,10 @@ class _LoginState extends State<Login> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Color(0xFFFFCC80),
                     Color(0xFFFFB74D),
                     Color(0xFFFFA726),
                     Color(0xFFFF9800),
+                    Color(0xFFFB8C00),
                   ],
                   stops: [0.1, 0.4, 0.7, 0.9],
                 ),
@@ -235,12 +239,14 @@ class _LoginState extends State<Login> {
                     padding: EdgeInsets.fromLTRB(32, 96, 32, 0),
                     child: Column(
                       children: <Widget>[
+
                         Text(
-                          "Please Sign In",
+                          "Sign In",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 36, color: Colors.white),
                         ),
                         SizedBox(height: 32),
+                        _buildLogoPicture(),
                         _authMode == AuthMode.Signup
                             ? _buildDisplayNameField()
                             : Container(),
