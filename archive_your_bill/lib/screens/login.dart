@@ -46,8 +46,20 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Widget _buildLogoPicture(){
-    return Image(image: AssetImage('lib/assets/images/logo.png', package: 'archive_your_bill'));
+  Widget _buildLogoPicture() {
+    return Column(
+      children: [
+        Image.asset(
+          'lib/assets/images/logo.png',
+          //height: 100,
+          //width: 400,
+          //scale: 0.8,
+          //fit: BoxFit.fitWidth,
+         
+        ),
+        SizedBox(height: 60.0)
+      ],
+    );
   }
 
   Widget _buildDisplayNameField() {
@@ -90,14 +102,14 @@ class _LoginState extends State<Login> {
 
   final kHintTextStyle = TextStyle(
     color: Colors.white54,
-    fontFamily: 'OpenSans',
+    fontFamily: 'Calibri',
     fontSize: 20,
   );
 
   final kLabelStyle = TextStyle(
     color: Colors.white,
     fontWeight: FontWeight.bold,
-    fontFamily: 'OpenSans',
+    fontFamily: 'Calibri',
     fontSize: 20,
   );
 
@@ -118,7 +130,7 @@ class _LoginState extends State<Login> {
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.white,
-              fontFamily: 'OpenSans',
+              fontFamily: 'Calibri',
               fontSize: 20,
             ),
             decoration: InputDecoration(
@@ -236,17 +248,16 @@ class _LoginState extends State<Login> {
                 key: _formKey,
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(32, 96, 32, 0),
+                    padding: EdgeInsets.fromLTRB(32, 60, 32, 0),
                     child: Column(
                       children: <Widget>[
-
+                        _buildLogoPicture(),
                         Text(
                           "Sign In",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 36, color: Colors.white),
                         ),
                         SizedBox(height: 32),
-                        _buildLogoPicture(),
                         _authMode == AuthMode.Signup
                             ? _buildDisplayNameField()
                             : Container(),
