@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.orange,
         accentColor: Colors.black,
+        fontFamily: 'Calibri',
       ),
       home: Consumer<AuthNotifier>(
         builder: (context, notifier, child) {

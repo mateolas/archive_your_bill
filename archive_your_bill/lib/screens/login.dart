@@ -55,7 +55,6 @@ class _LoginState extends State<Login> {
           //width: 400,
           //scale: 0.8,
           //fit: BoxFit.fitWidth,
-         
         ),
         SizedBox(height: 60.0)
       ],
@@ -108,7 +107,6 @@ class _LoginState extends State<Login> {
 
   final kLabelStyle = TextStyle(
     color: Colors.white,
-    fontWeight: FontWeight.bold,
     fontFamily: 'Calibri',
     fontSize: 20,
   );
@@ -121,7 +119,7 @@ class _LoginState extends State<Login> {
           'Email',
           style: kLabelStyle,
         ),
-        SizedBox(height: 10.0),
+        SizedBox(height: 4.0),
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
@@ -145,13 +143,13 @@ class _LoginState extends State<Login> {
             ),
             validator: (String value) {
               if (value.isEmpty) {
-                return 'Email is required';
+                return '    Email is required';
               }
 
               if (!RegExp(
                       r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
                   .hasMatch(value)) {
-                return 'Please enter a valid email address';
+                return '    Please enter a valid email address';
               }
 
               return null;
@@ -161,34 +159,60 @@ class _LoginState extends State<Login> {
             },
           ),
         ),
+        SizedBox(height: 12.0),
       ],
     );
   }
 
   Widget _buildPasswordField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: "Password",
-        labelStyle: TextStyle(color: Colors.black),
-      ),
-      style: TextStyle(fontSize: 26, color: Colors.black),
-      cursorColor: Colors.black,
-      obscureText: true,
-      controller: _passwordController,
-      validator: (String value) {
-        if (value.isEmpty) {
-          return 'Password is required';
-        }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Password',
+          style: kLabelStyle,
+        ),
+        SizedBox(height: 4.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 60.0,
+          child: TextFormField(
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Calibri',
+              fontSize: 20,
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              prefixIcon: Icon(
+                Icons.lock,
+                color: Colors.white,
+              ),
+              hintText: "Password",
+              hintStyle: kHintTextStyle,
+            ),
+            //cursorColor: Colors.black,
+            obscureText: true,
+            controller: _passwordController,
+            validator: (String value) {
+              if (value.isEmpty) {
+                return '    Password is required';
+              }
 
-        if (value.length < 5 || value.length > 20) {
-          return 'Password must be betweem 5 and 20 characters';
-        }
+              if (value.length < 5 || value.length > 20) {
+                return '    Password must be betweem 5 and 20 characters';
+              }
 
-        return null;
-      },
-      onSaved: (String value) {
-        _user.password = value;
-      },
+              return null;
+            },
+            onSaved: (String value) {
+              _user.password = value;
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -255,7 +279,11 @@ class _LoginState extends State<Login> {
                         Text(
                           "Sign In",
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 36, color: Colors.white),
+                          style: TextStyle(
+                            fontSize: 26,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         SizedBox(height: 32),
                         _authMode == AuthMode.Signup
@@ -267,6 +295,35 @@ class _LoginState extends State<Login> {
                             ? _buildConfirmPasswordField()
                             : Container(),
                         SizedBox(height: 32),
+                        ButtonTheme(
+                          //minWidth: 200,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            //side: BorderSide(color: Colors.orange),
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 25.0),
+                            width: double.infinity,
+                            child: RaisedButton(
+                              elevation: 5.0,
+                              color: Colors.white,
+                              padding: EdgeInsets.all(15.0),
+                              onPressed: () => _submitForm(),
+                              child: Text(
+                                _authMode == AuthMode.Login
+                                    ? 'LOGIN'
+                                    : 'SIGNUP',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.orange,
+                                  letterSpacing: 1.5,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 16),
                         ButtonTheme(
                           minWidth: 200,
                           child: RaisedButton(
@@ -287,23 +344,6 @@ class _LoginState extends State<Login> {
                                     : AuthMode.Login;
                               });
                             },
-                          ),
-                        ),
-                        SizedBox(height: 16),
-                        ButtonTheme(
-                          minWidth: 200,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                            side: BorderSide(color: Colors.orange),
-                          ),
-                          child: RaisedButton(
-                            padding: EdgeInsets.all(10.0),
-                            onPressed: () => _submitForm(),
-                            child: Text(
-                              _authMode == AuthMode.Login ? 'Login' : 'Signup',
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.black),
-                            ),
                           ),
                         ),
                       ],
