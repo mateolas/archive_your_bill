@@ -326,16 +326,31 @@ class _LoginState extends State<Login> {
                         SizedBox(height: 16),
                         ButtonTheme(
                           minWidth: 200,
-                          child: RaisedButton(
-                            padding: EdgeInsets.all(10.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.orange),
-                            ),
-                            child: Text(
-                              'Switch to ${_authMode == AuthMode.Login ? 'Signup' : 'Login'}',
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.black),
+                          child: FlatButton(
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: _authMode == AuthMode.Login
+                                        ? 'Don\'t have an Account ? '
+                                        : 'Already have an Account ? ',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: _authMode == AuthMode.Login
+                                        ? 'Signup'
+                                        : 'Login',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             onPressed: () {
                               setState(() {
