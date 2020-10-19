@@ -56,34 +56,61 @@ class _LoginState extends State<Login> {
           //scale: 0.8,
           //fit: BoxFit.fitWidth,
         ),
-        SizedBox(height: 60.0)
+        SizedBox(height: 30.0)
       ],
     );
   }
 
   Widget _buildDisplayNameField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: "Display Name",
-        labelStyle: TextStyle(color: Colors.white),
-      ),
-      keyboardType: TextInputType.emailAddress,
-      style: TextStyle(fontSize: 26, color: Colors.white),
-      cursorColor: Colors.white,
-      validator: (String value) {
-        if (value.isEmpty) {
-          return 'Display Name is required';
-        }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Display name',
+          style: kLabelStyle,
+        ),
+        SizedBox(height: 4.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 58.0,
+          child: TextFormField(
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Calibri',
+              fontSize: 20,
+            ),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              errorStyle: TextStyle(fontSize: 11, height: 0.1),
+              prefixIcon: Icon(
+                Icons.person,
+                color: Colors.white,
+              ),
+              hintText: 'Enter your Email',
+              hintStyle: kHintTextStyle,
+              labelStyle: TextStyle(color: Colors.white),
+            ),
+            keyboardType: TextInputType.emailAddress,
+            cursorColor: Colors.white,
+            validator: (String value) {
+              if (value.isEmpty) {
+                return '     Display Name is required';
+              }
 
-        if (value.length < 5 || value.length > 12) {
-          return 'Display Name must be betweem 5 and 12 characters';
-        }
+              if (value.length < 2 || value.length > 12) {
+                return '     Display Name must be betweem 2 and 12 characters';
+              }
 
-        return null;
-      },
-      onSaved: (String value) {
-        _user.displayName = value;
-      },
+              return null;
+            },
+            onSaved: (String value) {
+              _user.displayName = value;
+            },
+          ),
+        ),
+        SizedBox(height: 16.0),
+      ],
     );
   }
 
@@ -123,7 +150,7 @@ class _LoginState extends State<Login> {
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
-          height: 60.0,
+          height: 58.0,
           child: TextFormField(
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
@@ -133,7 +160,9 @@ class _LoginState extends State<Login> {
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
+              //contentPadding:
+              //EdgeInsets.only(left: 0, right: 0, top: 10, bottom: 0),
+              errorStyle: TextStyle(fontSize: 11, height: 0.1),
               prefixIcon: Icon(
                 Icons.email,
                 color: Colors.white,
@@ -143,13 +172,13 @@ class _LoginState extends State<Login> {
             ),
             validator: (String value) {
               if (value.isEmpty) {
-                return '    Email is required';
+                return '     Email is required';
               }
 
               if (!RegExp(
                       r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
                   .hasMatch(value)) {
-                return '    Please enter a valid email address';
+                return '     Please enter a valid email address';
               }
 
               return null;
@@ -159,7 +188,7 @@ class _LoginState extends State<Login> {
             },
           ),
         ),
-        SizedBox(height: 12.0),
+        SizedBox(height: 16.0),
       ],
     );
   }
@@ -176,7 +205,7 @@ class _LoginState extends State<Login> {
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
-          height: 60.0,
+          height: 58.0,
           child: TextFormField(
             style: TextStyle(
               color: Colors.white,
@@ -184,8 +213,9 @@ class _LoginState extends State<Login> {
               fontSize: 20,
             ),
             decoration: InputDecoration(
+              errorStyle: TextStyle(fontSize: 11, height: 0.1),
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
+              //contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
                 Icons.lock,
                 color: Colors.white,
@@ -198,11 +228,11 @@ class _LoginState extends State<Login> {
             controller: _passwordController,
             validator: (String value) {
               if (value.isEmpty) {
-                return '    Password is required';
+                return '     Password is required';
               }
 
               if (value.length < 5 || value.length > 20) {
-                return '    Password must be betweem 5 and 20 characters';
+                return '     Password must be betweem 5 and 20 characters';
               }
 
               return null;
@@ -217,21 +247,46 @@ class _LoginState extends State<Login> {
   }
 
   Widget _buildConfirmPasswordField() {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: "Confirm Password",
-        labelStyle: TextStyle(color: Colors.black),
-      ),
-      style: TextStyle(fontSize: 26, color: Colors.black),
-      cursorColor: Colors.black,
-      obscureText: true,
-      validator: (String value) {
-        if (_passwordController.text != value) {
-          return 'Passwords do not match';
-        }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 16.0),
+        Text(
+          'Confirm Password',
+          style: kLabelStyle,
+        ),
+        SizedBox(height: 4.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          decoration: kBoxDecorationStyle,
+          height: 58.0,
+          child: TextFormField(
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Calibri',
+              fontSize: 20,
+            ),
+            decoration: InputDecoration(
+              errorStyle: TextStyle(fontSize: 11, height: 0.1),
+              border: InputBorder.none,
+              hintText: "Confirm Password",
+              hintStyle: kHintTextStyle,
+              prefixIcon: Icon(
+                Icons.lock,
+                color: Colors.white,
+              ),
+            ),
+            obscureText: true,
+            validator: (String value) {
+              if (_passwordController.text != value) {
+                return '    Passwords do not match';
+              }
 
-        return null;
-      },
+              return null;
+            },
+          ),
+        ),
+      ],
     );
   }
 
