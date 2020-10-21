@@ -87,7 +87,7 @@ class _LoginState extends State<Login> {
                 Icons.person,
                 color: Colors.white,
               ),
-              hintText: 'Enter your Email',
+              hintText: 'Enter your Display name',
               hintStyle: kHintTextStyle,
               labelStyle: TextStyle(color: Colors.white),
             ),
@@ -170,6 +170,7 @@ class _LoginState extends State<Login> {
               hintText: 'Enter your Email',
               hintStyle: kHintTextStyle,
             ),
+            inputFormatters: [ BlacklistingTextInputFormatter(RegExp("[ ]"))],
             validator: (String value) {
               if (value.isEmpty) {
                 return '     Email is required';

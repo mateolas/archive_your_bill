@@ -194,14 +194,14 @@ class _FeedState extends State<Feed> {
 
 
   //function to refresh the screen
-  @override
-  void didChangeDependencies() {
-    BillNotifier billNotifier = Provider.of<BillNotifier>(context);
-    super.didChangeDependencies();
-    setState(() {
-      getBills(billNotifier);
-    });
-  }
+  //@override
+  //void didChangeDependencies() {
+  //  BillNotifier billNotifier = Provider.of<BillNotifier>(context);
+    //super.didChangeDependencies();
+  //  setState(() {
+  //    getBills(billNotifier);
+  //  });
+  //}
 
   @override
   Widget build(BuildContext context) {
@@ -241,7 +241,9 @@ class _FeedState extends State<Feed> {
       body: Column(
         children: [
           searchField(),
-          Expanded(
+          billNotifier.billList.isEmpty
+            ? Text('Test')
+            : Expanded(
             child: RefreshIndicator(
                           child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
