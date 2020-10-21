@@ -44,7 +44,8 @@ class _FeedState extends State<Feed> {
   }
 
   _onSearchChanged() {
-    BillNotifier billNotifier = Provider.of<BillNotifier>(context, listen: false);
+    BillNotifier billNotifier =
+        Provider.of<BillNotifier>(context, listen: false);
     setSearchResultsList(billNotifier);
     //print(_searchController.text);
   }
@@ -57,16 +58,17 @@ class _FeedState extends State<Feed> {
 
     //if text field is not empty
     if (_searchController.text != "") {
-    //search whole list from firebase
+      //search whole list from firebase
       for (var bill in billNotifier.billList) {
         var title = bill.nameShop.toLowerCase();
         var title2 = bill.nameItem.toLowerCase();
-    //if typed by user value equals bill's nameShop or nameItem add bill to the filtered list - showResults
-        if (title.contains(_searchController.text.toLowerCase()) || title2.contains(_searchController.text.toLowerCase())  ) {
+        //if typed by user value equals bill's nameShop or nameItem add bill to the filtered list - showResults
+        if (title.contains(_searchController.text.toLowerCase()) ||
+            title2.contains(_searchController.text.toLowerCase())) {
           showResults.add(bill);
         }
       }
-    //if text field is empty copy all the items from list fetched from firebase to filtered list
+      //if text field is empty copy all the items from list fetched from firebase to filtered list
     } else {
       showResults = billNotifier.billList;
     }
@@ -115,14 +117,11 @@ class _FeedState extends State<Feed> {
         }
         break;
 
-
       case "Books/Music/Culture":
         {
           return Icon(Icons.format_quote, size: 32, color: Colors.orange);
         }
         break;
-      
-
 
       case "Home":
         {
@@ -192,16 +191,29 @@ class _FeedState extends State<Feed> {
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
-
   //function to refresh the screen
   //@override
   //void didChangeDependencies() {
   //  BillNotifier billNotifier = Provider.of<BillNotifier>(context);
-    //super.didChangeDependencies();
+  //super.didChangeDependencies();
   //  setState(() {
   //    getBills(billNotifier);
   //  });
   //}
+
+  Widget noBillsYetText() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 350,
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(170,14,0,0),
+          child: Image.asset('lib/assets/images/arrow.png', scale: 2.7),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -242,167 +254,185 @@ class _FeedState extends State<Feed> {
         children: [
           searchField(),
           billNotifier.billList.isEmpty
-            ? Text('Test')
-            : Expanded(
-            child: RefreshIndicator(
-                          child: ListView.builder(
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      //after clicking setting up with notifier a current bill
-                      billNotifier.currentBill = _resultsList[index];
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BillDetail())).then((value) {
-                      
-                      });
-                    },
-                    child: Card(
-                      elevation: 3,
-                      margin: EdgeInsets.all(6),
-                      shadowColor: Colors.black,
-                      color: Colors.white,
-                      child: Container(
-                        height: 140,
-                        child: Center(
-                          child: Row(
-                            children: <Widget>[
-                              //Category Icon
-                              Container(
-                                  padding: EdgeInsets.all(10),
-                                  //color: Colors.blue,
-                                  child: categoryToIcon(
-                                      _resultsList[index].category)),
-                              //Item name and cost
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  //SHOP NAME
-                                  Text(
-                                    '${_resultsList[index].nameShop}',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.orange,
-                                    ),
-                                  ),
-                                  Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 6)),
-                                  //ITEM NAME
-                                  Text(
-                                    '${_resultsList[index].nameItem}',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 12)),
-                                  //ITEM PRICE AND CURRENCY
-                                  Row(
-                                    children: [
-                                      Text(
-                                          'Price: ${_resultsList[index].priceItem}',
-                                          style: TextStyle(fontSize: 14)),
-                                      Text(' ${_resultsList[index].currencyItem}',
-                                          style: TextStyle(fontSize: 14)),
-                                    ],
-                                  ),
-                                  Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
-                                  //ITEM BOUGHT DATE
-                                  Text(
-                                    'Bought: ${DateFormat.yMMMd().format(_resultsList[index].warrantyStart.toDate())}',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 4)),
-                                  //WARRANTY UNTIL
-                                  billNotifier.billList[index].warrantyEnd == null
-                                      ? Text('')
-                                      : Text(
-                                          'Warranty until: ${DateFormat.yMMMd().format(_resultsList[index].warrantyEnd.toDate())}',
+              ? noBillsYetText()
+              : Expanded(
+                  child: RefreshIndicator(
+                    child: ListView.builder(
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            //after clicking setting up with notifier a current bill
+                            billNotifier.currentBill = _resultsList[index];
+                            Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BillDetail()))
+                                .then((value) {});
+                          },
+                          child: Card(
+                            elevation: 3,
+                            margin: EdgeInsets.all(6),
+                            shadowColor: Colors.black,
+                            color: Colors.white,
+                            child: Container(
+                              height: 140,
+                              child: Center(
+                                child: Row(
+                                  children: <Widget>[
+                                    //Category Icon
+                                    Container(
+                                        padding: EdgeInsets.all(10),
+                                        //color: Colors.blue,
+                                        child: categoryToIcon(
+                                            _resultsList[index].category)),
+                                    //Item name and cost
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        //SHOP NAME
+                                        Text(
+                                          '${_resultsList[index].nameShop}',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.orange,
+                                          ),
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 0, 0, 6)),
+                                        //ITEM NAME
+                                        Text(
+                                          '${_resultsList[index].nameItem}',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 0, 0, 12)),
+                                        //ITEM PRICE AND CURRENCY
+                                        Row(
+                                          children: [
+                                            Text(
+                                                'Price: ${_resultsList[index].priceItem}',
+                                                style: TextStyle(fontSize: 14)),
+                                            Text(
+                                                ' ${_resultsList[index].currencyItem}',
+                                                style: TextStyle(fontSize: 14)),
+                                          ],
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 0, 0, 4)),
+                                        //ITEM BOUGHT DATE
+                                        Text(
+                                          'Bought: ${DateFormat.yMMMd().format(_resultsList[index].warrantyStart.toDate())}',
                                           style: TextStyle(
                                             fontSize: 14,
                                           ),
                                         ),
-                                ],
-                              ),
-                              Expanded(
-                                child: Container(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: <Widget>[
-                                      Container(
-                                        child: IconButton(
-                                          icon: Icon(Icons.edit),
-                                          color: Colors.grey,
-                                          onPressed: () {
-                                            billNotifier.currentBill =
-                                                _resultsList[index];
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(builder:
-                                                  (BuildContext context) {
-                                                return BillForm(
-                                                  isUpdating: true,
-                                                );
-                                              }),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                        child: IconButton(
-                                          icon: Icon(Icons.share),
-                                          disabledColor: Colors.yellow,
-                                          color: Colors.grey,
-                                          onPressed: () {
-                                            billNotifier.currentBill =
-                                                _resultsList[index];
+                                        Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 0, 0, 4)),
+                                        //WARRANTY UNTIL
+                                        billNotifier.billList[index]
+                                                    .warrantyEnd ==
+                                                null
+                                            ? Text('')
+                                            : Text(
+                                                'Warranty until: ${DateFormat.yMMMd().format(_resultsList[index].warrantyEnd.toDate())}',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: <Widget>[
+                                            Container(
+                                              child: IconButton(
+                                                icon: Icon(Icons.edit),
+                                                color: Colors.grey,
+                                                onPressed: () {
+                                                  billNotifier.currentBill =
+                                                      _resultsList[index];
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(builder:
+                                                        (BuildContext context) {
+                                                      return BillForm(
+                                                        isUpdating: true,
+                                                      );
+                                                    }),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            Container(
+                                              child: IconButton(
+                                                icon: Icon(Icons.share),
+                                                disabledColor: Colors.yellow,
+                                                color: Colors.grey,
+                                                onPressed: () {
+                                                  billNotifier.currentBill =
+                                                      _resultsList[index];
 
-                                            saveAndShare(
-                                                nameShop:
-                                                    _resultsList[index].nameShop,
-                                                nameItem:
-                                                    _resultsList[index].nameItem,
-                                                itemPrice:
-                                                    _resultsList[index].priceItem,
-                                                warrantyStart: DateFormat.yMMMd()
-                                                    .format(_resultsList[index]
-                                                        .warrantyStart
-                                                        .toDate()),
-                                                warrantyEnd: DateFormat.yMMMd()
-                                                    .format(_resultsList[index]
-                                                        .warrantyEnd
-                                                        .toDate()),
-                                                warrantyLength:
-                                                    _resultsList[index]
-                                                        .warrantyLength,
-                                                url: _resultsList[index].image);
-                                          },
+                                                  saveAndShare(
+                                                      nameShop:
+                                                          _resultsList[index]
+                                                              .nameShop,
+                                                      nameItem:
+                                                          _resultsList[index]
+                                                              .nameItem,
+                                                      itemPrice:
+                                                          _resultsList[index]
+                                                              .priceItem,
+                                                      warrantyStart: DateFormat
+                                                              .yMMMd()
+                                                          .format(
+                                                              _resultsList[index]
+                                                                  .warrantyStart
+                                                                  .toDate()),
+                                                      warrantyEnd:
+                                                          DateFormat.yMMMd()
+                                                              .format(
+                                                                  _resultsList[index]
+                                                                      .warrantyEnd
+                                                                      .toDate()),
+                                                      warrantyLength:
+                                                          _resultsList[index]
+                                                              .warrantyLength,
+                                                      url: _resultsList[index]
+                                                          .image);
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
+                      itemCount: _resultsList.length,
                     ),
-                  );
-                },
-                itemCount: _resultsList.length,
-              ),
-              onRefresh: _refreshList,
-            ),
-          ),
+                    onRefresh: _refreshList,
+                  ),
+                ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
