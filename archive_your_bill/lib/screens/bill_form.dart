@@ -136,8 +136,6 @@ class _BillFormState extends State<BillForm> {
     }
   }
 
-
-
   Future<void> _showSelectionDialog(BuildContext context) {
     return showDialog(
         context: context,
@@ -179,7 +177,7 @@ class _BillFormState extends State<BillForm> {
     }
   }
 
-_getImageFromCamera() async {
+  _getImageFromCamera() async {
     File imageFile = await ImagePicker.pickImage(
         source: ImageSource.camera, imageQuality: 50, maxWidth: 400);
 
@@ -190,14 +188,9 @@ _getImageFromCamera() async {
     }
   }
 
-
-
   Widget _buildShopNameField() {
     return TextFormField(
-      decoration: InputDecoration(
-          labelText: 'Name of the shop',
-          focusColor: Colors.yellow,
-          hoverColor: Colors.yellow),
+      decoration: InputDecoration(labelText: 'Name of the shop'),
       autovalidate: _autovalidate,
       initialValue: _currentBill.nameShop,
       keyboardType: TextInputType.text,
@@ -301,13 +294,17 @@ _getImageFromCamera() async {
 
   Widget _buildCostCurrencyField() {
     return DropdownButtonFormField<String>(
+      style: TextStyle(
+        color: Colors.black,
+        fontSize: 16,
+      ),
       value: _currentBill.currencyItem,
       decoration: InputDecoration(
+        hoverColor: Colors.black,
         labelText: 'Currency',
         labelStyle: TextStyle(fontSize: 16),
         isDense: true,
       ),
-      style: TextStyle(fontSize: 16, color: Colors.black),
       onChanged: (newValue) =>
           setState(() => _currentBill.currencyItem = newValue),
       validator: (value) => value == null ? 'Currency required' : null,
@@ -328,30 +325,32 @@ _getImageFromCamera() async {
   }
 
   Widget _buildCostField() {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 0.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: Container(
-                //color: Colors.red,
-                child: _buildCostFieldValue(),
-              ),
-            ),
-            SizedBox(width: 16.0),
-            Expanded(
-              flex: 1,
-              child: Container(
-                //color: Colors.blue,
-                child: _buildCostCurrencyField(),
-              ),
-            ),
-          ],
+    return
+        //color: Colors.blue,
+        Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Flexible(
+          flex: 2,
+          child: Container(
+            //color: Colors.red,
+            child: _buildCostFieldValue(),
+          ),
         ),
-      ),
+        SizedBox(width: 20.0),
+        Flexible(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 4),
+            child: Container(
+              //color: Colors.blue,
+              child: _buildCostCurrencyField(),
+            ),
+          ),
+        ),
+      ],
+
+      //),
     );
   }
 
@@ -573,7 +572,6 @@ _getImageFromCamera() async {
               SizedBox(height: 26),
               _buildShopNameField(),
               _buildItemNameField(),
-              //SizedBox(height: 12),
               _buildItemCategoryField(),
               _buildCostField(),
               _buildItemWarrantyLength(),
