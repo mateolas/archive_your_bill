@@ -296,6 +296,7 @@ class _LoginState extends State<Login> {
     print("Building login screen");
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(

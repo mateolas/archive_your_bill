@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-
 //screen to create/edit the bill
 class BillForm extends StatefulWidget {
   final bool isUpdating;
@@ -104,7 +103,7 @@ class _BillFormState extends State<BillForm> {
                   fontSize: 22,
                   fontWeight: FontWeight.w400),
             ),
-            onPressed: () => _getLocalImage(),
+            onPressed: () => _showSelectionDialog(context),
           )
         ],
       );
@@ -137,6 +136,38 @@ class _BillFormState extends State<BillForm> {
     }
   }
 
+
+
+  Future<void> _showSelectionDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text("From where do you want to take the photo?"),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Text("Gallery"),
+                      onTap: () {
+                        _getLocalImage();
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Padding(padding: EdgeInsets.all(8.0)),
+                    GestureDetector(
+                      child: Text("Camera"),
+                      onTap: () {
+                        _getImageFromCamera();
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ),
+              ));
+        });
+  }
+
   _getLocalImage() async {
     File imageFile = await ImagePicker.pickImage(
         source: ImageSource.gallery, imageQuality: 50, maxWidth: 400);
@@ -147,6 +178,19 @@ class _BillFormState extends State<BillForm> {
       });
     }
   }
+
+_getImageFromCamera() async {
+    File imageFile = await ImagePicker.pickImage(
+        source: ImageSource.camera, imageQuality: 50, maxWidth: 400);
+
+    if (imageFile != null) {
+      setState(() {
+        _imageFile = imageFile;
+      });
+    }
+  }
+
+
 
   Widget _buildShopNameField() {
     return TextFormField(
@@ -489,7 +533,6 @@ class _BillFormState extends State<BillForm> {
     print("_imageUrl $_imageUrl");
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -519,7 +562,7 @@ class _BillFormState extends State<BillForm> {
                           borderRadius: BorderRadius.circular(18.0),
                           side: BorderSide(color: Colors.orange),
                         ),
-                        onPressed: () => _getLocalImage(),
+                        onPressed: () => _showSelectionDialog(context),
                         child: Text(
                           'Add Image',
                           style: TextStyle(fontWeight: FontWeight.bold),
