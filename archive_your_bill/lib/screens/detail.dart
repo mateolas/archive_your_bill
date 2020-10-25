@@ -15,7 +15,12 @@ import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class BillDetail extends StatelessWidget {
+class BillDetail extends StatefulWidget {
+  @override
+  _BillDetailState createState() => _BillDetailState();
+}
+
+class _BillDetailState extends State<BillDetail> {
   @override
   Widget build(BuildContext context) {
     BillNotifier billNotifier = Provider.of<BillNotifier>(context);
@@ -41,8 +46,9 @@ class BillDetail extends StatelessWidget {
         await Permission.storage.request();
       }
 
-      if(billNotifier.currentBill.image == null){
-        url = "https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg";
+      if (billNotifier.currentBill.image == null) {
+        url =
+            "https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg";
       }
 
       final RenderBox box = context.findRenderObject();
@@ -61,7 +67,8 @@ class BillDetail extends StatelessWidget {
       //share function
       Share.shareFiles(imagePaths,
           subject: 'Bill from ${nameShop} bought at ${warrantyStart}',
-          text: 'Hey! Just sending you a picture of a bill from ${nameShop} where ${warrantyStart} you bought ${nameItem}. Have a great day ! Archive Your Bill Team',
+          text:
+              'Hey! Just sending you a picture of a bill from ${nameShop} where ${warrantyStart} you bought ${nameItem}. Have a great day ! Archive Your Bill Team',
           sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
     }
 
@@ -187,7 +194,7 @@ class BillDetail extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
                   child: billNotifier.currentBill.warrantyEnd == null
-                  //Timestamp.fromDate(DateTime.parse("1969-07-20 20:18:04Z"))
+                      //Timestamp.fromDate(DateTime.parse("1969-07-20 20:18:04Z"))
                       ? Text('')
                       : Text(
                           'Warranty until: ${DateFormat.yMMMd().format(billNotifier.currentBill.warrantyEnd.toDate())}',
@@ -199,11 +206,11 @@ class BillDetail extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
                   child: billNotifier.currentBill.warrantyLength.isEmpty
-                   ? Text('')
-                   : Text(
-                    'Warranty length: ${billNotifier.currentBill.warrantyLength} months',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                      ? Text('')
+                      : Text(
+                          'Warranty length: ${billNotifier.currentBill.warrantyLength} months',
+                          style: TextStyle(fontSize: 18),
+                        ),
                 ),
                 SizedBox(height: 10),
               ],
@@ -253,7 +260,7 @@ class BillDetail extends StatelessWidget {
                         isUpdating: true,
                       );
                     }),
-                  );
+                  ).then((value) => setState(() => {getBills(billNotifier)}));
                 },
                 child: Icon(Icons.edit),
                 foregroundColor: Colors.white,
