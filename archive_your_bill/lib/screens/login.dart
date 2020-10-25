@@ -115,7 +115,16 @@ class _LoginState extends State<Login> {
   }
 
   final kBoxDecorationStyle = BoxDecoration(
-    color: Color(0xFFFFCC80),
+    gradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.topRight,
+      colors: [
+   
+        Color(0xff3438A4),
+        Color(0xff3438A4),
+
+      ],
+    ),
     borderRadius: BorderRadius.circular(10.0),
     boxShadow: [
       BoxShadow(
@@ -170,7 +179,7 @@ class _LoginState extends State<Login> {
               hintText: 'Enter your Email',
               hintStyle: kHintTextStyle,
             ),
-            inputFormatters: [ BlacklistingTextInputFormatter(RegExp("[ ]"))],
+            inputFormatters: [BlacklistingTextInputFormatter(RegExp("[ ]"))],
             validator: (String value) {
               if (value.isEmpty) {
                 return '     Email is required';
@@ -307,15 +316,16 @@ class _LoginState extends State<Login> {
               width: double.infinity,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFFFFB74D),
-                    Color(0xFFFFA726),
-                    Color(0xFFFF9800),
-                    Color(0xFFFB8C00),
+                    //Endless River
+                    Color(0xff0947B1),
+                    Color(0xffB1097C),
+                  
+                   
                   ],
-                  stops: [0.1, 0.4, 0.7, 0.9],
+                  //stops: [0.1, 0.4],
                 ),
               ),
             ),
@@ -356,7 +366,7 @@ class _LoginState extends State<Login> {
                           //minWidth: 200,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
-                            //side: BorderSide(color: Colors.orange),
+                      
                           ),
                           child: Container(
                             padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -372,7 +382,7 @@ class _LoginState extends State<Login> {
                                     : 'SIGNUP',
                                 style: TextStyle(
                                   fontSize: 20,
-                                  color: Colors.orange,
+                                  color: Color(0xff3438A4),
                                   letterSpacing: 1.5,
                                   fontWeight: FontWeight.bold,
                                 ),
