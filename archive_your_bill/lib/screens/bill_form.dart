@@ -7,6 +7,7 @@ import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 //screen to create/edit the bill
 class BillForm extends StatefulWidget {
@@ -585,8 +586,11 @@ class _BillFormState extends State<BillForm> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          FocusScope.of(context).requestFocus(new FocusNode());
+   
+          //FocusScope.of(context).requestFocus(new FocusNode());
+          //Navigator.of(context).pop();
           _saveBill();
+        
         },
         child: Icon(Icons.save),
         foregroundColor: Colors.white,

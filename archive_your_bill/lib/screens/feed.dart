@@ -1,5 +1,4 @@
 import 'package:archive_your_bill/api/bill_api.dart';
-import 'package:archive_your_bill/model/bill.dart';
 import 'package:archive_your_bill/notifier/auth_notifier.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:archive_your_bill/screens/bill_form.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:archive_your_bill/screens/detail.dart';
 import 'package:intl/intl.dart';
-
 import 'dart:async';
 import 'dart:io';
 import 'package:share/share.dart';
@@ -31,9 +29,11 @@ class _FeedState extends State<Feed> {
     BillNotifier billNotifier =
         Provider.of<BillNotifier>(context, listen: false);
     getBills(billNotifier);
-    super.initState();
+    
+    _resultsList = billNotifier.billList;
     _searchController.addListener(_onSearchChanged);
     //setSearchResultsList(billNotifier);
+    super.initState();
   }
 
   @override
@@ -69,7 +69,8 @@ class _FeedState extends State<Feed> {
         }
       }
       //if text field is empty copy all the items from list fetched from firebase to filtered list
-    } else {
+    } 
+    else {
       showResults = billNotifier.billList;
     }
     //update the results
@@ -192,15 +193,30 @@ class _FeedState extends State<Feed> {
   }
 
   //function to refresh the screen
-  //@override
-  //void didChangeDependencies() {
-  //  BillNotifier billNotifier = Provider.of<BillNotifier>(context);
-  //super.didChangeDependencies();
-  //  setState(() {
-  //    getBills(billNotifier);
-  //  });
-  //}
+  @override
+  void didChangeDependencies() {
+    BillNotifier billNotifier = Provider.of<BillNotifier>(context);
+    super.didChangeDependencies();
+    setState(() {
+      //_refreshList(); print("Did change Dependencies function");
+      //getBills(billNotifier);
+    });
+  }
 
+    //function to used in RefreshIndicator widget
+    //swipe to refresh
+    Future<void> _refreshList() async {
+      BillNotifier billNotifier =
+        Provider.of<BillNotifier>(context, listen: false);
+      getBills(billNotifier);
+      //setSearchResultsList(billNotifier);
+    }
+    updateResults(){
+      BillNotifier billNotifier =
+        Provider.of<BillNotifier>(context, listen: true);
+      _resultsList = billNotifier.billList;
+    }
+    
   Widget noBillsYetText() {
     return Column(
       children: [
@@ -208,7 +224,7 @@ class _FeedState extends State<Feed> {
           height: 350,
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(170,14,0,0),
+          padding: const EdgeInsets.fromLTRB(170, 14, 0, 0),
           child: Image.asset('lib/assets/images/arrow.png', scale: 2.7),
         ),
       ],
@@ -219,12 +235,6 @@ class _FeedState extends State<Feed> {
   Widget build(BuildContext context) {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
     BillNotifier billNotifier = Provider.of<BillNotifier>(context);
-    //function to used in RefreshIndicator widget
-    //swipe to refresh
-    Future<void> _refreshList() async {
-      getBills(billNotifier);
-      setSearchResultsList(billNotifier);
-    }
 
     //sets the search results
     setSearchResultsList(billNotifier);
@@ -235,21 +245,35 @@ class _FeedState extends State<Feed> {
 
     return Scaffold(
       appBar: AppBar(
-        //added display.name
-        title: Text(authNotifier.user.displayName != null
-            ? authNotifier.user.displayName
-            : "Main page"),
+        automaticallyImplyLeading: false, // hides default back button
+        flexibleSpace: Container(
+            decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.topRight,
+              colors: [
+                Color(0xFFFFB74D),
+                Color(0xFFFB8C00),
+                //Color(0xffB1097C),
+                //Color(0xff0947B1),
+              ]),
+        )),
+        title: Image.asset('lib/assets/images/logo.png', scale: 5),
+        centerTitle: true,
         actions: <Widget>[
           // action button - logout
           FlatButton(
             onPressed: () => signout(authNotifier),
-            child: Text(
-              "Logout",
-              style: TextStyle(fontSize: 20, color: Colors.black),
+            child: Icon(
+              Icons.exit_to_app,
+              color: Colors.white,
+              //size: 24.0,
+              semanticLabel: 'Text to announce in accessibility modes',
             ),
           ),
         ],
       ),
+      
       body: Column(
         children: [
           searchField(),
@@ -368,13 +392,15 @@ class _FeedState extends State<Feed> {
                                                   billNotifier.currentBill =
                                                       _resultsList[index];
                                                   Navigator.of(context).push(
-                                                    MaterialPageRoute(builder:
-                                                        (BuildContext context) {
+                                                    new MaterialPageRoute(
+                                                        builder: (BuildContext
+                                                            context) {
                                                       return BillForm(
                                                         isUpdating: true,
                                                       );
                                                     }),
-                                                  );
+                                                  ).then(( value) =>
+                                                     setState(() => { getBills(billNotifier)}));
                                                 },
                                               ),
                                             ),

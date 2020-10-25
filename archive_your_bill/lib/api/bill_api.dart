@@ -135,7 +135,9 @@ _uploadBill(Bill bill, bool isUpdating, Function billUploaded, {String imageUrl}
     await foodRef.document(firebaseUser.uid).collection('bills').document(bill.id).updateData(bill.toMap());
 
     billUploaded(bill);
+    
     print('updated food with id: ${bill.id}');
+    
   } else {
     bill.createdAt = Timestamp.now();
 
