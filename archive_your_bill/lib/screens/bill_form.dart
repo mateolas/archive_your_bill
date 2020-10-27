@@ -440,10 +440,10 @@ class _BillFormState extends State<BillForm> {
           children: <Widget>[
             RaisedButton(
               textColor: Theme.of(context).accentColor,
-              color: Colors.orange,
+              //color: Colors.orange,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
-                side: BorderSide(color: Colors.orange),
+                //side: BorderSide(color: Colors.orange),
               ),
               child: Text(
                 'Choose warranty start date:',
@@ -511,15 +511,6 @@ class _BillFormState extends State<BillForm> {
       return;
     }
 
-    //if(_currentBill.warrantyEnd == null){
-    //  _currentBill.warrantyEnd = Timestamp.fromDate(DateTime.parse("1969-07-20 20:18:04Z"));
-    //}
-
-    //if (itemWarrantyLengthController == null){
-    //  itemWarrantyLengthController.text = '0';
-    //}
-
-    //_currentBill.warrantyStart = Timestamp.fromDate(_selectedDate);
     _formKey.currentState.save();
 
     print('form saved');
@@ -538,6 +529,16 @@ class _BillFormState extends State<BillForm> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        flexibleSpace: Container(
+              decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xffB1097C),
+                  Color(0xff0947B1),
+                ]),
+          )),
         title: Text(
           widget.isUpdating ? "Edit Bill" : "Create Bill",
           textAlign: TextAlign.center,
@@ -560,12 +561,12 @@ class _BillFormState extends State<BillForm> {
                       child: RaisedButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.orange),
+                          //side: BorderSide(color: Colors.orange),
                         ),
                         onPressed: () => _showSelectionDialog(context),
                         child: Text(
                           'Add Image',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
                     )

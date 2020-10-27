@@ -1,4 +1,5 @@
 import 'package:archive_your_bill/api/bill_api.dart';
+import 'package:archive_your_bill/model/colors.dart';
 import 'package:archive_your_bill/notifier/auth_notifier.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:archive_your_bill/screens/bill_form.dart';
@@ -101,37 +102,42 @@ class _FeedState extends State<Feed> {
     switch (category) {
       case "Electronics":
         {
-          return Icon(Icons.computer, size: 32, color: Colors.orange);
+          return Icon(
+            Icons.computer,
+            size: 32,
+            color: primaryCustomColor,
+          );
         }
         break;
 
       case "Fashion":
         {
-          return Icon(Icons.local_offer, size: 32, color: Colors.orange);
+          return Icon(Icons.local_offer, size: 32, color: primaryCustomColor);
         }
         break;
 
       case "Sports":
         {
-          return Icon(Icons.local_offer, size: 32, color: Colors.orange);
+          return Icon(Icons.fitness_center,
+              size: 32, color: primaryCustomColor);
         }
         break;
 
       case "Books/Music/Culture":
         {
-          return Icon(Icons.format_quote, size: 32, color: Colors.orange);
+          return Icon(Icons.format_quote, size: 32, color: primaryCustomColor);
         }
         break;
 
       case "Home":
         {
-          return Icon(Icons.home, size: 32, color: Colors.orange);
+          return Icon(Icons.home, size: 32, color: primaryCustomColor);
         }
         break;
 
       case "Food":
         {
-          return Icon(Icons.local_dining, size: 32, color: Colors.orange);
+          return Icon(Icons.local_dining, size: 32, color: primaryCustomColor);
         }
         break;
 
@@ -284,7 +290,7 @@ class _FeedState extends State<Feed> {
               child: Icon(
                 Icons.exit_to_app,
                 color: Colors.white,
-                //size: 24.0,
+                size: 26.0,
                 semanticLabel: 'Text to announce in accessibility modes',
               ),
             ),
@@ -310,13 +316,13 @@ class _FeedState extends State<Feed> {
                                   .then((value) {});
                             },
                             child: Card(
-                              elevation: 0,
+                              elevation: 3,
                               margin: EdgeInsets.all(6),
-                              shape: Border(
-                              
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15.0),
                               ),
-                              shadowColor: Colors.blue,
-                              color: Colors.transparent,
+                              shadowColor: primaryCustomColor,
+                              //color: Colors.transparent,
                               child: Container(
                                 height: 140,
                                 child: Center(
@@ -341,7 +347,7 @@ class _FeedState extends State<Feed> {
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.orange,
+                                              color: primaryCustomColor,
                                             ),
                                           ),
                                           Padding(
@@ -353,6 +359,7 @@ class _FeedState extends State<Feed> {
                                             style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
+                                              color: accentCustomColor,
                                             ),
                                           ),
                                           Padding(

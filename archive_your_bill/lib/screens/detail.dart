@@ -155,6 +155,7 @@ class _BillDetailState extends State<BillDetail> {
                       fontSize: 32,
                     ),
                   ),
+                  SizedBox(height: 12),
                   //ITEM NAME
                   Text(
                     '${billNotifier.currentBill.nameItem}',
@@ -172,9 +173,18 @@ class _BillDetailState extends State<BillDetail> {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
-                  child: Text('Category: ${billNotifier.currentBill.category}',
-                      style: TextStyle(fontSize: 18),
-                      textAlign: TextAlign.left),
+                  child: RichText(
+                    text: TextSpan(
+                        text: 'Category: ',
+                        style:
+                            TextStyle(color: accentCustomColor, fontSize: 18),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: ' ${billNotifier.currentBill.category}',
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                          )
+                        ]),
+                  ),
                 ),
                 SizedBox(height: 10),
                 //PRICE AND CURRENCY
@@ -184,13 +194,19 @@ class _BillDetailState extends State<BillDetail> {
                     child: Row(
                       //mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          'Item price: ${billNotifier.currentBill.priceItem}',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        Text(
-                          ' ${billNotifier.currentBill.currencyItem}',
-                          style: TextStyle(fontSize: 18),
+                        RichText(
+                          text: TextSpan(
+                              text: 'Item price: ',
+                              style: TextStyle(
+                                  color: accentCustomColor, fontSize: 18),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text:
+                                      ' ${billNotifier.currentBill.priceItem} ${billNotifier.currentBill.currencyItem}',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                )
+                              ]),
                         ),
                       ],
                     ),
@@ -200,9 +216,26 @@ class _BillDetailState extends State<BillDetail> {
                 //BOUGHT
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
-                  child: Text(
-                    'Bought: ${DateFormat.yMMMd().format(billNotifier.currentBill.warrantyStart.toDate())}',
-                    style: TextStyle(fontSize: 18),
+                  child: Container(
+                    child: Row(
+                      //mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                              text: 'Bought ',
+                              style: TextStyle(
+                                  color: accentCustomColor, fontSize: 18),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text:
+                                      ' ${DateFormat.yMMMd().format(billNotifier.currentBill.warrantyStart.toDate())}',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                )
+                              ]),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(height: 10),
@@ -210,11 +243,27 @@ class _BillDetailState extends State<BillDetail> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
                   child: billNotifier.currentBill.warrantyEnd == null
-                      //Timestamp.fromDate(DateTime.parse("1969-07-20 20:18:04Z"))
                       ? Text('')
-                      : Text(
-                          'Warranty until: ${DateFormat.yMMMd().format(billNotifier.currentBill.warrantyEnd.toDate())}',
-                          style: TextStyle(fontSize: 18),
+                      : Container(
+                          child: Row(
+                            //mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                    text: 'Warranty until: ',
+                                    style: TextStyle(
+                                        color: accentCustomColor, fontSize: 18),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text:
+                                            ' ${DateFormat.yMMMd().format(billNotifier.currentBill.warrantyEnd.toDate())}',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 18),
+                                      )
+                                    ]),
+                              ),
+                            ],
+                          ),
                         ),
                 ),
                 SizedBox(height: 10),
@@ -223,9 +272,26 @@ class _BillDetailState extends State<BillDetail> {
                   padding: const EdgeInsets.fromLTRB(35, 0, 0, 0),
                   child: billNotifier.currentBill.warrantyLength.isEmpty
                       ? Text('')
-                      : Text(
-                          'Warranty length: ${billNotifier.currentBill.warrantyLength} months',
-                          style: TextStyle(fontSize: 18),
+                      : Container(
+                          child: Row(
+                            //mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                    text: 'Warranty length: ',
+                                    style: TextStyle(
+                                        color: accentCustomColor, fontSize: 18),
+                                    children: <TextSpan>[
+                                      TextSpan(
+                                        text:
+                                            ' ${billNotifier.currentBill.warrantyLength} months',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 18),
+                                      )
+                                    ]),
+                              ),
+                            ],
+                          ),
                         ),
                 ),
                 SizedBox(height: 10),
