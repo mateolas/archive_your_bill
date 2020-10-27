@@ -1,4 +1,5 @@
 import 'package:archive_your_bill/api/bill_api.dart';
+import 'package:archive_your_bill/model/colors.dart';
 import 'package:archive_your_bill/screens/bill_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -109,6 +110,16 @@ class _BillDetailState extends State<BillDetail> {
 
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+            decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xffB1097C),
+                Color(0xff0947B1),
+              ]),
+        )),
         title: Text(billNotifier.currentBill.nameShop),
       ),
       body: SingleChildScrollView(
@@ -139,13 +150,18 @@ class _BillDetailState extends State<BillDetail> {
                   Text(
                     billNotifier.currentBill.nameShop,
                     style: TextStyle(
+                      color: primaryCustomColor,
+                      fontWeight: FontWeight.bold,
                       fontSize: 32,
                     ),
                   ),
                   //ITEM NAME
                   Text(
                     '${billNotifier.currentBill.nameItem}',
-                    style: TextStyle(fontSize: 24),
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: accentCustomColor,
+                    ),
                   ),
                   SizedBox(height: 30),
                 ],
@@ -227,7 +243,6 @@ class _BillDetailState extends State<BillDetail> {
             child: FittedBox(
               child: FloatingActionButton(
                 heroTag: 'button1',
-                backgroundColor: Colors.orange,
                 onPressed: () {
                   saveAndShare(
                       nameShop: billNotifier.currentBill.nameShop,
@@ -251,7 +266,6 @@ class _BillDetailState extends State<BillDetail> {
             width: 46.0,
             child: FittedBox(
               child: FloatingActionButton(
-                backgroundColor: Colors.orange,
                 heroTag: 'button2',
                 onPressed: () {
                   Navigator.of(context).push(

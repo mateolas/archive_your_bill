@@ -56,7 +56,7 @@ class _LoginState extends State<Login> {
           //scale: 0.8,
           //fit: BoxFit.fitWidth,
         ),
-        SizedBox(height: 30.0)
+        SizedBox(height: 52.0)
       ],
     );
   }
@@ -119,10 +119,8 @@ class _LoginState extends State<Login> {
       begin: Alignment.topLeft,
       end: Alignment.topRight,
       colors: [
-   
         Color(0xff3438A4),
         Color(0xff3438A4),
-
       ],
     ),
     borderRadius: BorderRadius.circular(10.0),
@@ -322,8 +320,6 @@ class _LoginState extends State<Login> {
                     //Endless River
                     Color(0xff0947B1),
                     Color(0xffB1097C),
-                  
-                   
                   ],
                   //stops: [0.1, 0.4],
                 ),
@@ -344,7 +340,7 @@ class _LoginState extends State<Login> {
                       children: <Widget>[
                         _buildLogoPicture(),
                         Text(
-                          "Sign In",
+                          _authMode == AuthMode.Login ? 'Log In' : 'Sign Up',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 26,
@@ -352,7 +348,7 @@ class _LoginState extends State<Login> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 32),
+                        SizedBox(height: 52),
                         _authMode == AuthMode.Signup
                             ? _buildDisplayNameField()
                             : Container(),
@@ -366,7 +362,6 @@ class _LoginState extends State<Login> {
                           //minWidth: 200,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
-                      
                           ),
                           child: Container(
                             padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -390,7 +385,7 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 16),
+                        SizedBox(height: 24),
                         ButtonTheme(
                           minWidth: 200,
                           child: FlatButton(

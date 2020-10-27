@@ -5,6 +5,7 @@ import './screens/feed.dart';
 import './screens/login.dart';
 import 'package:flutter/material.dart';
 
+import 'model/colors.dart';
 import 'notifier/auth_notifier.dart';
 
 void main() => runApp(MultiProvider(
@@ -19,15 +20,19 @@ void main() => runApp(MultiProvider(
       child: MyApp(),
     ));
 
+
+
 class MyApp extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Archive your app',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        accentColor: Colors.pink,
+        primarySwatch: primaryCustomColor,
+        accentColor: accentCustomColor,
         //fontFamily: 'Calibri',
       ),
       home: Consumer<AuthNotifier>(
