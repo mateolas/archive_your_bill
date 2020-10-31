@@ -138,12 +138,18 @@ class _BillDetailState extends State<BillDetail> {
                         fit: BoxFit.fitWidth,
                       ),
                       onTap: () {
-                        print("IMAGE STRING ${billNotifier.currentBill.image}");
-                        Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return OnlyImageScreen(
-                            url: billNotifier.currentBill.image,
-                          );
-                        }));
+                        if (billNotifier.currentBill.image == null){
+                            //'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg') {
+                        } else {
+                          print(
+                              "IMAGE STRING ${billNotifier.currentBill.image}");
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (_) {
+                            return OnlyImageScreen(
+                              url: billNotifier.currentBill.image,
+                            );
+                          }));
+                        }
                       }),
                   SizedBox(height: 24),
                   //SHOP NAME
