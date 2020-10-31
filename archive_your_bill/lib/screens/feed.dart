@@ -24,9 +24,43 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> {
   TextEditingController _searchController = TextEditingController();
   List _resultsList = [];
+  ScrollController _hideButtonController;
+  var _isVisible;
 
   @override
   void initState() {
+    //code to implement visibility of FloatingActionButton
+    _isVisible = true;
+    //scrollController
+    _hideButtonController = new ScrollController();
+    _hideButtonController.addListener(() {
+      if (_hideButtonController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (_isVisible == true) {
+          /* only set when the previous state is false
+             * Less widget rebuilds 
+             */
+          print("**** ${_isVisible} up"); //Move IO away from setState
+          setState(() {
+            _isVisible = false;
+          });
+        }
+      } else {
+        if (_hideButtonController.position.userScrollDirection ==
+            ScrollDirection.forward) {
+          if (_isVisible == false) {
+            /* only set when the previous state is false
+               * Less widget rebuilds 
+               */
+            print("**** ${_isVisible} down"); //Move IO away from setState
+            setState(() {
+              _isVisible = true;
+            });
+          }
+        }
+      }
+    });
+
     BillNotifier billNotifier =
         Provider.of<BillNotifier>(context, listen: false);
     getBills(billNotifier);
@@ -143,19 +177,20 @@ class _FeedState extends State<Feed> {
 
       case "Health":
         {
-          return Icon(Icons.local_hospital, size: 32, color: Colors.orange);
+          return Icon(Icons.local_hospital,
+              size: 32, color: primaryCustomColor);
         }
         break;
 
       case "Services":
         {
-          return Icon(Icons.build, size: 32, color: Colors.orange);
+          return Icon(Icons.build, size: 32, color: primaryCustomColor);
         }
         break;
 
       case "Other":
         {
-          return Icon(Icons.receipt, size: 32, color: Colors.orange);
+          return Icon(Icons.receipt, size: 32, color: primaryCustomColor);
         }
         break;
     }
@@ -304,6 +339,9 @@ class _FeedState extends State<Feed> {
                 : Expanded(
                     child: RefreshIndicator(
                       child: ListView.builder(
+                        //to monitor direction of scrolling (up / down)
+                        //and based on it show / hide the Floating action button
+                        controller: _hideButtonController,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             onTap: () {
@@ -491,19 +529,26 @@ class _FeedState extends State<Feed> {
                   ),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            billNotifier.currentBill = null;
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (BuildContext context) {
-                return BillForm(
-                  isUpdating: false,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: Visibility(
+            //flag which is set depending on the scroll direction
+            visible: _isVisible,
+            child: FloatingActionButton(
+              onPressed: () {
+                billNotifier.currentBill = null;
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (BuildContext context) {
+                    return BillForm(
+                      isUpdating: false,
+                    );
+                  }),
                 );
-              }),
-            );
-          },
-          child: Icon(Icons.add),
-          foregroundColor: Colors.white,
+              },
+              child: Icon(Icons.add),
+              foregroundColor: Colors.white,
+            ),
+          ),
         ),
       ),
     );

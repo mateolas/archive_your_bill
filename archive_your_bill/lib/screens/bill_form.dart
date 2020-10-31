@@ -588,15 +588,18 @@ class _BillFormState extends State<BillForm> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          //FocusScope.of(context).requestFocus(new FocusNode());
-          //Navigator.of(context).pop();
-          _saveBill();
-        
-        },
-        child: Icon(Icons.save),
-        foregroundColor: Colors.white,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.fromLTRB(0,0,0,0),
+        child: FloatingActionButton(
+          onPressed: () {
+            //FocusScope.of(context).requestFocus(new FocusNode());
+            //Navigator.of(context).pop();
+            _saveBill();
+          
+          },
+          child: Icon(Icons.save),
+          foregroundColor: Colors.white,
+        ),
       ),
     );
   }
