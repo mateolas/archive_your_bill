@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:archive_your_bill/api/bill_api.dart';
+import 'package:archive_your_bill/model/colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:archive_your_bill/model/bill.dart';
@@ -527,6 +528,7 @@ class _BillFormState extends State<BillForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //resizeToAvoidBottomPadding: false,
       key: _scaffoldKey,
       appBar: AppBar(
         flexibleSpace: Container(
@@ -559,6 +561,7 @@ class _BillFormState extends State<BillForm> {
               _imageFile == null && _imageUrl == null
                   ? ButtonTheme(
                       child: RaisedButton(
+                        color: buttonCustomColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
                           //side: BorderSide(color: Colors.orange),
@@ -566,7 +569,7 @@ class _BillFormState extends State<BillForm> {
                         onPressed: () => _showSelectionDialog(context),
                         child: Text(
                           'Add Image',
-                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                          style: TextStyle(fontWeight: FontWeight.bold, color: accentCustomColor),
                         ),
                       ),
                     )
@@ -587,7 +590,6 @@ class _BillFormState extends State<BillForm> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-   
           //FocusScope.of(context).requestFocus(new FocusNode());
           //Navigator.of(context).pop();
           _saveBill();
