@@ -339,6 +339,7 @@ class _LoginState extends State<Login> {
                     child: Column(
                       children: <Widget>[
                         _buildLogoPicture(),
+                         SizedBox(height: 24),
                         Text(
                           _authMode == AuthMode.Login ? 'Log In' : 'Sign Up',
                           textAlign: TextAlign.center,
@@ -348,7 +349,7 @@ class _LoginState extends State<Login> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 52),
+                        SizedBox(height: 72),
                         _authMode == AuthMode.Signup
                             ? _buildDisplayNameField()
                             : Container(),
@@ -364,7 +365,7 @@ class _LoginState extends State<Login> {
                             borderRadius: BorderRadius.circular(30.0),
                           ),
                           child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 25.0),
+                            padding: EdgeInsets.fromLTRB(0, 92, 0, 12),
                             width: double.infinity,
                             child: RaisedButton(
                               elevation: 5.0,
@@ -385,7 +386,7 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 24),
+                        SizedBox(height: 20),
                         ButtonTheme(
                           minWidth: 200,
                           child: FlatButton(
