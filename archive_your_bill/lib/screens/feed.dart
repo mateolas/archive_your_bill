@@ -119,11 +119,11 @@ class _FeedState extends State<Feed> {
       padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
       child: TextField(
         controller: _searchController,
-        decoration: InputDecoration(
+        decoration: InputDecoration( 
           prefixIcon: Icon(Icons.search),
           border: new OutlineInputBorder(
             borderRadius: const BorderRadius.all(
-              const Radius.circular(10.0),
+              const Radius.circular(24.0),
             ),
           ),
         ),
