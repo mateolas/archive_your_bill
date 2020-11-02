@@ -170,7 +170,7 @@ class _BillFormState extends State<BillForm> {
 
   _getLocalImage() async {
     File imageFile = await ImagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 100, maxWidth: 400);
+        source: ImageSource.gallery, imageQuality: 100);
 
     if (imageFile != null) {
       setState(() {
@@ -181,7 +181,7 @@ class _BillFormState extends State<BillForm> {
 
   _getImageFromCamera() async {
     File imageFile = await ImagePicker.pickImage(
-        source: ImageSource.camera, imageQuality: 100, maxWidth: 400);
+        source: ImageSource.camera, imageQuality: 100);
     if (imageFile != null) {
       setState(() {
         _imageFile = imageFile;

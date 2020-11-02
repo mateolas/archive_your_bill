@@ -205,7 +205,8 @@ class _FeedState extends State<Feed> {
       String itemPrice,
       String warrantyStart,
       String warrantyEnd,
-      String warrantyLength}) async {
+      String warrantyLength,
+      String currencyItem}) async {
     //enable permission to write/read from internal memory
     var status = await Permission.storage.status;
     if (!status.isGranted) {
@@ -213,6 +214,22 @@ class _FeedState extends State<Feed> {
     }
 
     final RenderBox box = context.findRenderObject();
+    //message to be display in email sharing
+    String message = """
+    Hey ! 
+
+    ${warrantyStart} at ${nameShop} you 
+    
+    bought ${nameItem} for ${itemPrice} ${ currencyItem}.
+    
+    
+    
+    Thanks for using Archive your bill. 
+
+    Your bill is save with us :).
+
+    AYB team
+    """;
 
     //list of imagePaths
     List<String> imagePaths = [];
@@ -228,7 +245,7 @@ class _FeedState extends State<Feed> {
     //share function
     Share.shareFiles(imagePaths,
         subject: 'Bill from ${nameShop} bought at ${warrantyStart}',
-        text: 'Hey! Checkout the Share Files repo',
+        text: message,
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
@@ -473,6 +490,8 @@ class _FeedState extends State<Feed> {
                                                   },
                                                 ),
                                               ),
+                                            
+
                                               Container(
                                                 child: IconButton(
                                                   icon: Icon(Icons.share),
@@ -481,6 +500,9 @@ class _FeedState extends State<Feed> {
                                                   onPressed: () {
                                                     billNotifier.currentBill =
                                                         _resultsList[index];
+                                                    _resultsList[index].image == null
+                                              ? _resultsList[index].image = 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg'
+                                              : _resultsList[index].image;
 
                                                     saveAndShare(
                                                         nameShop:
@@ -507,7 +529,8 @@ class _FeedState extends State<Feed> {
                                                         warrantyLength:
                                                             _resultsList[index]
                                                                 .warrantyLength,
-                                                        url: _resultsList[index].image);
+                                                        url: _resultsList[index].image,
+                                                        currencyItem:_resultsList[index].currencyItem);
                                                   },
                                                 ),
                                               ),
