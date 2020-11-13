@@ -128,46 +128,66 @@ class _BillDetailState extends State<BillDetail> {
             Container(
               child: Column(
                 children: <Widget>[
-                  GestureDetector(
-                      child: Image.network(
-                        billNotifier.currentBill.image != null
-                            ? billNotifier.currentBill.image
-                            : 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg',
-                        width: MediaQuery.of(context).size.width,
-                        height: 250,
-                        fit: BoxFit.fitWidth,
-                        //showing indicator while loading
-                        loadingBuilder: (BuildContext context, Widget child,
-                            ImageChunkEvent loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Center(
-                            child: Container(
+                  Stack(
+                    children: [
+                      Card(
+                        elevation: 10,
+                        margin: EdgeInsets.all(0),
+                        child: GestureDetector(
+                            child: Image.network(
+                              billNotifier.currentBill.image != null
+                                  ? billNotifier.currentBill.image
+                                  : 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg',
+                              width: MediaQuery.of(context).size.width,
                               height: 250,
-                              alignment: AlignmentDirectional(0.0, 0.0),
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes
-                                    : null,
-                              ),
+                              fit: BoxFit.fitWidth,
+                              //loadingBuilder to show indicator while loading the image
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return Center(
+                                  //indicator wrapped in container to set the width 250 and be "centered" with the image
+                                  child: Container(
+                                    height: 250,
+                                    alignment: AlignmentDirectional(0.0, 0.0),
+                                    child: CircularProgressIndicator(
+                                      value: loadingProgress
+                                                  .expectedTotalBytes !=
+                                              null
+                                          ? loadingProgress
+                                                  .cumulativeBytesLoaded /
+                                              loadingProgress.expectedTotalBytes
+                                          : null,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
+                            onTap: () {
+                              if (billNotifier.currentBill.image == null) {
+                                //'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg') {
+                              } else {
+                                print(
+                                    "IMAGE STRING ${billNotifier.currentBill.image}");
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (_) {
+                                  return OnlyImageScreen(
+                                    url: billNotifier.currentBill.image,
+                                  );
+                                }));
+                              }
+                            }),
                       ),
-                      onTap: () {
-                        if (billNotifier.currentBill.image == null) {
-                          //'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg') {
-                        } else {
-                          print(
-                              "IMAGE STRING ${billNotifier.currentBill.image}");
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (_) {
-                            return OnlyImageScreen(
-                              url: billNotifier.currentBill.image,
-                            );
-                          }));
-                        }
-                      }),
+                      billNotifier.currentBill.image != null
+                          ? Container(
+                            height: 250,
+                              alignment: AlignmentDirectional(0.95, 0.9),
+                              child: Icon(Icons.search,
+                                  size: 35, color: accentCustomColor))
+                          : Text("")
+                    ],
+                  ),
                   SizedBox(height: 24),
                   //SHOP NAME
                   Text(
