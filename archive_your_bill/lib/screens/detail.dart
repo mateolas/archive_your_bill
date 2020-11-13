@@ -136,10 +136,27 @@ class _BillDetailState extends State<BillDetail> {
                         width: MediaQuery.of(context).size.width,
                         height: 250,
                         fit: BoxFit.fitWidth,
+                        //showing indicator while loading
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: Container(
+                              height: 250,
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes
+                                    : null,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                       onTap: () {
-                        if (billNotifier.currentBill.image == null){
-                            //'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg') {
+                        if (billNotifier.currentBill.image == null) {
+                          //'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg') {
                         } else {
                           print(
                               "IMAGE STRING ${billNotifier.currentBill.image}");
