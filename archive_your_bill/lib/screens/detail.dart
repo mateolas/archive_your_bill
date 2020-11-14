@@ -193,6 +193,7 @@ class _BillDetailState extends State<BillDetail> {
                                       errorWidget: (context, url, error) =>
                                           Icon(Icons.error),
                                     ),
+                                    //Share icon on the picture
                                     floatingActionButton: Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: <Widget>[

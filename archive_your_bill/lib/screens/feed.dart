@@ -12,7 +12,7 @@ import 'dart:io';
 import 'package:share/share.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/rendering.dart';
-
+import 'package:archive_your_bill/model/globals.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -26,6 +26,7 @@ class _FeedState extends State<Feed> {
   List _resultsList = [];
   ScrollController _hideButtonController;
   var _isVisible;
+  Color color;
 
   @override
   void initState() {
@@ -64,7 +65,6 @@ class _FeedState extends State<Feed> {
     BillNotifier billNotifier =
         Provider.of<BillNotifier>(context, listen: false);
     getBills(billNotifier);
-
     _resultsList = billNotifier.billList;
     _searchController.addListener(_onSearchChanged);
     //setSearchResultsList(billNotifier);
@@ -119,7 +119,7 @@ class _FeedState extends State<Feed> {
       padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
       child: TextField(
         controller: _searchController,
-        decoration: InputDecoration( 
+        decoration: InputDecoration(
           prefixIcon: Icon(Icons.search),
           border: new OutlineInputBorder(
             borderRadius: const BorderRadius.all(
@@ -193,6 +193,159 @@ class _FeedState extends State<Feed> {
           return Icon(Icons.receipt, size: 32, color: primaryCustomColor);
         }
         break;
+
+      case "All":
+        {
+          return Text("ALL",
+              style: TextStyle(color: primaryCustomColor, fontSize: 18));
+        }
+        break;
+    }
+  }
+
+  categoryToIconWhite(String category) {
+    switch (category) {
+      case "Electronics":
+        {
+          return Icon(
+            Icons.computer,
+            size: 30,
+            color: Colors.white,
+          );
+        }
+        break;
+
+      case "Fashion":
+        {
+          return Icon(Icons.local_offer, size: 30, color: Colors.white);
+        }
+        break;
+
+      case "Sports":
+        {
+          return Icon(Icons.fitness_center, size: 32, color: Colors.white);
+        }
+        break;
+
+      case "Books/Music/Culture":
+        {
+          return Icon(Icons.format_quote, size: 30, color: Colors.white);
+        }
+        break;
+
+      case "Home":
+        {
+          return Icon(Icons.home, size: 30, color: Colors.white);
+        }
+        break;
+
+      case "Food":
+        {
+          return Icon(Icons.local_dining, size: 30, color: Colors.white);
+        }
+        break;
+
+      case "Health":
+        {
+          return Icon(Icons.local_hospital, size: 30, color: Colors.white);
+        }
+        break;
+
+      case "Services":
+        {
+          return Icon(Icons.build, size: 30, color: Colors.white);
+        }
+        break;
+
+      case "Other":
+        {
+          return Icon(Icons.receipt, size: 30, color: Colors.white);
+        }
+        break;
+
+      case "All":
+        {
+          return Text("ALL",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ));
+        }
+        break;
+    }
+  }
+
+  categoryToIconGreen(String category) {
+    switch (category) {
+      case "Electronics":
+        {
+          return Icon(
+            Icons.computer,
+            size: 30,
+            color: Colors.green,
+          );
+        }
+        break;
+
+      case "Fashion":
+        {
+          return Icon(Icons.local_offer, size: 30, color: Colors.green);
+        }
+        break;
+
+      case "Sports":
+        {
+          return Icon(Icons.fitness_center, size: 32, color: Colors.green);
+        }
+        break;
+
+      case "Books/Music/Culture":
+        {
+          return Icon(Icons.format_quote, size: 30, color: Colors.green);
+        }
+        break;
+
+      case "Home":
+        {
+          return Icon(Icons.home, size: 30, color: Colors.green);
+        }
+        break;
+
+      case "Food":
+        {
+          return Icon(Icons.local_dining, size: 30, color: Colors.green);
+        }
+        break;
+
+      case "Health":
+        {
+          return Icon(Icons.local_hospital, size: 30, color: Colors.green);
+        }
+        break;
+
+      case "Services":
+        {
+          return Icon(Icons.build, size: 30, color: Colors.green);
+        }
+        break;
+
+      case "Other":
+        {
+          return Icon(Icons.receipt, size: 30, color: Colors.green);
+        }
+        break;
+
+      case "All":
+        {
+          return Text("ALL",
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ));
+        }
+        break;
     }
   }
 
@@ -220,7 +373,7 @@ class _FeedState extends State<Feed> {
 
     ${warrantyStart} at ${nameShop} you 
     
-    bought ${nameItem} for ${itemPrice} ${ currencyItem}.
+    bought ${nameItem} for ${itemPrice} ${currencyItem}.
     
     
     
@@ -250,15 +403,15 @@ class _FeedState extends State<Feed> {
   }
 
   //function to refresh the screen
-  @override
-  void didChangeDependencies() {
-    BillNotifier billNotifier = Provider.of<BillNotifier>(context);
-    super.didChangeDependencies();
-    setState(() {
-      //_refreshList(); print("Did change Dependencies function");
-      //getBills(billNotifier);
-    });
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   BillNotifier billNotifier = Provider.of<BillNotifier>(context);
+  //   super.didChangeDependencies();
+  //   setState(() {
+  //     //_refreshList(); print("Did change Dependencies function");
+  //     //getBills(billNotifier);
+  //   });
+  // }
 
   //function to used in RefreshIndicator widget
   //swipe to refresh
@@ -278,13 +431,89 @@ class _FeedState extends State<Feed> {
   Widget noBillsYetText() {
     return Expanded(
       child: Container(
+        //color: Colors.grey,
         child: Align(
           alignment: FractionalOffset.bottomCenter,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(190, 0, 0, 70),
-            child: Image.asset('lib/assets/images/arrow.png', scale: 2.7),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 60, 0, 10),
+                child:
+                    Image.asset('lib/assets/images/empty box.png', scale: 10.5),
+              ),
+              isAllListIsEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.fromLTRB(200, 0, 0, 10),
+                      child: Image.asset('lib/assets/images/arrow.png',
+                          scale: 2.7),
+                    )
+                  : Text("")
+            ],
           ),
         ),
+      ),
+    );
+  }
+
+  //Bottom horizontal ListView of categories
+  Widget filterCategoriesList() {
+    BillNotifier billNotifier =
+        Provider.of<BillNotifier>(context, listen: false);
+        
+    List namesOfCategories = [
+      'All',
+      'Electronics',
+      'Fashion',
+      'Sports',
+      'Books/Music/Culture',
+      'Home',
+      'Food',
+      'Health',
+      'Services',
+      'Other'
+    ];
+
+    int _selectedIndex = 0;
+
+    _onSelected(int index) {
+      setState(() => _selectedIndex = index);
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xffB1097C),
+              Color(0xff0947B1),
+            ]),
+      ),
+      margin: EdgeInsets.symmetric(vertical: 6.0),
+      height: 50.0,
+      child: ListView.builder(
+        key: Key("Name"),
+        scrollDirection: Axis.horizontal,
+        itemCount: 10,
+        itemBuilder: (BuildContext context2, int index2) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                //print('Clicked item ${index}');
+                _onSelected(index2);
+                getBillsBasedOnCategory(billNotifier, index2);
+                print('Selected index ${_selectedIndex}');
+              });
+            },
+            child: Container(
+              alignment: AlignmentDirectional.center,
+              child: _selectedIndex != null && _selectedIndex == index2
+                  ? categoryToIconGreen(namesOfCategories[index2])
+                  : categoryToIconWhite(namesOfCategories[index2]),
+              width: 60.0,
+            ),
+          );
+        },
       ),
     );
   }
@@ -293,6 +522,7 @@ class _FeedState extends State<Feed> {
   Widget build(BuildContext context) {
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
     BillNotifier billNotifier = Provider.of<BillNotifier>(context);
+    //Color color = Colors.blue;
 
     //sets the search results
     setSearchResultsList(billNotifier);
@@ -300,36 +530,28 @@ class _FeedState extends State<Feed> {
     print("1 Building Feed");
     print('2 First authnotifier ${authNotifier.user.displayName}');
     print("3 BUILD RESULT LIST LENGTH: ${_resultsList.length}");
+    print("4 Is All Build list is Empty: ${isAllListIsEmpty}");
+    print('Color after tap inside build ${color}');
 
     return Container(
       height: double.infinity,
       width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.topRight,
-          colors: [
-            //Endless River
-            Color(0xff1c92d2),
-            Color(0xfff2fcfe),
-          ],
-          //stops: [0.1, 0.4],
-        ),
-      ),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
           automaticallyImplyLeading: false, // hides default back button
           flexibleSpace: Container(
-              decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xffB1097C),
-                  Color(0xff0947B1),
-                ]),
-          )),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xffB1097C),
+                    Color(0xff0947B1),
+                  ]),
+            ),
+          ),
           title: Text(
             'Archive your bill',
             style: TextStyle(color: Colors.white),
@@ -410,7 +632,7 @@ class _FeedState extends State<Feed> {
                                                   0, 0, 0, 6)),
                                           //ITEM NAME
                                           Text(
-                                            '${_resultsList[index].nameItem}',
+                                            '${_resultsList[index].nameItem} (${_resultsList[index].category})',
                                             style: TextStyle(
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold,
@@ -490,8 +712,6 @@ class _FeedState extends State<Feed> {
                                                   },
                                                 ),
                                               ),
-                                            
-
                                               Container(
                                                 child: IconButton(
                                                   icon: Icon(Icons.share),
@@ -500,9 +720,13 @@ class _FeedState extends State<Feed> {
                                                   onPressed: () {
                                                     billNotifier.currentBill =
                                                         _resultsList[index];
-                                                    _resultsList[index].image == null
-                                              ? _resultsList[index].image = 'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg'
-                                              : _resultsList[index].image;
+                                                    _resultsList[index].image ==
+                                                            null
+                                                        ? _resultsList[index]
+                                                                .image =
+                                                            'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg'
+                                                        : _resultsList[index]
+                                                            .image;
 
                                                     saveAndShare(
                                                         nameShop:
@@ -520,8 +744,7 @@ class _FeedState extends State<Feed> {
                                                                 _resultsList[index]
                                                                     .warrantyStart
                                                                     .toDate()),
-                                                        warrantyEnd: DateFormat
-                                                                .yMMMd()
+                                                        warrantyEnd: DateFormat.yMMMd()
                                                             .format(
                                                                 _resultsList[index]
                                                                     .warrantyEnd
@@ -529,8 +752,11 @@ class _FeedState extends State<Feed> {
                                                         warrantyLength:
                                                             _resultsList[index]
                                                                 .warrantyLength,
-                                                        url: _resultsList[index].image,
-                                                        currencyItem:_resultsList[index].currencyItem);
+                                                        url: _resultsList[index]
+                                                            .image,
+                                                        currencyItem:
+                                                            _resultsList[index]
+                                                                .currencyItem);
                                                   },
                                                 ),
                                               ),
@@ -550,10 +776,14 @@ class _FeedState extends State<Feed> {
                       onRefresh: _refreshList,
                     ),
                   ),
+            Visibility(
+              visible: _isVisible,
+              child: filterCategoriesList(),
+            ),
           ],
         ),
         floatingActionButton: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 34),
           child: Visibility(
             //flag which is set depending on the scroll direction
             visible: _isVisible,

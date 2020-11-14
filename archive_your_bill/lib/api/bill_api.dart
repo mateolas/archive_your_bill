@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:archive_your_bill/model/globals.dart';
 import 'package:archive_your_bill/model/bill.dart';
 import 'package:archive_your_bill/model/user.dart';
 import 'package:archive_your_bill/notifier/auth_notifier.dart';
@@ -27,7 +27,8 @@ login(User user, AuthNotifier authNotifier) async {
 
 signup(User user, AuthNotifier authNotifier) async {
   AuthResult authResult = await FirebaseAuth.instance
-      .createUserWithEmailAndPassword(email: user.email, password: user.password)
+      .createUserWithEmailAndPassword(
+          email: user.email, password: user.password)
       .catchError((error) => print(error.code));
 
   if (authResult != null) {
@@ -50,7 +51,9 @@ signup(User user, AuthNotifier authNotifier) async {
 }
 
 signout(AuthNotifier authNotifier) async {
-  await FirebaseAuth.instance.signOut().catchError((error) => print(error.code));
+  await FirebaseAuth.instance
+      .signOut()
+      .catchError((error) => print(error.code));
 
   authNotifier.setUser(null);
 }
@@ -64,17 +67,16 @@ initializeCurrentUser(AuthNotifier authNotifier) async {
   }
 }
 
- // GET UID
-  Future<String> getCurrentUID() async {
-    return (await FirebaseAuth.instance.currentUser()).uid;
-  }
+// GET UID
+Future<String> getCurrentUID() async {
+  return (await FirebaseAuth.instance.currentUser()).uid;
+}
 
 //function to get list of bills from the firebase
 getBills(BillNotifier billNotifier) async {
+  FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
 
-FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
-
- //DocumentReference documentRef = await Firestore.instance.collection('userData').document(firebaseUser.uid).collection('bills').add(food.toMap());
+  //DocumentReference documentRef = await Firestore.instance.collection('userData').document(firebaseUser.uid).collection('bills').add(food.toMap());
 
   QuerySnapshot snapshot = await Firestore.instance
       .collection('userData')
@@ -91,9 +93,137 @@ FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
   });
 
   billNotifier.billList = _billList;
+
 }
 
-uploadBillAndImage(Bill bill, bool isUpdating, File localFile, Function foodUploaded) async {
+//function to get list of bills from the firebase
+getBillsBasedOnCategory(BillNotifier billNotifier, int index) async {
+  FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
+
+  List namesOfCategories = ['All', 'Electronics', 'Fashion','Sports','Books/Music/Culture','Home','Food','Health','Services','Other'];
+  
+  if (index == 0) {
+    QuerySnapshot snapshot = await Firestore.instance
+        .collection('userData')
+        .document(firebaseUser.uid)
+        .collection('bills')
+        .orderBy("createdAt", descending: true)
+        .getDocuments();
+
+    List<Bill> _billList = [];
+
+    snapshot.documents.forEach((document) {
+      Bill bill = Bill.fromMap(document.data);
+      _billList.add(bill);
+    });
+
+    billNotifier.billList = _billList;
+
+  } 
+  else {
+    QuerySnapshot snapshot = await Firestore.instance
+        .collection('userData')
+        .document(firebaseUser.uid)
+        .collection('bills')
+        .where("category", isEqualTo: namesOfCategories[index])
+        .getDocuments();
+
+    List<Bill> _billList = [];
+    snapshot.documents.forEach((document) {
+      Bill bill = Bill.fromMap(document.data);
+      _billList.add(bill);
+    });
+
+    billNotifier.billList = _billList;
+  }
+
+  // switch (index) {
+  //   case 0:
+  //     {
+  //       QuerySnapshot snapshot = await Firestore.instance
+  //           .collection('userData')
+  //           .document(firebaseUser.uid)
+  //           .collection('bills')
+  //           .where("category", isEqualTo: "Sports")
+  //           .getDocuments();
+
+  //       List<Bill> _billList = [];
+  //       snapshot.documents.forEach((document) {
+  //         Bill bill = Bill.fromMap(document.data);
+  //         _billList.add(bill);
+  //       });
+
+  //       billNotifier.billList = _billList;
+  //     }
+  //     break;
+
+  //   case 1:
+  //     {
+  //       QuerySnapshot snapshot = await Firestore.instance
+  //           .collection('userData')
+  //           .document(firebaseUser.uid)
+  //           .collection('bills')
+  //           .where("category", isEqualTo: "Sports")
+  //           .getDocuments();
+
+  //       List<Bill> _billList = [];
+  //       snapshot.documents.forEach((document) {
+  //         Bill bill = Bill.fromMap(document.data);
+  //         _billList.add(bill);
+  //       });
+
+  //       billNotifier.billList = _billList;
+  //     }
+  //     break;
+
+  //   case 2:
+  //     {
+  //       QuerySnapshot snapshot = await Firestore.instance
+  //           .collection('userData')
+  //           .document(firebaseUser.uid)
+  //           .collection('bills')
+  //           .where("category", isEqualTo: "Sports")
+  //           .getDocuments();
+
+  //       List<Bill> _billList = [];
+  //       snapshot.documents.forEach((document) {
+  //         Bill bill = Bill.fromMap(document.data);
+  //         _billList.add(bill);
+  //       });
+
+  //       billNotifier.billList = _billList;
+  //     }
+  //     break;
+
+  //   case 3:
+  //     {
+  //       QuerySnapshot snapshot = await Firestore.instance
+  //           .collection('userData')
+  //           .document(firebaseUser.uid)
+  //           .collection('bills')
+  //           .where("category", isEqualTo: "Sports")
+  //           .getDocuments();
+
+  //       List<Bill> _billList = [];
+  //       snapshot.documents.forEach((document) {
+  //         Bill bill = Bill.fromMap(document.data);
+  //         _billList.add(bill);
+  //       });
+
+  //       billNotifier.billList = _billList;
+  //     }
+  //     break;
+
+  //   default:
+  //     {
+  //
+  //     }
+  //     break;
+  // }
+}
+
+uploadBillAndImage(
+    Bill bill, bool isUpdating, File localFile, Function foodUploaded) async {
   if (localFile != null) {
     print("uploading image");
 
@@ -102,10 +232,14 @@ uploadBillAndImage(Bill bill, bool isUpdating, File localFile, Function foodUplo
 
     var uuid = Uuid().v4();
 
-    final StorageReference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child('archive/images/$uuid$fileExtension');
+    final StorageReference firebaseStorageRef = FirebaseStorage.instance
+        .ref()
+        .child('archive/images/$uuid$fileExtension');
 
-    await firebaseStorageRef.putFile(localFile).onComplete.catchError((onError) {
+    await firebaseStorageRef
+        .putFile(localFile)
+        .onComplete
+        .catchError((onError) {
       print(onError);
       return false;
     });
@@ -119,10 +253,9 @@ uploadBillAndImage(Bill bill, bool isUpdating, File localFile, Function foodUplo
   }
 }
 
-_uploadBill(Bill bill, bool isUpdating, Function billUploaded, {String imageUrl}) async {
-  
+_uploadBill(Bill bill, bool isUpdating, Function billUploaded,
+    {String imageUrl}) async {
   CollectionReference foodRef = Firestore.instance.collection('userData');
-  
 
   if (imageUrl != null) {
     bill.image = imageUrl;
@@ -132,18 +265,24 @@ _uploadBill(Bill bill, bool isUpdating, Function billUploaded, {String imageUrl}
     bill.updatedAt = Timestamp.now();
     FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
 
-    await foodRef.document(firebaseUser.uid).collection('bills').document(bill.id).updateData(bill.toMap());
+    await foodRef
+        .document(firebaseUser.uid)
+        .collection('bills')
+        .document(bill.id)
+        .updateData(bill.toMap());
 
     billUploaded(bill);
-    
+
     print('updated food with id: ${bill.id}');
-    
   } else {
     bill.createdAt = Timestamp.now();
 
     FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
 
-    DocumentReference documentRef = await foodRef.document(firebaseUser.uid).collection('bills').add(bill.toMap());
+    DocumentReference documentRef = await foodRef
+        .document(firebaseUser.uid)
+        .collection('bills')
+        .add(bill.toMap());
 
     bill.id = documentRef.documentID;
 
@@ -167,6 +306,11 @@ deleteBill(Bill bill, Function foodDeleted) async {
     print('image deleted');
   }
   FirebaseUser firebaseUser = await FirebaseAuth.instance.currentUser();
-  await Firestore.instance.collection('userData').document(firebaseUser.uid).collection('bills').document(bill.id)..delete();
+  await Firestore.instance
+      .collection('userData')
+      .document(firebaseUser.uid)
+      .collection('bills')
+      .document(bill.id)
+    ..delete();
   foodDeleted(bill);
 }
