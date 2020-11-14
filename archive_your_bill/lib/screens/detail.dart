@@ -172,10 +172,76 @@ class _BillDetailState extends State<BillDetail> {
                                     "IMAGE STRING ${billNotifier.currentBill.image}");
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (_) {
-                                  return PhotoView(
-                                    imageProvider: CachedNetworkImageProvider(
-                                        billNotifier.currentBill.image),
+                                  return Scaffold(
+                                    appBar: new AppBar(
+                                      backgroundColor: Colors.transparent,
+                                      elevation: 0.0,
+                                    ),
+                                    backgroundColor: Colors.transparent,
+                                    //Below are used two 3rd party Classes (packages):
+                                    //CachedNetworkImage and PhotoView
+                                    //CachedNetworkImage - to keep in cache memory internet pictures
+                                    //PhotoView - to have possibility to zoom in/out the pictures
+                                    body: CachedNetworkImage(
+                                      imageUrl: billNotifier.currentBill.image,
+                                      imageBuilder: (context, imageProvider) =>
+                                          PhotoView(
+                                        imageProvider: imageProvider,
+                                      ),
+                                      placeholder: (context, url) =>
+                                          CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(Icons.error),
+                                    ),
+                                    floatingActionButton: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: <Widget>[
+                                        Container(
+                                          height: 46.0,
+                                          width: 46.0,
+                                          child: FittedBox(
+                                            child: FloatingActionButton(
+                                              heroTag: 'button1',
+                                              onPressed: () {
+                                                saveAndShare(
+                                                    nameShop: billNotifier
+                                                        .currentBill.nameShop,
+                                                    nameItem: billNotifier
+                                                        .currentBill.nameItem,
+                                                    itemPrice: billNotifier
+                                                        .currentBill.priceItem,
+                                                    warrantyStart:
+                                                        DateFormat.yMMMd()
+                                                            .format(billNotifier
+                                                                .currentBill
+                                                                .warrantyStart
+                                                                .toDate()),
+                                                    warrantyEnd: DateFormat.yMMMd()
+                                                        .format(billNotifier
+                                                            .currentBill
+                                                            .warrantyEnd
+                                                            .toDate()),
+                                                    warrantyLength: billNotifier
+                                                        .currentBill
+                                                        .warrantyLength,
+                                                    url: billNotifier
+                                                        .currentBill.image);
+                                              },
+                                              child: Icon(Icons.share),
+                                              foregroundColor: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   );
+
+                                  // PhotoView(
+                                  //   //CachedNetworkImageProviders enables to cache the images from web
+                                  //   imageProvider: CachedNetworkImageProvider(
+
+                                  //       billNotifier.currentBill.image),
+                                  // );
 
                                   //OnlyImageScreen(
                                   // url: billNotifier.currentBill.image,
