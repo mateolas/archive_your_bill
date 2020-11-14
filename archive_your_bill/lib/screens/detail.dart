@@ -6,15 +6,14 @@ import 'package:provider/provider.dart';
 import 'package:archive_your_bill/model/bill.dart';
 import 'package:intl/intl.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
-import 'only_image_screen.dart';
 
 import 'dart:io';
 import 'package:share/share.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:photo_view/photo_view.dart';
 
 class BillDetail extends StatefulWidget {
   @override
@@ -128,6 +127,7 @@ class _BillDetailState extends State<BillDetail> {
             Container(
               child: Column(
                 children: <Widget>[
+                  //Stack to enable put image, indicator and zoom icon at the top of each other
                   Stack(
                     children: [
                       Card(
@@ -172,16 +172,21 @@ class _BillDetailState extends State<BillDetail> {
                                     "IMAGE STRING ${billNotifier.currentBill.image}");
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (_) {
-                                  return OnlyImageScreen(
-                                    url: billNotifier.currentBill.image,
+                                  return PhotoView(
+                                    imageProvider: CachedNetworkImageProvider(
+                                        billNotifier.currentBill.image),
                                   );
+
+                                  //OnlyImageScreen(
+                                  // url: billNotifier.currentBill.image,
+                                  //);
                                 }));
                               }
                             }),
                       ),
                       billNotifier.currentBill.image != null
                           ? Container(
-                            height: 250,
+                              height: 250,
                               alignment: AlignmentDirectional(0.95, 0.9),
                               child: Icon(Icons.search,
                                   size: 35, color: accentCustomColor))
