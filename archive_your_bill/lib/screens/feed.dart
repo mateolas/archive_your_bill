@@ -21,12 +21,13 @@ class Feed extends StatefulWidget {
   _FeedState createState() => _FeedState();
 }
 
-class _FeedState extends State<Feed> {
+class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   TextEditingController _searchController = TextEditingController();
   List _resultsList = [];
   ScrollController _hideButtonController;
   var _isVisible;
-  Color color;
+  TabController _controller;
+  int _selectedIndex = 0;
   List tabNames = [
     'All',
     'Electronics',
@@ -42,6 +43,17 @@ class _FeedState extends State<Feed> {
 
   @override
   void initState() {
+    _controller = TabController(length: tabNames.length, vsync: this);
+     _controller.addListener(() {
+      setState(() {
+        BillNotifier billNotifier =
+        Provider.of<BillNotifier>(context, listen: false);
+        _selectedIndex = _controller.index;
+         getBillsBasedOnCategory(billNotifier, _selectedIndex);
+      });
+      print("Selected Index: " + _controller.index.toString());
+    });
+
     //code to implement visibility of FloatingActionButton
     _isVisible = true;
     //scrollController
@@ -821,6 +833,7 @@ class _FeedState extends State<Feed> {
             ],
           ),
           bottomNavigationBar: new Column(
+           
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -828,11 +841,14 @@ class _FeedState extends State<Feed> {
                 firstChild: new Material(
                   color: Theme.of(context).primaryColor,
                   child: new TabBar(
+                    controller: _controller,
                     isScrollable: true,
                     tabs: new List.generate(tabNames.length, (index) {
                       return new Tab(
                         text: tabNames[index].toUpperCase(),
                       );
+                      
+                      
                     }),
                   ),
                 ),
@@ -845,7 +861,7 @@ class _FeedState extends State<Feed> {
             ],
           ),
           floatingActionButton: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 34),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Visibility(
               //flag which is set depending on the scroll direction
               visible: _isVisible,
