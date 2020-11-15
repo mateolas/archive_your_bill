@@ -27,6 +27,18 @@ class _FeedState extends State<Feed> {
   ScrollController _hideButtonController;
   var _isVisible;
   Color color;
+  List tabNames = [
+    'All',
+    'Electronics',
+    'Fashion',
+    'Sports',
+    'Books/Music/Culture',
+    'Home',
+    'Food',
+    'Health',
+    'Services',
+    'Other'
+  ];
 
   @override
   void initState() {
@@ -457,65 +469,89 @@ class _FeedState extends State<Feed> {
 
   //Bottom horizontal ListView of categories
   Widget filterCategoriesList() {
-    BillNotifier billNotifier =
-        Provider.of<BillNotifier>(context, listen: false);
-        
-    List namesOfCategories = [
-      'All',
-      'Electronics',
-      'Fashion',
-      'Sports',
-      'Books/Music/Culture',
-      'Home',
-      'Food',
-      'Health',
-      'Services',
-      'Other'
-    ];
+    // BillNotifier billNotifier =
+    //     Provider.of<BillNotifier>(context, listen: false);
 
-    int _selectedIndex = 0;
+    // List namesOfCategories = [
+    //   'All',
+    //   'Electronics',
+    //   'Fashion',
+    //   'Sports',
+    //   'Books/Music/Culture',
+    //   'Home',
+    //   'Food',
+    //   'Health',
+    //   'Services',
+    //   'Other'
+    // ];
 
-    _onSelected(int index) {
-      setState(() => _selectedIndex = index);
-    }
+    // return DefaultTabController(
+    //   length: namesOfCategories.length,
+    //   child: Scaffold(
+    //         appBar: AppBar(
+    //           backgroundColor: Color(0xFF3F5AA6),
+    //           title: Text("Title text"),
+    //           bottom: menu(),
+    //         ),
+    //         body: TabBarView(
+    //           children: [
+    //             Container(child: Icon(Icons.directions_car), width: 60,height: 60,),
+    //             Container(child: Icon(Icons.directions_transit),width: 60,height: 60,),
+    //             Container(child: Icon(Icons.directions_bike),width: 60,height: 60,),
+    //             Container(child: Icon(Icons.directions_bike),width: 60,height: 60,),
+    //           ],
+    //         ),
+    //       ),
+    // );
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xffB1097C),
-              Color(0xff0947B1),
-            ]),
-      ),
-      margin: EdgeInsets.symmetric(vertical: 6.0),
-      height: 50.0,
-      child: ListView.builder(
-        key: Key("Name"),
-        scrollDirection: Axis.horizontal,
-        itemCount: 10,
-        itemBuilder: (BuildContext context2, int index2) {
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                //print('Clicked item ${index}');
-                _onSelected(index2);
-                getBillsBasedOnCategory(billNotifier, index2);
-                print('Selected index ${_selectedIndex}');
-              });
-            },
-            child: Container(
-              alignment: AlignmentDirectional.center,
-              child: _selectedIndex != null && _selectedIndex == index2
-                  ? categoryToIconGreen(namesOfCategories[index2])
-                  : categoryToIconWhite(namesOfCategories[index2]),
-              width: 60.0,
-            ),
-          );
-        },
-      ),
-    );
+    // int _selectedIndex = 0;
+
+    // _onSelected(int index) {
+    //   setState(() => _selectedIndex = index);
+    // }
+
+    // return Container(
+    //   decoration: BoxDecoration(
+    //     gradient: LinearGradient(
+    //         begin: Alignment.topLeft,
+    //         end: Alignment.bottomRight,
+    //         colors: [
+    //           Color(0xffB1097C),
+    //           Color(0xff0947B1),
+    //         ]),
+    //   ),
+    //   margin: EdgeInsets.symmetric(vertical: 6.0),
+    //   height: 50.0,
+    //   child: ListView.builder(
+    //     key: Key("Name"),
+    //     scrollDirection: Axis.horizontal,
+    //     itemCount: 10,
+    //     itemBuilder: (BuildContext context2, int index2) {
+    //       return GestureDetector(
+    //         onTap: () {
+    //           setState(() {
+    //             //print('Clicked item ${index}');
+    //             _onSelected(index2);
+    //             getBillsBasedOnCategory(billNotifier, index2);
+    //             print('Selected index ${_selectedIndex}');
+    //           });
+    //         },
+    //         child: Card(
+    //           color: Colors.transparent,
+    //           margin: EdgeInsets.all(0),
+    //           elevation: 16,
+    //           child: Container(
+    //             alignment: AlignmentDirectional.center,
+    //             child: _selectedIndex != null && _selectedIndex == index2
+    //                 ? categoryToIconGreen(namesOfCategories[index2])
+    //                 : categoryToIconWhite(namesOfCategories[index2]),
+    //             width: 60.0,
+    //           ),
+    //         ),
+    //       );
+    //     },
+    //   ),
+    // );
   }
 
   @override
@@ -533,273 +569,300 @@ class _FeedState extends State<Feed> {
     print("4 Is All Build list is Empty: ${isAllListIsEmpty}");
     print('Color after tap inside build ${color}');
 
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          automaticallyImplyLeading: false, // hides default back button
-          flexibleSpace: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xffB1097C),
-                    Color(0xff0947B1),
-                  ]),
-            ),
-          ),
-          title: Text(
-            'Archive your bill',
-            style: TextStyle(color: Colors.white),
-          ), //Image.asset('lib/assets/images/logo.png', scale: 5),
-          centerTitle: true,
-          actions: <Widget>[
-            // action button - logout
-            FlatButton(
-              onPressed: () => signout(authNotifier),
-              child: Icon(
-                Icons.exit_to_app,
-                color: Colors.white,
-                size: 26.0,
-                semanticLabel: 'Text to announce in accessibility modes',
+    return DefaultTabController(
+      length: tabNames.length,
+      child: Container(
+        height: double.infinity,
+        width: double.infinity,
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.white,
+          appBar: AppBar(
+            automaticallyImplyLeading: false, // hides default back button
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xffB1097C),
+                      Color(0xff0947B1),
+                    ]),
               ),
             ),
-          ],
-        ),
-        body: Column(
-          children: [
-            searchField(),
-            billNotifier.billList.isEmpty
-                ? noBillsYetText()
-                : Expanded(
-                    child: RefreshIndicator(
-                      child: ListView.builder(
-                        //to monitor direction of scrolling (up / down)
-                        //and based on it show / hide the Floating action button
-                        controller: _hideButtonController,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            onTap: () {
-                              //after clicking setting up with notifier a current bill
-                              billNotifier.currentBill = _resultsList[index];
-                              Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => BillDetail()))
-                                  .then((value) {});
-                            },
-                            child: Card(
-                              elevation: 3,
-                              margin: EdgeInsets.all(6),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              shadowColor: primaryCustomColor,
-                              //color: Colors.transparent,
-                              child: Container(
-                                height: 140,
-                                child: Center(
-                                  child: Row(
-                                    children: <Widget>[
-                                      //Category Icon
-                                      Container(
-                                          padding: EdgeInsets.all(10),
-                                          //color: Colors.blue,
-                                          child: categoryToIcon(
-                                              _resultsList[index].category)),
-                                      //Item name and cost
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          //SHOP NAME
-                                          Text(
-                                            '${_resultsList[index].nameShop}',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: primaryCustomColor,
+            title: Text(
+              'Archive your bill',
+              style: TextStyle(color: Colors.white),
+            ), //Image.asset('lib/assets/images/logo.png', scale: 5),
+            centerTitle: true,
+            actions: <Widget>[
+              // action button - logout
+              FlatButton(
+                onPressed: () => signout(authNotifier),
+                child: Icon(
+                  Icons.exit_to_app,
+                  color: Colors.white,
+                  size: 26.0,
+                  semanticLabel: 'Text to announce in accessibility modes',
+                ),
+              ),
+            ],
+          ),
+          body: Column(
+            children: [
+              searchField(),
+              billNotifier.billList.isEmpty
+                  ? noBillsYetText()
+                  : Expanded(
+                      child: RefreshIndicator(
+                        child: ListView.builder(
+                          //to monitor direction of scrolling (up / down)
+                          //and based on it show / hide the Floating action button
+                          controller: _hideButtonController,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              onTap: () {
+                                //after clicking setting up with notifier a current bill
+                                billNotifier.currentBill = _resultsList[index];
+                                Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => BillDetail()))
+                                    .then((value) {});
+                              },
+                              child: Card(
+                                elevation: 3,
+                                margin: EdgeInsets.all(6),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                shadowColor: primaryCustomColor,
+                                //color: Colors.transparent,
+                                child: Container(
+                                  height: 140,
+                                  child: Center(
+                                    child: Row(
+                                      children: <Widget>[
+                                        //Category Icon
+                                        Container(
+                                            padding: EdgeInsets.all(10),
+                                            //color: Colors.blue,
+                                            child: categoryToIcon(
+                                                _resultsList[index].category)),
+                                        //Item name and cost
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            //SHOP NAME
+                                            Text(
+                                              '${_resultsList[index].nameShop}',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: primaryCustomColor,
+                                              ),
                                             ),
-                                          ),
-                                          Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 6)),
-                                          //ITEM NAME
-                                          Text(
-                                            '${_resultsList[index].nameItem} (${_resultsList[index].category})',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              color: accentCustomColor,
+                                            Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    0, 0, 0, 6)),
+                                            //ITEM NAME
+                                            Text(
+                                              '${_resultsList[index].nameItem} (${_resultsList[index].category})',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: accentCustomColor,
+                                              ),
                                             ),
-                                          ),
-                                          Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 12)),
-                                          //ITEM PRICE AND CURRENCY
-                                          Row(
-                                            children: [
-                                              Text(
-                                                  'Price: ${_resultsList[index].priceItem}',
-                                                  style:
-                                                      TextStyle(fontSize: 14)),
-                                              Text(
-                                                  ' ${_resultsList[index].currencyItem}',
-                                                  style:
-                                                      TextStyle(fontSize: 14)),
-                                            ],
-                                          ),
-                                          Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 4)),
-                                          //ITEM BOUGHT DATE
-                                          Text(
-                                            'Bought: ${DateFormat.yMMMd().format(_resultsList[index].warrantyStart.toDate())}',
-                                            style: TextStyle(
-                                              fontSize: 14,
+                                            Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    0, 0, 0, 12)),
+                                            //ITEM PRICE AND CURRENCY
+                                            Row(
+                                              children: [
+                                                Text(
+                                                    'Price: ${_resultsList[index].priceItem}',
+                                                    style: TextStyle(
+                                                        fontSize: 14)),
+                                                Text(
+                                                    ' ${_resultsList[index].currencyItem}',
+                                                    style: TextStyle(
+                                                        fontSize: 14)),
+                                              ],
                                             ),
-                                          ),
-                                          Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  0, 0, 0, 4)),
-                                          //WARRANTY UNTIL
-                                          billNotifier.billList[index]
-                                                      .warrantyEnd ==
-                                                  null
-                                              ? Text('')
-                                              : Text(
-                                                  'Warranty until: ${DateFormat.yMMMd().format(_resultsList[index].warrantyEnd.toDate())}',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
+                                            Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    0, 0, 0, 4)),
+                                            //ITEM BOUGHT DATE
+                                            Text(
+                                              'Bought: ${DateFormat.yMMMd().format(_resultsList[index].warrantyStart.toDate())}',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    0, 0, 0, 4)),
+                                            //WARRANTY UNTIL
+                                            billNotifier.billList[index]
+                                                        .warrantyEnd ==
+                                                    null
+                                                ? Text('')
+                                                : Text(
+                                                    'Warranty until: ${DateFormat.yMMMd().format(_resultsList[index].warrantyEnd.toDate())}',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                          ],
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: <Widget>[
+                                                Container(
+                                                  child: IconButton(
+                                                    icon: Icon(Icons.edit),
+                                                    color: Colors.grey,
+                                                    onPressed: () {
+                                                      billNotifier.currentBill =
+                                                          _resultsList[index];
+                                                      Navigator.of(context)
+                                                          .push(
+                                                        new MaterialPageRoute(
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                          return BillForm(
+                                                            isUpdating: true,
+                                                          );
+                                                        }),
+                                                      ).then(
+                                                              (value) =>
+                                                                  setState(
+                                                                      () => {
+                                                                            getBills(billNotifier)
+                                                                          }));
+                                                    },
                                                   ),
                                                 ),
-                                        ],
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: <Widget>[
-                                              Container(
-                                                child: IconButton(
-                                                  icon: Icon(Icons.edit),
-                                                  color: Colors.grey,
-                                                  onPressed: () {
-                                                    billNotifier.currentBill =
-                                                        _resultsList[index];
-                                                    Navigator.of(context).push(
-                                                      new MaterialPageRoute(
-                                                          builder: (BuildContext
-                                                              context) {
-                                                        return BillForm(
-                                                          isUpdating: true,
-                                                        );
-                                                      }),
-                                                    ).then((value) => setState(
-                                                        () => {
-                                                              getBills(
-                                                                  billNotifier)
-                                                            }));
-                                                  },
-                                                ),
-                                              ),
-                                              Container(
-                                                child: IconButton(
-                                                  icon: Icon(Icons.share),
-                                                  disabledColor: Colors.yellow,
-                                                  color: Colors.grey,
-                                                  onPressed: () {
-                                                    billNotifier.currentBill =
-                                                        _resultsList[index];
-                                                    _resultsList[index].image ==
-                                                            null
-                                                        ? _resultsList[index]
-                                                                .image =
-                                                            'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg'
-                                                        : _resultsList[index]
-                                                            .image;
+                                                Container(
+                                                  child: IconButton(
+                                                    icon: Icon(Icons.share),
+                                                    disabledColor:
+                                                        Colors.yellow,
+                                                    color: Colors.grey,
+                                                    onPressed: () {
+                                                      billNotifier.currentBill =
+                                                          _resultsList[index];
+                                                      _resultsList[index]
+                                                                  .image ==
+                                                              null
+                                                          ? _resultsList[index]
+                                                                  .image =
+                                                              'https://www.testingxperts.com/wp-content/uploads/2019/02/placeholder-img.jpg'
+                                                          : _resultsList[index]
+                                                              .image;
 
-                                                    saveAndShare(
-                                                        nameShop:
-                                                            _resultsList[index]
-                                                                .nameShop,
-                                                        nameItem:
-                                                            _resultsList[index]
-                                                                .nameItem,
-                                                        itemPrice:
-                                                            _resultsList[index]
-                                                                .priceItem,
-                                                        warrantyStart: DateFormat
-                                                                .yMMMd()
-                                                            .format(
-                                                                _resultsList[index]
-                                                                    .warrantyStart
-                                                                    .toDate()),
-                                                        warrantyEnd: DateFormat.yMMMd()
-                                                            .format(
-                                                                _resultsList[index]
-                                                                    .warrantyEnd
-                                                                    .toDate()),
-                                                        warrantyLength:
-                                                            _resultsList[index]
-                                                                .warrantyLength,
-                                                        url: _resultsList[index]
-                                                            .image,
-                                                        currencyItem:
-                                                            _resultsList[index]
-                                                                .currencyItem);
-                                                  },
+                                                      saveAndShare(
+                                                          nameShop:
+                                                              _resultsList[index]
+                                                                  .nameShop,
+                                                          nameItem:
+                                                              _resultsList[index]
+                                                                  .nameItem,
+                                                          itemPrice:
+                                                              _resultsList[index]
+                                                                  .priceItem,
+                                                          warrantyStart:
+                                                              DateFormat.yMMMd().format(
+                                                                  _resultsList[index]
+                                                                      .warrantyStart
+                                                                      .toDate()),
+                                                          warrantyEnd: DateFormat.yMMMd()
+                                                              .format(_resultsList[index]
+                                                                  .warrantyEnd
+                                                                  .toDate()),
+                                                          warrantyLength:
+                                                              _resultsList[index]
+                                                                  .warrantyLength,
+                                                          url: _resultsList[
+                                                                  index]
+                                                              .image,
+                                                          currencyItem:
+                                                              _resultsList[index]
+                                                                  .currencyItem);
+                                                    },
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                        itemCount: _resultsList.length,
+                            );
+                          },
+                          itemCount: _resultsList.length,
+                        ),
+                        onRefresh: _refreshList,
                       ),
-                      onRefresh: _refreshList,
                     ),
+            ],
+          ),
+          bottomNavigationBar: new Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              new AnimatedCrossFade(
+                firstChild: new Material(
+                  color: Theme.of(context).primaryColor,
+                  child: new TabBar(
+                    isScrollable: true,
+                    tabs: new List.generate(tabNames.length, (index) {
+                      return new Tab(
+                        text: tabNames[index].toUpperCase(),
+                      );
+                    }),
                   ),
-            Visibility(
+                ),
+                secondChild: new Container(),
+                crossFadeState: CrossFadeState.showFirst,
+                    //? CrossFadeState.showFirst
+                    //: CrossFadeState.showSecond,
+                duration: const Duration(milliseconds: 300),
+              ),
+            ],
+          ),
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 34),
+            child: Visibility(
+              //flag which is set depending on the scroll direction
               visible: _isVisible,
-              child: filterCategoriesList(),
-            ),
-          ],
-        ),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 34),
-          child: Visibility(
-            //flag which is set depending on the scroll direction
-            visible: _isVisible,
-            child: FloatingActionButton(
-              onPressed: () {
-                billNotifier.currentBill = null;
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (BuildContext context) {
-                    return BillForm(
-                      isUpdating: false,
-                    );
-                  }),
-                );
-              },
-              child: Icon(Icons.add),
-              foregroundColor: Colors.white,
+              child: FloatingActionButton(
+                onPressed: () {
+                  billNotifier.currentBill = null;
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (BuildContext context) {
+                      return BillForm(
+                        isUpdating: false,
+                      );
+                    }),
+                  );
+                },
+                child: Icon(Icons.add),
+                foregroundColor: Colors.white,
+              ),
             ),
           ),
         ),
