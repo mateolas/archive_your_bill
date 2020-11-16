@@ -144,8 +144,10 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     return Padding(
       padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
       child: TextField(
+        
         controller: _searchController,
         decoration: InputDecoration(
+          labelText: 'Search in: ${tabNames[_selectedIndex]}',
           prefixIcon: Icon(Icons.search),
           border: new OutlineInputBorder(
             borderRadius: const BorderRadius.all(
@@ -428,17 +430,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
-  //function to refresh the screen
-  // @override
-  // void didChangeDependencies() {
-  //   BillNotifier billNotifier = Provider.of<BillNotifier>(context);
-  //   super.didChangeDependencies();
-  //   setState(() {
-  //     //_refreshList(); print("Did change Dependencies function");
-  //     //getBills(billNotifier);
-  //   });
-  // }
-
   //function to used in RefreshIndicator widget
   //swipe to refresh
   Future<void> _refreshList() async {
@@ -495,6 +486,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     print('2 First authnotifier ${authNotifier.user.displayName}');
     print("3 BUILD RESULT LIST LENGTH: ${_resultsList.length}");
     print('4 isAllSelected ${isAllSelected}');
+
+    
 
     return DefaultTabController(
       length: tabNames.length,
