@@ -144,7 +144,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     return Padding(
       padding: EdgeInsets.fromLTRB(8, 10, 8, 10),
       child: TextField(
-        
         controller: _searchController,
         decoration: InputDecoration(
           labelText: 'Search in: ${tabNames[_selectedIndex]}',
@@ -451,22 +450,32 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
         //alignment: FractionalOffset.bottomCenter,
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),
-              child:
-                  Image.asset('lib/assets/images/empty box.png', scale: 10.5),
+            Container(
+              //color: Colors.yellow,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 120, 0, 0),
+                child:
+                    Image.asset('lib/assets/images/empty box.png', scale: 10.5),
+              ),
             ),
             isAllSelected
-                ? Align(
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                      child: Image.asset('lib/assets/images/arrow.png',
-                          scale: 2.7),
+                ? Expanded(
+                    child: Container(
+                      //color: Colors.blue,
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 20, 40),
+                          child: Image.asset('lib/assets/images/arrow.png',
+                              scale: 2.7),
+                        ),
+                      ),
                     ),
                   )
                 : Text(""),
-              SizedBox(height: 20,),   
+            SizedBox(
+              height: 20,
+            ),
           ],
         ),
       ),
@@ -486,8 +495,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     print('2 First authnotifier ${authNotifier.user.displayName}');
     print("3 BUILD RESULT LIST LENGTH: ${_resultsList.length}");
     print('4 isAllSelected ${isAllSelected}');
-
-    
 
     return DefaultTabController(
       length: tabNames.length,
