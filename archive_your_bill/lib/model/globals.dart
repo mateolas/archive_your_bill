@@ -1,3 +1,3 @@
 library ayb.globals;
 
-bool isAllListIsEmpty = true;
+bool isAllSelected = true;

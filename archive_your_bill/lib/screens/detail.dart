@@ -85,6 +85,7 @@ class _BillDetailState extends State<BillDetail> {
         onPressed: () {
           Navigator.pop(context);
           deleteBill(billNotifier.currentBill, _onBillDeleted);
+          
         },
       );
 

@@ -118,6 +118,10 @@ getBillsBasedOnCategory(BillNotifier billNotifier, int index) async {
     });
 
     billNotifier.billList = _billList;
+    
+    if(billNotifier.billList.isEmpty){
+      isAllSelected = true;
+    }
 
   } 
   else {
@@ -135,91 +139,9 @@ getBillsBasedOnCategory(BillNotifier billNotifier, int index) async {
     });
 
     billNotifier.billList = _billList;
+       isAllSelected = false;
   }
 
-  // switch (index) {
-  //   case 0:
-  //     {
-  //       QuerySnapshot snapshot = await Firestore.instance
-  //           .collection('userData')
-  //           .document(firebaseUser.uid)
-  //           .collection('bills')
-  //           .where("category", isEqualTo: "Sports")
-  //           .getDocuments();
-
-  //       List<Bill> _billList = [];
-  //       snapshot.documents.forEach((document) {
-  //         Bill bill = Bill.fromMap(document.data);
-  //         _billList.add(bill);
-  //       });
-
-  //       billNotifier.billList = _billList;
-  //     }
-  //     break;
-
-  //   case 1:
-  //     {
-  //       QuerySnapshot snapshot = await Firestore.instance
-  //           .collection('userData')
-  //           .document(firebaseUser.uid)
-  //           .collection('bills')
-  //           .where("category", isEqualTo: "Sports")
-  //           .getDocuments();
-
-  //       List<Bill> _billList = [];
-  //       snapshot.documents.forEach((document) {
-  //         Bill bill = Bill.fromMap(document.data);
-  //         _billList.add(bill);
-  //       });
-
-  //       billNotifier.billList = _billList;
-  //     }
-  //     break;
-
-  //   case 2:
-  //     {
-  //       QuerySnapshot snapshot = await Firestore.instance
-  //           .collection('userData')
-  //           .document(firebaseUser.uid)
-  //           .collection('bills')
-  //           .where("category", isEqualTo: "Sports")
-  //           .getDocuments();
-
-  //       List<Bill> _billList = [];
-  //       snapshot.documents.forEach((document) {
-  //         Bill bill = Bill.fromMap(document.data);
-  //         _billList.add(bill);
-  //       });
-
-  //       billNotifier.billList = _billList;
-  //     }
-  //     break;
-
-  //   case 3:
-  //     {
-  //       QuerySnapshot snapshot = await Firestore.instance
-  //           .collection('userData')
-  //           .document(firebaseUser.uid)
-  //           .collection('bills')
-  //           .where("category", isEqualTo: "Sports")
-  //           .getDocuments();
-
-  //       List<Bill> _billList = [];
-  //       snapshot.documents.forEach((document) {
-  //         Bill bill = Bill.fromMap(document.data);
-  //         _billList.add(bill);
-  //       });
-
-  //       billNotifier.billList = _billList;
-  //     }
-  //     break;
-
-  //   default:
-  //     {
-  //
-  //     }
-  //     break;
-  // }
 }
 
 uploadBillAndImage(
@@ -313,4 +235,6 @@ deleteBill(Bill bill, Function foodDeleted) async {
       .document(bill.id)
     ..delete();
   foodDeleted(bill);
+
+ 
 }

@@ -26,7 +26,9 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   List _resultsList = [];
   ScrollController _hideButtonController;
   var _isVisible;
+  //BottomTab controller
   TabController _controller;
+  //Index of selected BottomTab
   int _selectedIndex = 0;
   List tabNames = [
     'All',
@@ -44,12 +46,12 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     _controller = TabController(length: tabNames.length, vsync: this);
-     _controller.addListener(() {
+    _controller.addListener(() {
       setState(() {
         BillNotifier billNotifier =
-        Provider.of<BillNotifier>(context, listen: false);
+            Provider.of<BillNotifier>(context, listen: false);
         _selectedIndex = _controller.index;
-         getBillsBasedOnCategory(billNotifier, _selectedIndex);
+        getBillsBasedOnCategory(billNotifier, _selectedIndex);
       });
       print("Selected Index: " + _controller.index.toString());
     });
@@ -455,115 +457,29 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   Widget noBillsYetText() {
     return Expanded(
       child: Container(
-        //color: Colors.grey,
-        child: Align(
-          alignment: FractionalOffset.bottomCenter,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 60, 0, 10),
-                child:
-                    Image.asset('lib/assets/images/empty box.png', scale: 10.5),
-              ),
-              isAllListIsEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.fromLTRB(200, 0, 0, 10),
+        //alignment: FractionalOffset.bottomCenter,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),
+              child:
+                  Image.asset('lib/assets/images/empty box.png', scale: 10.5),
+            ),
+            isAllSelected
+                ? Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
                       child: Image.asset('lib/assets/images/arrow.png',
                           scale: 2.7),
-                    )
-                  : Text("")
-            ],
-          ),
+                    ),
+                  )
+                : Text(""),
+              SizedBox(height: 20,),   
+          ],
         ),
       ),
     );
-  }
-
-  //Bottom horizontal ListView of categories
-  Widget filterCategoriesList() {
-    // BillNotifier billNotifier =
-    //     Provider.of<BillNotifier>(context, listen: false);
-
-    // List namesOfCategories = [
-    //   'All',
-    //   'Electronics',
-    //   'Fashion',
-    //   'Sports',
-    //   'Books/Music/Culture',
-    //   'Home',
-    //   'Food',
-    //   'Health',
-    //   'Services',
-    //   'Other'
-    // ];
-
-    // return DefaultTabController(
-    //   length: namesOfCategories.length,
-    //   child: Scaffold(
-    //         appBar: AppBar(
-    //           backgroundColor: Color(0xFF3F5AA6),
-    //           title: Text("Title text"),
-    //           bottom: menu(),
-    //         ),
-    //         body: TabBarView(
-    //           children: [
-    //             Container(child: Icon(Icons.directions_car), width: 60,height: 60,),
-    //             Container(child: Icon(Icons.directions_transit),width: 60,height: 60,),
-    //             Container(child: Icon(Icons.directions_bike),width: 60,height: 60,),
-    //             Container(child: Icon(Icons.directions_bike),width: 60,height: 60,),
-    //           ],
-    //         ),
-    //       ),
-    // );
-
-    // int _selectedIndex = 0;
-
-    // _onSelected(int index) {
-    //   setState(() => _selectedIndex = index);
-    // }
-
-    // return Container(
-    //   decoration: BoxDecoration(
-    //     gradient: LinearGradient(
-    //         begin: Alignment.topLeft,
-    //         end: Alignment.bottomRight,
-    //         colors: [
-    //           Color(0xffB1097C),
-    //           Color(0xff0947B1),
-    //         ]),
-    //   ),
-    //   margin: EdgeInsets.symmetric(vertical: 6.0),
-    //   height: 50.0,
-    //   child: ListView.builder(
-    //     key: Key("Name"),
-    //     scrollDirection: Axis.horizontal,
-    //     itemCount: 10,
-    //     itemBuilder: (BuildContext context2, int index2) {
-    //       return GestureDetector(
-    //         onTap: () {
-    //           setState(() {
-    //             //print('Clicked item ${index}');
-    //             _onSelected(index2);
-    //             getBillsBasedOnCategory(billNotifier, index2);
-    //             print('Selected index ${_selectedIndex}');
-    //           });
-    //         },
-    //         child: Card(
-    //           color: Colors.transparent,
-    //           margin: EdgeInsets.all(0),
-    //           elevation: 16,
-    //           child: Container(
-    //             alignment: AlignmentDirectional.center,
-    //             child: _selectedIndex != null && _selectedIndex == index2
-    //                 ? categoryToIconGreen(namesOfCategories[index2])
-    //                 : categoryToIconWhite(namesOfCategories[index2]),
-    //             width: 60.0,
-    //           ),
-    //         ),
-    //       );
-    //     },
-    //   ),
-    // );
   }
 
   @override
@@ -578,8 +494,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     print("1 Building Feed");
     print('2 First authnotifier ${authNotifier.user.displayName}');
     print("3 BUILD RESULT LIST LENGTH: ${_resultsList.length}");
-    print("4 Is All Build list is Empty: ${isAllListIsEmpty}");
-    print('Color after tap inside build ${color}');
+    print('4 isAllSelected ${isAllSelected}');
 
     return DefaultTabController(
       length: tabNames.length,
@@ -768,8 +683,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                 Container(
                                                   child: IconButton(
                                                     icon: Icon(Icons.share),
-                                                    disabledColor:
-                                                        Colors.yellow,
+                                                    //disabledColor:
+                                                    //    Colors.yellow,
                                                     color: Colors.grey,
                                                     onPressed: () {
                                                       billNotifier.currentBill =
@@ -833,7 +748,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
             ],
           ),
           bottomNavigationBar: new Column(
-           
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -847,15 +761,13 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                       return new Tab(
                         text: tabNames[index].toUpperCase(),
                       );
-                      
-                      
                     }),
                   ),
                 ),
                 secondChild: new Container(),
                 crossFadeState: CrossFadeState.showFirst,
-                    //? CrossFadeState.showFirst
-                    //: CrossFadeState.showSecond,
+                //? CrossFadeState.showFirst
+                //: CrossFadeState.showSecond,
                 duration: const Duration(milliseconds: 300),
               ),
             ],
