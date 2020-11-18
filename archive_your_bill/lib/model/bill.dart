@@ -9,6 +9,7 @@ class Bill {
   String warrantyLength;
   String category;
   String image;
+  String warrantyValid;
   
   Timestamp createdAt;
   Timestamp updatedAt;
@@ -25,6 +26,7 @@ class Bill {
     priceItem = data['priceItem'];
     currencyItem = data['currencyItem'];
     warrantyLength = data['warrantyLength'];
+    warrantyValid = data['warrantyValid'];
     category = data['category'];
     image = data['image'];
     createdAt = data['createdAt'];
@@ -41,6 +43,7 @@ class Bill {
       'priceItem': priceItem,
       'currencyItem': currencyItem,
       'warrantyLength': warrantyLength,
+      'warrantyValid': warrantyValid,
       'category': category,
       'image': image,
       'createdAt': createdAt,

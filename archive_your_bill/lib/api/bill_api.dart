@@ -234,7 +234,7 @@ deleteBill(Bill bill, Function foodDeleted) async {
       .collection('bills')
       .document(bill.id)
     ..delete();
-  foodDeleted(bill);
 
+  foodDeleted(bill);
  
 }

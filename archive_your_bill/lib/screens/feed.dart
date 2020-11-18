@@ -15,6 +15,7 @@ import 'package:flutter/rendering.dart';
 import 'package:archive_your_bill/model/globals.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:archive_your_bill/model/dateCheck.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -30,6 +31,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   TabController _controller;
   //Index of selected BottomTab
   int _selectedIndex = 0;
+  int _selectedIndexListView = 0;
   List tabNames = [
     'All',
     'Electronics',
@@ -55,6 +57,9 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
       });
       print("Selected Index: " + _controller.index.toString());
     });
+
+    WidgetsBinding.instance.addObserver(new LifecycleEventHandler(
+        resumeCallBack: () async => _refreshContent(_selectedIndexListView)));
 
     //code to implement visibility of FloatingActionButton
     _isVisible = true;
@@ -102,6 +107,30 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     _searchController.removeListener(_onSearchChanged());
     _searchController.dispose();
     super.dispose();
+  }
+
+  void _refreshContent(int index) {
+    BillNotifier billNotifier =
+        Provider.of<BillNotifier>(context, listen: false);
+
+    setState(() {
+      // Here you can change your widget
+      // each time the app resumed.
+      var now = DateTime.now();
+
+      // Is now time is before the warranty End
+      // If it's true warranty is Valid
+      if (DateTime(now.year, now.month, now.day)
+          .isBefore(billNotifier.billList[index].warrantyEnd.toDate())) {
+        billNotifier.billList[index].warrantyValid = "VALID";
+      }
+      // Is now time is after the warranty End
+      // If it's true warranty is Expired
+      else if (DateTime(now.year, now.month, now.day)
+          .isAfter(billNotifier.billList[index].warrantyEnd.toDate())) {
+        billNotifier.billList[index].warrantyValid = "EXPIRED";
+      }
+    });
   }
 
   _onSearchChanged() {
@@ -230,152 +259,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     }
   }
 
-  categoryToIconWhite(String category) {
-    switch (category) {
-      case "Electronics":
-        {
-          return Icon(
-            Icons.computer,
-            size: 30,
-            color: Colors.white,
-          );
-        }
-        break;
-
-      case "Fashion":
-        {
-          return Icon(Icons.local_offer, size: 30, color: Colors.white);
-        }
-        break;
-
-      case "Sports":
-        {
-          return Icon(Icons.fitness_center, size: 32, color: Colors.white);
-        }
-        break;
-
-      case "Books/Music/Culture":
-        {
-          return Icon(Icons.format_quote, size: 30, color: Colors.white);
-        }
-        break;
-
-      case "Home":
-        {
-          return Icon(Icons.home, size: 30, color: Colors.white);
-        }
-        break;
-
-      case "Food":
-        {
-          return Icon(Icons.local_dining, size: 30, color: Colors.white);
-        }
-        break;
-
-      case "Health":
-        {
-          return Icon(Icons.local_hospital, size: 30, color: Colors.white);
-        }
-        break;
-
-      case "Services":
-        {
-          return Icon(Icons.build, size: 30, color: Colors.white);
-        }
-        break;
-
-      case "Other":
-        {
-          return Icon(Icons.receipt, size: 30, color: Colors.white);
-        }
-        break;
-
-      case "All":
-        {
-          return Text("ALL",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ));
-        }
-        break;
-    }
-  }
-
-  categoryToIconGreen(String category) {
-    switch (category) {
-      case "Electronics":
-        {
-          return Icon(
-            Icons.computer,
-            size: 30,
-            color: Colors.green,
-          );
-        }
-        break;
-
-      case "Fashion":
-        {
-          return Icon(Icons.local_offer, size: 30, color: Colors.green);
-        }
-        break;
-
-      case "Sports":
-        {
-          return Icon(Icons.fitness_center, size: 32, color: Colors.green);
-        }
-        break;
-
-      case "Books/Music/Culture":
-        {
-          return Icon(Icons.format_quote, size: 30, color: Colors.green);
-        }
-        break;
-
-      case "Home":
-        {
-          return Icon(Icons.home, size: 30, color: Colors.green);
-        }
-        break;
-
-      case "Food":
-        {
-          return Icon(Icons.local_dining, size: 30, color: Colors.green);
-        }
-        break;
-
-      case "Health":
-        {
-          return Icon(Icons.local_hospital, size: 30, color: Colors.green);
-        }
-        break;
-
-      case "Services":
-        {
-          return Icon(Icons.build, size: 30, color: Colors.green);
-        }
-        break;
-
-      case "Other":
-        {
-          return Icon(Icons.receipt, size: 30, color: Colors.green);
-        }
-        break;
-
-      case "All":
-        {
-          return Text("ALL",
-              style: TextStyle(
-                color: Colors.green,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ));
-        }
-        break;
-    }
-  }
-
   //function to get image from url, save it and share
   Future<Null> saveAndShare(
       {String url,
@@ -397,7 +280,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     //message to be display in email sharing
     String message = """
     Hey ! 
-
     ${warrantyStart} at ${nameShop} you 
     
     bought ${nameItem} for ${itemPrice} ${currencyItem}.
@@ -405,9 +287,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     
     
     Thanks for using Archive your bill. 
-
     Your bill is save with us :).
-
     AYB team
     """;
 
@@ -551,6 +431,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                               onTap: () {
                                 //after clicking setting up with notifier a current bill
                                 billNotifier.currentBill = _resultsList[index];
+                                _selectedIndexListView = index;
                                 Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -640,6 +521,20 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                 ? Text('')
                                                 : Text(
                                                     'Warranty until: ${DateFormat.yMMMd().format(_resultsList[index].warrantyEnd.toDate())}',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                            Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    0, 0, 0, 4)),
+                                            //WARRANTY VALID
+                                            billNotifier.billList[index]
+                                                        .warrantyValid ==
+                                                    null
+                                                ? Text('')
+                                                : Text(
+                                                    'Warranty status: ${billNotifier.billList[index].warrantyValid}',
                                                     style: TextStyle(
                                                       fontSize: 14,
                                                     ),
