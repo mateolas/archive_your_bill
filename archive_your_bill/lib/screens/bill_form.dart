@@ -400,6 +400,20 @@ class _BillFormState extends State<BillForm> {
 
         _currentBill.warrantyEnd = Timestamp.fromDate(_warrantyValidUntil);
         _currentBill.warrantyLength = itemWarrantyLengthController.text;
+
+        //setting if Warranty is still valid
+        var now = DateTime.now();
+
+        if (DateTime(now.year, now.month, now.day)
+            .isBefore(_currentBill.warrantyEnd.toDate())) {
+          _currentBill.warrantyValid = "VALID";
+        }
+        // Is now time is after the warranty End
+        // If it's true warranty is Expired
+        else if (DateTime(now.year, now.month, now.day)
+            .isAfter(_currentBill.warrantyEnd.toDate())) {
+          _currentBill.warrantyValid = "EXPIRED";
+        }
       });
     }
     setState(() {
@@ -531,15 +545,15 @@ class _BillFormState extends State<BillForm> {
       key: _scaffoldKey,
       appBar: AppBar(
         flexibleSpace: Container(
-              decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xffB1097C),
-                  Color(0xff0947B1),
-                ]),
-          )),
+            decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xffB1097C),
+                Color(0xff0947B1),
+              ]),
+        )),
         title: Text(
           widget.isUpdating ? "Edit Bill" : "Create Bill",
           textAlign: TextAlign.center,
@@ -568,7 +582,9 @@ class _BillFormState extends State<BillForm> {
                         onPressed: () => _showSelectionDialog(context),
                         child: Text(
                           'Add Image',
-                          style: TextStyle(fontWeight: FontWeight.bold, color: accentCustomColor),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: accentCustomColor),
                         ),
                       ),
                     )
@@ -588,13 +604,12 @@ class _BillFormState extends State<BillForm> {
         ),
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.fromLTRB(0,0,0,0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: FloatingActionButton(
           onPressed: () {
             //FocusScope.of(context).requestFocus(new FocusNode());
             //Navigator.of(context).pop();
             _saveBill();
-          
           },
           child: Icon(Icons.save),
           foregroundColor: Colors.white,

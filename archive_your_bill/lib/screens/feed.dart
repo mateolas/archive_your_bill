@@ -45,6 +45,11 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     'Other'
   ];
 
+  
+  
+
+
+
   @override
   void initState() {
     _controller = TabController(length: tabNames.length, vsync: this);
@@ -59,7 +64,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     });
 
     WidgetsBinding.instance.addObserver(new LifecycleEventHandler(
-        resumeCallBack: () async => _refreshContent(_selectedIndexListView)));
+        resumeCallBack: () async => refreshScreenAfterComingBackToApp()));
 
     //code to implement visibility of FloatingActionButton
     _isVisible = true;
@@ -109,28 +114,47 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  void _refreshContent(int index) {
+
+  void refreshScreenAfterComingBackToApp(){
+      
+      setState(() {
+            
+            });
+      
+  }
+
+
+  String _isWarrantyValid(int index) {
     BillNotifier billNotifier =
         Provider.of<BillNotifier>(context, listen: false);
 
-    setState(() {
+  
       // Here you can change your widget
       // each time the app resumed.
       var now = DateTime.now();
+
+             
+          
 
       // Is now time is before the warranty End
       // If it's true warranty is Valid
       if (DateTime(now.year, now.month, now.day)
           .isBefore(billNotifier.billList[index].warrantyEnd.toDate())) {
         billNotifier.billList[index].warrantyValid = "VALID";
+        print('Warranty nr ${index} valid inside function: ${billNotifier.billList[index].warrantyValid}');
+        
       }
       // Is now time is after the warranty End
       // If it's true warranty is Expired
       else if (DateTime(now.year, now.month, now.day)
           .isAfter(billNotifier.billList[index].warrantyEnd.toDate())) {
         billNotifier.billList[index].warrantyValid = "EXPIRED";
+        print('Warranty ${index} expired inside fucntion: ${billNotifier.billList[index].warrantyValid}');
       }
-    });
+      
+
+    return 'Warranty status: ${billNotifier.billList[index].warrantyValid}';
+    
   }
 
   _onSearchChanged() {
@@ -370,9 +394,9 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
 
     //sets the search results
     setSearchResultsList(billNotifier);
-
+    
     print("1 Building Feed");
-    print('2 First authnotifier ${authNotifier.user.displayName}');
+    print('2 Authnotifier ${authNotifier.user.displayName}');
     print("3 BUILD RESULT LIST LENGTH: ${_resultsList.length}");
     print('4 isAllSelected ${isAllSelected}');
 
@@ -533,12 +557,14 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                         .warrantyValid ==
                                                     null
                                                 ? Text('')
-                                                : Text(
-                                                    'Warranty status: ${billNotifier.billList[index].warrantyValid}',
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
+                                                : //Text('')
+                                                Text(_isWarrantyValid(index)),
+                                                  // Text(
+                                                  //   'Warranty status: ${_resultsList[index].warrantyValid}',
+                                                  //   style: TextStyle(
+                                                  //     fontSize: 14,
+                                                  //   ),
+                                                  // ),
                                           ],
                                         ),
                                         Expanded(
