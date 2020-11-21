@@ -4,6 +4,7 @@ import 'package:archive_your_bill/notifier/auth_notifier.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:archive_your_bill/screens/bill_form.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:archive_your_bill/screens/detail.dart';
 import 'package:intl/intl.dart';
@@ -16,6 +17,7 @@ import 'package:archive_your_bill/model/globals.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:archive_your_bill/model/dateCheck.dart';
+import 'package:archive_your_bill/model/bill.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -45,13 +47,19 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     'Other'
   ];
 
-  
-  
+  //variables for local notifications
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
+  var androidInitializationSettings =
+      new AndroidInitializationSettings('@drawable/app_icon');
 
+  IOSInitializationSettings iosInitializationSettings;
+  InitializationSettings initializationSettings;
 
   @override
   void initState() {
+    //controller for bottom Tabs ribbos
     _controller = TabController(length: tabNames.length, vsync: this);
     _controller.addListener(() {
       setState(() {
@@ -63,10 +71,11 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
       print("Selected Index: " + _controller.index.toString());
     });
 
+    //Observer to update screen after resume
     WidgetsBinding.instance.addObserver(new LifecycleEventHandler(
         resumeCallBack: () async => refreshScreenAfterComingBackToApp()));
 
-    //code to implement visibility of FloatingActionButton
+    //variable to implement visibility of FloatingActionButton
     _isVisible = true;
     //scrollController
     _hideButtonController = new ScrollController();
@@ -104,8 +113,81 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     _resultsList = billNotifier.billList;
     _searchController.addListener(_onSearchChanged);
     //setSearchResultsList(billNotifier);
+
+    initializingNotification();
     super.initState();
   }
+
+  //
+  //NOTIFICIATION FUNCTIONALITY
+  //
+
+  //initalization of local notification functionality
+  void initializingNotification() async {
+    androidInitializationSettings = AndroidInitializationSettings('app_icon');
+    iosInitializationSettings = IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+    initializationSettings = InitializationSettings(
+        android: androidInitializationSettings, iOS: iosInitializationSettings);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+  }
+
+  Future onDidReceiveLocalNotification(
+      int id, String title, String body, String payload) async {
+    return AlertDialog(
+      title: Text(title),
+      content: Text(body),
+      actions: <Widget>[
+        Text("Okay"),
+      ],
+    );
+  }
+
+  Future onSelectNotification(String payLoad) {
+    if (payLoad != null) {
+      print(payLoad);
+    }
+  }
+
+  void _showNotifications(int index, List<Bill> listOfBills) async {
+    await notification(index, listOfBills);
+  }
+
+  Future<void> notification(int index, List<Bill> listOfBills) async {
+
+    AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+            'Channel ID', 'Channel title', 'channel body',
+            priority: Priority.high,
+            importance: Importance.max,
+            ticker: 'test');
+
+    IOSNotificationDetails iosNotificationDetails = IOSNotificationDetails();
+
+    NotificationDetails notificationDetails = NotificationDetails(
+        android: androidNotificationDetails, iOS: iosNotificationDetails);
+    await flutterLocalNotificationsPlugin.show(
+        index, 'Hi !', 'Just kindly reminder. Your warranty of bill ${listOfBills[index].nameItem} will expire soon.', notificationDetails);
+  }
+
+  Widget TestButton(int index, List<Bill> listOfBills) {
+    return FlatButton(
+      color: Colors.blue,
+      onPressed: () => _showNotifications(index, listOfBills),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          "Show Notification",
+          style: TextStyle(fontSize: 20.0, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  //
+  // END OF NOTIFICATION IMPLEMENTATION //
+  //
 
   @override
   void dispose() {
@@ -114,47 +196,59 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-
-  void refreshScreenAfterComingBackToApp(){
-      
-      setState(() {
-            
-            });
-      
+  void refreshScreenAfterComingBackToApp() {
+    setState(() {});
   }
 
+  Widget _isWarrantyValid(int index, List<Bill> listOfBills) {
+    //BillNotifier billNotifier =
+    //    Provider.of<BillNotifier>(context, listen: false);
 
-  String _isWarrantyValid(int index) {
-    BillNotifier billNotifier =
-        Provider.of<BillNotifier>(context, listen: false);
+        // Here you can change your widget
+    // each time the app resumed.
+    var now = DateTime.now();
 
-  
-      // Here you can change your widget
-      // each time the app resumed.
-      var now = DateTime.now();
+    // Is now time is before the warranty End
+    // If it's true warranty is Valid
+    if (DateTime(now.year, now.month, now.day)
+        .isBefore(listOfBills[index].warrantyEnd.toDate())) {
+      listOfBills[index].warrantyValid = "VALID";
+      print(
+          'Warranty nr ${index} valid inside function: ${listOfBills[index].warrantyValid}');
+    }
+    // Is now time is after the warranty End
+    // If it's true warranty is Expired
+    else if (DateTime(now.year, now.month, now.day)
+        .isAfter(listOfBills[index].warrantyEnd.toDate())) {
+      listOfBills[index].warrantyValid = "EXPIRED";
+      print(
+          'Warranty ${index} expired inside fucntion: ${listOfBills[index].warrantyValid}');
+    }
 
-             
-          
-
-      // Is now time is before the warranty End
-      // If it's true warranty is Valid
-      if (DateTime(now.year, now.month, now.day)
-          .isBefore(billNotifier.billList[index].warrantyEnd.toDate())) {
-        billNotifier.billList[index].warrantyValid = "VALID";
-        print('Warranty nr ${index} valid inside function: ${billNotifier.billList[index].warrantyValid}');
-        
-      }
-      // Is now time is after the warranty End
-      // If it's true warranty is Expired
-      else if (DateTime(now.year, now.month, now.day)
-          .isAfter(billNotifier.billList[index].warrantyEnd.toDate())) {
-        billNotifier.billList[index].warrantyValid = "EXPIRED";
-        print('Warranty ${index} expired inside fucntion: ${billNotifier.billList[index].warrantyValid}');
-      }
-      
-
-    return 'Warranty status: ${billNotifier.billList[index].warrantyValid}';
-    
+    if (listOfBills[index].warrantyValid == "VALID") {
+      return RichText(
+        text: TextSpan(
+            text: 'Warranty status: ',
+            style: TextStyle(color: Colors.black),
+            children: <TextSpan>[
+              TextSpan(
+                text: ' ${listOfBills[index].warrantyValid}',
+                style: TextStyle(color: Colors.green),
+              )
+            ]),
+      );
+    } else
+      return RichText(
+        text: TextSpan(
+            text: 'Warranty status: ',
+            style: TextStyle(color: Colors.black),
+            children: <TextSpan>[
+              TextSpan(
+                text: ' ${listOfBills[index].warrantyValid}',
+                style: TextStyle(color: Colors.grey),
+              )
+            ]),
+      );
   }
 
   _onSearchChanged() {
@@ -394,7 +488,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
 
     //sets the search results
     setSearchResultsList(billNotifier);
-    
+
     print("1 Building Feed");
     print('2 Authnotifier ${authNotifier.user.displayName}');
     print("3 BUILD RESULT LIST LENGTH: ${_resultsList.length}");
@@ -471,7 +565,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                 shadowColor: primaryCustomColor,
                                 //color: Colors.transparent,
                                 child: Container(
-                                  height: 140,
+                                  height: 240,
                                   child: Center(
                                     child: Row(
                                       children: <Widget>[
@@ -488,6 +582,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
+                                            TestButton(index,_resultsList),
                                             //SHOP NAME
                                             Text(
                                               '${_resultsList[index].nameShop}',
@@ -539,32 +634,32 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                 padding: EdgeInsets.fromLTRB(
                                                     0, 0, 0, 4)),
                                             //WARRANTY UNTIL
-                                            billNotifier.billList[index]
-                                                        .warrantyEnd ==
-                                                    null
-                                                ? Text('')
-                                                : Text(
-                                                    'Warranty until: ${DateFormat.yMMMd().format(_resultsList[index].warrantyEnd.toDate())}',
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                            Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    0, 0, 0, 4)),
+                                            // billNotifier.billList[index]
+                                            //             .warrantyEnd ==
+                                            //         null
+                                            //     ? Text('')
+                                            //     : Text(
+                                            //         'Warranty until: ${DateFormat.yMMMd().format(_resultsList[index].warrantyEnd.toDate())}',
+                                            //         style: TextStyle(
+                                            //           fontSize: 14,
+                                            //         ),
+                                            //       ),
+                                            // Padding(
+                                            //     padding: EdgeInsets.fromLTRB(
+                                            //         0, 0, 0, 4)),
                                             //WARRANTY VALID
                                             billNotifier.billList[index]
                                                         .warrantyValid ==
                                                     null
                                                 ? Text('')
                                                 : //Text('')
-                                                Text(_isWarrantyValid(index)),
-                                                  // Text(
-                                                  //   'Warranty status: ${_resultsList[index].warrantyValid}',
-                                                  //   style: TextStyle(
-                                                  //     fontSize: 14,
-                                                  //   ),
-                                                  // ),
+                                                _isWarrantyValid(index, _resultsList),
+                                            // Text(
+                                            //   'Warranty status: ${_resultsList[index].warrantyValid}',
+                                            //   style: TextStyle(
+                                            //     fontSize: 14,
+                                            //   ),
+                                            // ),
                                           ],
                                         ),
                                         Expanded(
