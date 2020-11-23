@@ -19,6 +19,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:archive_your_bill/model/dateCheck.dart';
 import 'package:archive_your_bill/model/bill.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workmanager/workmanager.dart';
+
+const simpleTaskKey = "simpleTask";
+const simpleDelayedTask = "simpleDelayedTask";
+const simplePeriodicTask = "simplePeriodicTask";
+const simplePeriodic1HourTask = "simplePeriodic1HourTask";
+
 class Feed extends StatefulWidget {
   @override
   _FeedState createState() => _FeedState();
@@ -114,7 +122,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     _searchController.addListener(_onSearchChanged);
     //setSearchResultsList(billNotifier);
 
-    initializingNotification();
+    // initializingNotification();
     super.initState();
   }
 
@@ -122,68 +130,70 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   //NOTIFICIATION FUNCTIONALITY
   //
 
-  //initalization of local notification functionality
-  void initializingNotification() async {
-    androidInitializationSettings = AndroidInitializationSettings('app_icon');
-    iosInitializationSettings = IOSInitializationSettings(
-        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-    initializationSettings = InitializationSettings(
-        android: androidInitializationSettings, iOS: iosInitializationSettings);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
-  }
+  // //initalization of local notification functionality
+  // void initializingNotification() async {
+  //   androidInitializationSettings = AndroidInitializationSettings('app_icon');
+  //   iosInitializationSettings = IOSInitializationSettings(
+  //       onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+  //   initializationSettings = InitializationSettings(
+  //       android: androidInitializationSettings, iOS: iosInitializationSettings);
+  //   await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+  //       onSelectNotification: onSelectNotification);
+  // }
 
-  Future onDidReceiveLocalNotification(
-      int id, String title, String body, String payload) async {
-    return AlertDialog(
-      title: Text(title),
-      content: Text(body),
-      actions: <Widget>[
-        Text("Okay"),
-      ],
-    );
-  }
+  // Future onDidReceiveLocalNotification(
+  //     int id, String title, String body, String payload) async {
+  //   return AlertDialog(
+  //     title: Text(title),
+  //     content: Text(body),
+  //     actions: <Widget>[
+  //       Text("Okay"),
+  //     ],
+  //   );
+  // }
 
-  Future onSelectNotification(String payLoad) {
-    if (payLoad != null) {
-      print(payLoad);
-    }
-  }
+  // Future onSelectNotification(String payLoad) {
+  //   if (payLoad != null) {
+  //     print(payLoad);
+  //   }
+  // }
 
-  void _showNotifications(int index, List<Bill> listOfBills) async {
-    await notification(index, listOfBills);
-  }
+  // void _showNotifications(int index, List<Bill> listOfBills) async {
+  //   await notification(index, listOfBills);
+  // }
 
-  Future<void> notification(int index, List<Bill> listOfBills) async {
+  // Future<void> notification(int index, List<Bill> listOfBills) async {
+  //   AndroidNotificationDetails androidNotificationDetails =
+  //       AndroidNotificationDetails(
+  //           'Channel ID', 'Channel title', 'channel body',
+  //           priority: Priority.high,
+  //           importance: Importance.max,
+  //           ticker: 'test');
 
-    AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails(
-            'Channel ID', 'Channel title', 'channel body',
-            priority: Priority.high,
-            importance: Importance.max,
-            ticker: 'test');
+  //   IOSNotificationDetails iosNotificationDetails = IOSNotificationDetails();
 
-    IOSNotificationDetails iosNotificationDetails = IOSNotificationDetails();
+  //   NotificationDetails notificationDetails = NotificationDetails(
+  //       android: androidNotificationDetails, iOS: iosNotificationDetails);
+  //   await flutterLocalNotificationsPlugin.show(
+  //       index,
+  //       'Hi !',
+  //       'Just kindly reminder. Your warranty of bill ${listOfBills[index].nameItem} will expire soon.',
+  //       notificationDetails);
+  // }
 
-    NotificationDetails notificationDetails = NotificationDetails(
-        android: androidNotificationDetails, iOS: iosNotificationDetails);
-    await flutterLocalNotificationsPlugin.show(
-        index, 'Hi !', 'Just kindly reminder. Your warranty of bill ${listOfBills[index].nameItem} will expire soon.', notificationDetails);
-  }
-
-  Widget TestButton(int index, List<Bill> listOfBills) {
-    return FlatButton(
-      color: Colors.blue,
-      onPressed: () => _showNotifications(index, listOfBills),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          "Show Notification",
-          style: TextStyle(fontSize: 20.0, color: Colors.white),
-        ),
-      ),
-    );
-  }
+  // Widget TestButton(int index, List<Bill> listOfBills) {
+  //   return FlatButton(
+  //     color: Colors.blue,
+  //     onPressed: () => _showNotifications(index, listOfBills),
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(8.0),
+  //       child: Text(
+  //         "Show Notification",
+  //         style: TextStyle(fontSize: 20.0, color: Colors.white),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   //
   // END OF NOTIFICATION IMPLEMENTATION //
@@ -201,10 +211,12 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
   }
 
   Widget _isWarrantyValid(int index, List<Bill> listOfBills) {
-    //BillNotifier billNotifier =
-    //    Provider.of<BillNotifier>(context, listen: false);
+    //the birthday's date
+//  final birthday = DateTime(1967, 10, 12);
+//  final date2 = DateTime.now();
+//  final difference = date2.difference(birthday).inDays;
 
-        // Here you can change your widget
+    // Here you can change your widget
     // each time the app resumed.
     var now = DateTime.now();
 
@@ -565,7 +577,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                 shadowColor: primaryCustomColor,
                                 //color: Colors.transparent,
                                 child: Container(
-                                  height: 240,
+                                  height: 140,
                                   child: Center(
                                     child: Row(
                                       children: <Widget>[
@@ -582,7 +594,7 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
-                                            TestButton(index,_resultsList),
+                                            // TestButton(index, _resultsList),
                                             //SHOP NAME
                                             Text(
                                               '${_resultsList[index].nameShop}',
@@ -653,7 +665,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                                     null
                                                 ? Text('')
                                                 : //Text('')
-                                                _isWarrantyValid(index, _resultsList),
+                                                _isWarrantyValid(
+                                                    index, _resultsList),
                                             // Text(
                                             //   'Warranty status: ${_resultsList[index].warrantyValid}',
                                             //   style: TextStyle(

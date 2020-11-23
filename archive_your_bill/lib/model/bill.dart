@@ -10,6 +10,9 @@ class Bill {
   String category;
   String image;
   String warrantyValid;
+  String reminderDays;
+
+  bool isReminderOn;
   
   Timestamp createdAt;
   Timestamp updatedAt;
@@ -33,6 +36,8 @@ class Bill {
     updatedAt = data['updatedAt'];
     warrantyStart = data['warrantyStart'];
     warrantyEnd = data['warrantyEnd'];
+    isReminderOn = data['isRemniderOn'];
+    reminderDays = data['reminderDays'];
   }
 
   Map<String, dynamic> toMap() {
@@ -50,6 +55,8 @@ class Bill {
       'updatedAt': updatedAt,
       'warrantyStart': warrantyStart,
       'warrantyEnd': warrantyEnd,
+      'isReminderOn': isReminderOn,
+      'reminderDays': reminderDays,
     };
   }
 }

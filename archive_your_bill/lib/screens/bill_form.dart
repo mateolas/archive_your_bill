@@ -40,6 +40,9 @@ class _BillFormState extends State<BillForm> {
   DateTime _warrantyValidUntil;
   var itemWarrantyLengthController = TextEditingController();
 
+  bool isSwitched = false;
+  double _currentSliderValue = 30;
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +54,8 @@ class _BillFormState extends State<BillForm> {
     } else {
       _currentBill = Bill();
     }
+
+    isSwitched = false;
 
     //setting initial value for editext widget
     if (_currentBill.warrantyLength == null) {
@@ -393,13 +398,14 @@ class _BillFormState extends State<BillForm> {
       });
     } else {
       setState(() {
+        _currentBill.warrantyLength = itemWarrantyLengthController.text;
+
         _warrantyValidUntil = DateTime(
             _selectedDate.year,
             _selectedDate.month + int.parse(itemWarrantyLengthController.text),
             _selectedDate.day);
 
         _currentBill.warrantyEnd = Timestamp.fromDate(_warrantyValidUntil);
-        _currentBill.warrantyLength = itemWarrantyLengthController.text;
 
         //setting if Warranty is still valid
         var now = DateTime.now();
@@ -430,18 +436,15 @@ class _BillFormState extends State<BillForm> {
   Widget _buildItemWarrantyLength() {
     //Data input - ITEM WARRANTY LENGTH
     return Container(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
-        child: TextField(
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-              labelStyle: TextStyle(fontSize: 16),
-              hintText: 'Enter warranty length in months',
-              labelText: 'Warranty length'),
-          controller: itemWarrantyLengthController,
-          onChanged: (_) => warrantyValidUntil(),
-          onSubmitted: (_) => warrantyValidUntil(),
-        ),
+      child: TextField(
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+            labelStyle: TextStyle(fontSize: 16),
+            hintText: 'Enter warranty length in months',
+            labelText: 'Warranty length'),
+        controller: itemWarrantyLengthController,
+        onChanged: (_) => warrantyValidUntil(),
+        onSubmitted: (_) => warrantyValidUntil(),
       ),
     );
   }
@@ -461,7 +464,7 @@ class _BillFormState extends State<BillForm> {
               ),
               child: Text(
                 'Choose warranty start date:',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               onPressed: _presentDatePicker,
             ),
@@ -472,6 +475,7 @@ class _BillFormState extends State<BillForm> {
                   _currentBill.warrantyStart == null
                       ? ''
                       : '${DateFormat.yMMMd().format(_currentBill.warrantyStart.toDate())}',
+                  style: TextStyle(fontSize: 16),
                 ),
               ),
             ),
@@ -484,30 +488,132 @@ class _BillFormState extends State<BillForm> {
   Widget _buildWarrantyValidUntil() {
     //DateTime - WARRANTY VALID UNTIL
     return Container(
-      height: 70,
+      height: 60,
       child: Row(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 5,
-              horizontal: 10,
-            ),
-            child: Text(
-              'Warranty valid until:',
-              style: TextStyle(fontWeight: FontWeight.bold),
+          Text(
+            'Warranty valid until: ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
           ),
-          Expanded(
+          Flexible(
             child: Text(
               _currentBill.warrantyEnd == null
                   ? Text('')
                   : '${DateFormat.yMMMd().format(_currentBill.warrantyEnd.toDate())}',
+              style: TextStyle(fontSize: 16),
             ),
           ),
         ],
       ),
     );
   }
+
+  // Widget _buildReminderOnOff() {
+  //   //DateTime - WARRANTY VALID UNTIL
+
+  //   return Column(
+  //     children: [
+  //       Container(
+  //         height: 60,
+  //         child: Row(
+  //           children: <Widget>[
+  //             Flexible(
+  //               flex: 4,
+  //               child: Text(
+  //                 'Would you like to receive reminder when warranty will be close to expire ?',
+  //                 style: TextStyle(fontSize: 16),
+  //               ),
+  //             ),
+  //             SizedBox(
+  //               width: 20,
+  //             ),
+  //             Flexible(
+  //               flex: 1,
+  //               child: Switch(
+  //                 value: isSwitched,
+  //                 onChanged: (value) {
+  //                   setState(() {
+  //                     _currentBill.isReminderOn = value;
+  //                     isSwitched = _currentBill.isReminderOn;
+  //                     print(isSwitched);
+  //                   });
+  //                 },
+  //                 activeTrackColor: Colors.lightGreenAccent,
+  //                 activeColor: Colors.green,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       SizedBox(
+  //         height: 12,
+  //       ),
+  //       _currentBill.isReminderOn == false
+  //           ? Container(
+  //               height: 80,
+  //             )
+  //           : Text(''),
+  //     ],
+  //   );
+  // }
+
+  // Widget _nrOfDaysBeforeReminder() {
+  //   //DateTime - WARRANTY VALID UNTIL
+
+  //   return Column(
+  //     children: [
+  //       Column(
+  //         children: [
+  //           Container(
+  //             height: 40,
+  //             child: Row(
+  //               children: <Widget>[
+  //                 Flexible(
+  //                   flex: 3,
+  //                   child: Text(
+  //                     'How many days before the warranty expiration you would like to receive a reminder ?',
+  //                     style: TextStyle(fontSize: 16),
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           SizedBox(
+  //             height: 12,
+  //           ),
+  //           Text(
+  //             '${_currentSliderValue.toInt()} days',
+  //             style: TextStyle(
+  //               fontSize: 16,
+  //               fontWeight: FontWeight.bold,
+  //             ),
+  //           ),
+  //           Slider(
+  //             activeColor: primaryCustomColor,
+  //             inactiveColor: accentCustomColor,
+  //             value: _currentSliderValue,
+  //             min: 0,
+  //             max: 60,
+  //             divisions: 60,
+  //             label: _currentSliderValue.round().toString(),
+  //             onChanged: (double value) {
+  //               setState(() {
+  //                 _currentSliderValue = value;
+  //                 _currentBill.reminderDays = value.toString();
+  //               });
+  //             },
+  //           )
+  //         ],
+  //       ),
+  //       Container(
+  //         height: 80,
+  //       )
+  //     ],
+  //   );
+  // }
 
 //#########################
 
@@ -599,6 +705,12 @@ class _BillFormState extends State<BillForm> {
               itemWarrantyLengthController.text.isEmpty
                   ? SizedBox(height: 0)
                   : _buildWarrantyValidUntil(),
+              // itemWarrantyLengthController.text.isEmpty
+              //     ? SizedBox(height: 0)
+              //     : _buildReminderOnOff(),
+              // _currentBill.isReminderOn == true
+              //     ? _nrOfDaysBeforeReminder()
+              //     : Text(''),
             ],
           ),
         ),
