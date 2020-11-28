@@ -8,27 +8,23 @@ import 'package:flutter/material.dart';
 import 'model/colors.dart';
 import 'notifier/auth_notifier.dart';
 
-import 'package:workmanager/workmanager.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-void main() => runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (context) => AuthNotifier(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => BillNotifier(),
-          ),
-        ],
-        child: MyApp(),
-      ),
-      
-    );
+void main() => runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AuthNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => BillNotifier(),
+        ),
+      ],
+      child: MyApp(),
+    ));
 
 
 
 class MyApp extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -47,3 +43,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

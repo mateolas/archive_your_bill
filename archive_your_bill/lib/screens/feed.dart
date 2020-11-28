@@ -4,7 +4,6 @@ import 'package:archive_your_bill/notifier/auth_notifier.dart';
 import 'package:archive_your_bill/notifier/bill_notifier.dart';
 import 'package:archive_your_bill/screens/bill_form.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:archive_your_bill/screens/detail.dart';
 import 'package:intl/intl.dart';
@@ -18,14 +17,6 @@ import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:archive_your_bill/model/dateCheck.dart';
 import 'package:archive_your_bill/model/bill.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
-
-const simpleTaskKey = "simpleTask";
-const simpleDelayedTask = "simpleDelayedTask";
-const simplePeriodicTask = "simplePeriodicTask";
-const simplePeriodic1HourTask = "simplePeriodic1HourTask";
 
 class Feed extends StatefulWidget {
   @override
@@ -55,19 +46,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     'Other'
   ];
 
-  //variables for local notifications
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
-  var androidInitializationSettings =
-      new AndroidInitializationSettings('@drawable/app_icon');
-
-  IOSInitializationSettings iosInitializationSettings;
-  InitializationSettings initializationSettings;
-
   @override
   void initState() {
-    //controller for bottom Tabs ribbos
     _controller = TabController(length: tabNames.length, vsync: this);
     _controller.addListener(() {
       setState(() {
@@ -79,11 +59,10 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
       print("Selected Index: " + _controller.index.toString());
     });
 
-    //Observer to update screen after resume
     WidgetsBinding.instance.addObserver(new LifecycleEventHandler(
         resumeCallBack: () async => refreshScreenAfterComingBackToApp()));
 
-    //variable to implement visibility of FloatingActionButton
+    //code to implement visibility of FloatingActionButton
     _isVisible = true;
     //scrollController
     _hideButtonController = new ScrollController();
@@ -121,83 +100,8 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
     _resultsList = billNotifier.billList;
     _searchController.addListener(_onSearchChanged);
     //setSearchResultsList(billNotifier);
-
-    // initializingNotification();
     super.initState();
   }
-
-  //
-  //NOTIFICIATION FUNCTIONALITY
-  //
-
-  // //initalization of local notification functionality
-  // void initializingNotification() async {
-  //   androidInitializationSettings = AndroidInitializationSettings('app_icon');
-  //   iosInitializationSettings = IOSInitializationSettings(
-  //       onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-  //   initializationSettings = InitializationSettings(
-  //       android: androidInitializationSettings, iOS: iosInitializationSettings);
-  //   await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-  //       onSelectNotification: onSelectNotification);
-  // }
-
-  // Future onDidReceiveLocalNotification(
-  //     int id, String title, String body, String payload) async {
-  //   return AlertDialog(
-  //     title: Text(title),
-  //     content: Text(body),
-  //     actions: <Widget>[
-  //       Text("Okay"),
-  //     ],
-  //   );
-  // }
-
-  // Future onSelectNotification(String payLoad) {
-  //   if (payLoad != null) {
-  //     print(payLoad);
-  //   }
-  // }
-
-  // void _showNotifications(int index, List<Bill> listOfBills) async {
-  //   await notification(index, listOfBills);
-  // }
-
-  // Future<void> notification(int index, List<Bill> listOfBills) async {
-  //   AndroidNotificationDetails androidNotificationDetails =
-  //       AndroidNotificationDetails(
-  //           'Channel ID', 'Channel title', 'channel body',
-  //           priority: Priority.high,
-  //           importance: Importance.max,
-  //           ticker: 'test');
-
-  //   IOSNotificationDetails iosNotificationDetails = IOSNotificationDetails();
-
-  //   NotificationDetails notificationDetails = NotificationDetails(
-  //       android: androidNotificationDetails, iOS: iosNotificationDetails);
-  //   await flutterLocalNotificationsPlugin.show(
-  //       index,
-  //       'Hi !',
-  //       'Just kindly reminder. Your warranty of bill ${listOfBills[index].nameItem} will expire soon.',
-  //       notificationDetails);
-  // }
-
-  // Widget TestButton(int index, List<Bill> listOfBills) {
-  //   return FlatButton(
-  //     color: Colors.blue,
-  //     onPressed: () => _showNotifications(index, listOfBills),
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(8.0),
-  //       child: Text(
-  //         "Show Notification",
-  //         style: TextStyle(fontSize: 20.0, color: Colors.white),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  //
-  // END OF NOTIFICATION IMPLEMENTATION //
-  //
 
   @override
   void dispose() {
@@ -594,7 +498,6 @@ class _FeedState extends State<Feed> with SingleTickerProviderStateMixin {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
-                                            // TestButton(index, _resultsList),
                                             //SHOP NAME
                                             Text(
                                               '${_resultsList[index].nameShop}',

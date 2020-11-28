@@ -34,6 +34,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542200477194:android:dbd3febd4a542b4c7d11f3",
+        "android_client_info": {
+          "package_name": "com.skylinestudio.archive_your_bill"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "542200477194-ma4qo2jr5jkqi9ch7ovh26qj1e3oj8pm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFnDoGqeGOAAJx5DcbwFP9oLL8uzYKiQ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "542200477194-ma4qo2jr5jkqi9ch7ovh26qj1e3oj8pm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"
