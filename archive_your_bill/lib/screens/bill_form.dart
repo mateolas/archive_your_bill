@@ -452,22 +452,26 @@ class _BillFormState extends State<BillForm> {
         padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
         child: Row(
           children: <Widget>[
-            RaisedButton(
-              textColor: Theme.of(context).accentColor,
-              //color: Colors.orange,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18.0),
-                //side: BorderSide(color: Colors.orange),
+            Flexible(
+              flex: 2,
+              child: RaisedButton(
+                textColor: Theme.of(context).accentColor,
+                //color: Colors.orange,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  //side: BorderSide(color: Colors.orange),
+                ),
+                child: Text(
+                  'Choose warranty start date:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onPressed: _presentDatePicker,
               ),
-              child: Text(
-                'Choose warranty start date:',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              onPressed: _presentDatePicker,
             ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-              child: Expanded(
+            Flexible(
+              flex: 1,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                 child: Text(
                   _currentBill.warrantyStart == null
                       ? ''
@@ -597,23 +601,20 @@ class _BillFormState extends State<BillForm> {
               _buildItemWarrantyLength(),
               _buildChooseStartDayButton(),
               itemWarrantyLengthController.text.isEmpty
-                  ? SizedBox(height: 0)
+                  ? SizedBox(height: 2)
                   : _buildWarrantyValidUntil(),
             ],
           ),
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: FloatingActionButton(
-          onPressed: () {
-            //FocusScope.of(context).requestFocus(new FocusNode());
-            //Navigator.of(context).pop();
-            _saveBill();
-          },
-          child: Icon(Icons.save),
-          foregroundColor: Colors.white,
-        ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          //FocusScope.of(context).requestFocus(new FocusNode());
+          //Navigator.of(context).pop();
+          _saveBill();
+        },
+        child: Icon(Icons.save),
+        foregroundColor: Colors.white,
       ),
     );
   }
